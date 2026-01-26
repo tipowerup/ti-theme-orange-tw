@@ -1,0 +1,38 @@
+{
+  "doctype": "html5",
+  "meta": [
+    {
+      "name": "Content-type",
+      "content": "text/html; charset=utf-8",
+      "type": "equiv"
+    },
+    {
+      "name": "X-UA-Compatible",
+      "content": "IE=edge",
+      "type": "equiv"
+    },
+    {
+      "name": "viewport",
+      "content": "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+      "type": "name"
+    }
+  ],
+  "style": [
+    {
+      "path": "$/tipowerup-orange-tw/css/app.css",
+      "name": "app-css",
+      "attributes": {
+        "data-navigate-track": "reload"
+      }
+    }
+  ],
+  "script": [
+    {
+      "path": "$/tipowerup-orange-tw/js/app.js",
+      "name": "app-js",
+      "attributes": {
+        "data-navigate-track": "reload"
+      }
+    }
+  ]
+}
