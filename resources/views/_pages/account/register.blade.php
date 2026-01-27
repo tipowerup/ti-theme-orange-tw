@@ -14,17 +14,15 @@ security: guest
             {{-- Register Component --}}
             <livewire:tipowerup-orange-tw::register />
 
-            {{-- Social Login (if available) --}}
-            @if (class_exists('Igniter\Socialite\Livewire\Socialite'))
-                <div class="mt-6">
-                    <div class="bg-surface rounded-lg border border-border shadow-sm p-6 lg:p-8">
-                        <div class="text-center mb-4">
-                            <span class="text-sm text-text-muted">@lang('tipowerup.orange-tw::default.text_or_register_with')</span>
-                        </div>
-                        <livewire:igniter-socialite::socialite/>
+            {{-- Social Login --}}
+            <div class="mt-6">
+                <div class="bg-surface rounded-lg border border-border shadow-sm p-6 lg:p-8">
+                    <div class="text-center mb-4">
+                        <span class="text-sm text-text-muted">@lang('tipowerup.orange-tw::default.text_or_register_with')</span>
                     </div>
+                    <livewire:tipowerup-orange-tw::socialite />
                 </div>
-            @endif
+            </div>
         </div>
     </div>
 </div>

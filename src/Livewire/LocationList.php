@@ -7,6 +7,7 @@ namespace TiPowerUp\OrangeTw\Livewire;
 use Igniter\Local\Facades\Location;
 use Igniter\Local\Models\Location as LocationModel;
 use Igniter\Local\Models\ReviewSettings;
+use Igniter\Main\Traits\ConfigurableComponent;
 use Igniter\User\Facades\AdminAuth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
@@ -16,6 +17,7 @@ use TiPowerUp\OrangeTw\Data\LocationData;
 
 final class LocationList extends Component
 {
+    use ConfigurableComponent;
     use WithPagination;
 
     public string $distanceUnit = 'mi';
@@ -43,6 +45,37 @@ final class LocationList extends Component
     public array $filter = [];
 
     public string $searchQuery = '';
+
+    public static function componentMeta(): array
+    {
+        return [
+            'code' => 'tipowerup-orange-tw::location-list',
+            'name' => 'Location List',
+            'description' => 'Displays a list of locations',
+        ];
+    }
+
+    public function defineProperties(): array
+    {
+        return [
+            'menusPage' => [
+                'label' => 'Page to redirect to when viewing location menus.',
+                'type' => 'select',
+                'options' => [self::class, 'getThemePageOptions'],
+                'validationRule' => 'required|regex:/^[a-z0-9\-_\.]+$/i',
+            ],
+            'itemPerPage' => [
+                'label' => 'Number of locations to display per page.',
+                'type' => 'number',
+                'validationRule' => 'required|numeric|min:0',
+            ],
+            'showThumb' => [
+                'label' => 'Display location image thumb.',
+                'type' => 'switch',
+                'validationRule' => 'required|boolean',
+            ],
+        ];
+    }
 
     public function mount(): void
     {

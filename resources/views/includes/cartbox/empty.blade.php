@@ -5,7 +5,7 @@
     <h3 class="text-lg font-semibold text-text dark:text-text mb-2">@lang('tipowerup.orange-tw::default.cart.empty_title')</h3>
     <p class="text-text-muted dark:text-text-muted mb-6">@lang('tipowerup.orange-tw::default.cart.empty_text')</p>
     <a
-        href="{{ page_url('local.menus') }}"
+        href="{{ restaurant_url('local/menus') }}"
         class="inline-flex items-center px-6 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors"
         wire:navigate
     >

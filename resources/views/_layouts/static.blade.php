@@ -23,7 +23,7 @@ description: Static layout for simple pages
     </div>
 </main>
 
-@livewire('flash-message')
+@livewire('tipowerup-orange-tw::flash-message')
 
 @include('tipowerup-orange-tw::includes.scripts')
 @livewireScripts

@@ -8,6 +8,7 @@ use Igniter\Cart\Classes\OrderManager;
 use Igniter\Flame\Database\Model;
 use Igniter\Local\Models\Review as ReviewModel;
 use Igniter\Local\Models\ReviewSettings;
+use Igniter\Main\Traits\ConfigurableComponent;
 use Igniter\Reservation\Classes\BookingManager;
 use Igniter\System\Facades\Assets;
 use Igniter\User\Facades\Auth;
@@ -17,16 +18,51 @@ use Throwable;
 
 class LeaveReview extends Component
 {
+    use ConfigurableComponent;
+
     public string $type = 'order';
+
     public string $hashParamName = 'hash';
+
     public ?string $reviewableHash = null;
+
     public ?string $comment = null;
+
     public int $delivery = 0;
+
     public int $quality = 0;
+
     public int $service = 0;
 
     protected ?Model $reviewable = null;
+
     protected ?Model $customerReview = null;
+
+    public static function componentMeta(): array
+    {
+        return [
+            'code' => 'tipowerup-orange-tw::leave-review',
+            'name' => 'Leave Review',
+            'description' => 'Allows customers to leave reviews for orders or reservations',
+        ];
+    }
+
+    public function defineProperties(): array
+    {
+        return [
+            'type' => [
+                'label' => 'Reviewable type (order or reservation)',
+                'type' => 'select',
+                'options' => ['order' => 'Order', 'reservation' => 'Reservation'],
+                'validationRule' => 'required|in:order,reservation',
+            ],
+            'hashParamName' => [
+                'label' => 'URL routing parameter for the hash.',
+                'type' => 'text',
+                'validationRule' => 'required|alpha',
+            ],
+        ];
+    }
 
     public function mount(): void
     {
@@ -68,7 +104,7 @@ class LeaveReview extends Component
             'comment' => lang('igniter.local::default.review.alert_review_not_found'),
         ]));
 
-        rescue(function() use ($reviewable): void {
+        rescue(function () use ($reviewable): void {
             ReviewModel::leaveReview($reviewable, [
                 'quality' => $this->quality,
                 'delivery' => $this->delivery,
@@ -77,7 +113,7 @@ class LeaveReview extends Component
             ]);
 
             flash()->success(lang('igniter.local::default.review.alert_review_success'))->now();
-        }, function(Throwable $e): never {
+        }, function (Throwable $e): never {
             throw ValidationException::withMessages([
                 'comment' => $e->getMessage(),
             ]);
@@ -96,7 +132,7 @@ class LeaveReview extends Component
 
     protected function getReviewable()
     {
-        if (!$this->reviewableHash) {
+        if (! $this->reviewableHash) {
             return null;
         }
 

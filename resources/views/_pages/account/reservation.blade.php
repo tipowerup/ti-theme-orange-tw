@@ -27,10 +27,8 @@ security: customer
             {{-- Reservation Preview --}}
             <livewire:tipowerup-orange-tw::reservation-preview />
 
-            {{-- Leave Review Component (if available) --}}
-            @if (class_exists('Igniter\Review\Livewire\LeaveReview'))
-                <livewire:igniter-review::leave-review />
-            @endif
+            {{-- Leave Review Component --}}
+            <livewire:tipowerup-orange-tw::leave-review />
         </main>
     </div>
 </div>

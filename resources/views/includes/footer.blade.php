@@ -52,7 +52,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ page_url('menus') }}" class="text-text-muted hover:text-primary transition-colors" wire:navigate>
+                        <a href="{{ restaurant_url('local/menus') }}" class="text-text-muted hover:text-primary transition-colors" wire:navigate>
                             Menu
                         </a>
                     </li>

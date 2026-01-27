@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace TiPowerUp\OrangeTw\Livewire;
 
-use Livewire\Component;
+use Igniter\Main\Traits\ConfigurableComponent;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 class ResetPassword extends Component
 {
+    use ConfigurableComponent;
+
     #[Validate('required|email')]
     public string $email = '';
 
@@ -19,7 +22,22 @@ class ResetPassword extends Component
     public string $password_confirmation = '';
 
     public string $resetCode = '';
+
     public string $message = '';
+
+    public static function componentMeta(): array
+    {
+        return [
+            'code' => 'tipowerup-orange-tw::reset-password',
+            'name' => 'Reset Password',
+            'description' => 'Allows customers to reset their password',
+        ];
+    }
+
+    public function defineProperties(): array
+    {
+        return [];
+    }
 
     public function mount(): void
     {

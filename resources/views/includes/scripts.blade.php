@@ -1,5 +1,5 @@
 {{-- Theme JavaScript --}}
-@vite(['resources/src/js/app.js'], 'vendor/tipowerup/ti-theme-orange-tw')
+@vite(['resources/src/js/app.js'], 'vendor/tipowerup-orange-tw/build')
 
 {{-- Custom JS from theme settings --}}
 @if (!empty($theme->custom_js))

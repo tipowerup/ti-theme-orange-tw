@@ -10,7 +10,7 @@ permalink: /cart
         {{-- Back button --}}
         <div class="mb-6" wire:ignore>
             <a
-                href="{{ page_url('local.menus') }}"
+                href="{{ restaurant_url('local/menus') }}"
                 class="inline-flex items-center text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
                 wire:navigate
             >

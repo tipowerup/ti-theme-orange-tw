@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace TiPowerUp\OrangeTw\Livewire;
 
-use Livewire\Component;
-use Livewire\Attributes\Validate;
 use Igniter\Local\Models\Location;
+use Igniter\Main\Traits\ConfigurableComponent;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 class Contact extends Component
 {
+    use ConfigurableComponent;
+
     #[Validate('required|max:128')]
     public string $subject = '';
 
@@ -32,6 +35,20 @@ class Contact extends Component
         'Comment',
         'Technical Issues',
     ];
+
+    public static function componentMeta(): array
+    {
+        return [
+            'code' => 'tipowerup-orange-tw::contact',
+            'name' => 'Contact Form',
+            'description' => 'Displays a contact form',
+        ];
+    }
+
+    public function defineProperties(): array
+    {
+        return [];
+    }
 
     public function send(): void
     {

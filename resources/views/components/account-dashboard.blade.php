@@ -42,7 +42,7 @@
             <a
                 wire:navigate
                 class="inline-block px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-md transition-colors"
-                href="{{ page_url('local.menus') }}"
+                href="{{ restaurant_url('local/menus') }}"
             >
                 @lang('igniter.user::default.text_order')
             </a>

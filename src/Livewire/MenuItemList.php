@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TiPowerUp\OrangeTw\Livewire;
 
 use Igniter\Local\Facades\Location;
+use Igniter\Main\Traits\ConfigurableComponent;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -12,6 +13,7 @@ use TiPowerUp\OrangeTw\Actions\ListMenuItems;
 
 final class MenuItemList extends Component
 {
+    use ConfigurableComponent;
     use WithPagination;
 
     public bool $isGrouped = true;
@@ -47,6 +49,56 @@ final class MenuItemList extends Component
 
     #[Url(as: 'menuId')]
     public string $selectedMenuId = '';
+
+    public static function componentMeta(): array
+    {
+        return [
+            'code' => 'tipowerup-orange-tw::menu-item-list',
+            'name' => 'Menu Item List',
+            'description' => 'Displays a list of menu items',
+        ];
+    }
+
+    public function defineProperties(): array
+    {
+        return [
+            'isGrouped' => [
+                'label' => 'Group menu items by category.',
+                'type' => 'switch',
+                'validationRule' => 'required|boolean',
+            ],
+            'collapseCategoriesAfter' => [
+                'label' => 'The number of categories to expand before collapsing the rest. Set to 0 to always expand all categories.',
+                'type' => 'number',
+                'validationRule' => 'required|numeric|min:0',
+            ],
+            'itemsPerPage' => [
+                'label' => 'Number of menu items to display per page.',
+                'type' => 'number',
+                'validationRule' => 'required|numeric|min:0',
+            ],
+            'sortOrder' => [
+                'label' => 'Default sort order of menu items.',
+                'type' => 'text',
+                'validationRule' => 'required|string',
+            ],
+            'showThumb' => [
+                'label' => 'Display menu item, category and allergen image thumb.',
+                'type' => 'switch',
+                'validationRule' => 'required|boolean',
+            ],
+            'hideMenuSearch' => [
+                'label' => 'Hide the menu search form',
+                'type' => 'switch',
+                'validationRule' => 'required|boolean',
+            ],
+            'hideUnavailableItems' => [
+                'label' => 'Hide unavailable menu items',
+                'type' => 'switch',
+                'validationRule' => 'required|boolean',
+            ],
+        ];
+    }
 
     public function render()
     {

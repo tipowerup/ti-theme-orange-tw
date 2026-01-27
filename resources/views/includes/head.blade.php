@@ -26,7 +26,7 @@
 <link href="{{ $theme->font['url'] ?? 'https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap' }}" rel="stylesheet">
 
 {{-- Theme Styles --}}
-@vite(['resources/src/css/app.css'], 'vendor/tipowerup/ti-theme-orange-tw')
+@vite(['resources/src/css/app.css'], 'vendor/tipowerup-orange-tw/build')
 
 {{-- Custom CSS - Admin-configured values - XSS risk accepted for admin users --}}
 @if (!empty($theme->custom_css))

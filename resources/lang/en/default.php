@@ -8,6 +8,13 @@ return [
     'text_restaurant' => 'Restaurant',
     'text_information' => 'Information',
 
+    // Page security
+    'label_security' => 'Who can access this page',
+    'text_all' => 'Everyone',
+    'text_customer' => 'Customers only',
+    'text_guest' => 'Guests only',
+    'help_security' => 'Control who can access this page',
+
     // Account pages
     'account_login_title' => 'Login',
     'account_register_title' => 'Register',
@@ -39,6 +46,20 @@ return [
     'component_contact_desc' => 'Displays a contact form',
     'component_captcha_title' => 'reCaptcha',
     'component_captcha_desc' => 'Displays a reCaptcha form field',
+    'component_local_header_title' => 'Local Header',
+    'component_local_header_desc' => 'Displays the local restaurant header with info, reviews, and ratings',
+    'component_fulfillment_title' => 'Fulfillment',
+    'component_fulfillment_desc' => 'Displays the order fulfillment type and time selector',
+    'component_category_list_title' => 'Category List',
+    'component_category_list_desc' => 'Displays a list of menu categories for navigation',
+    'component_featured_items_title' => 'Featured Items',
+    'component_featured_items_desc' => 'Displays featured menu items in a responsive grid',
+    'component_account_dashboard_title' => 'Account Dashboard',
+    'component_account_dashboard_desc' => 'Displays account dashboard with user info and quick stats',
+    'component_order_list_title' => 'Order List',
+    'component_order_list_desc' => 'Displays a paginated list of customer orders',
+    'component_slider_title' => 'Slider',
+    'component_slider_desc' => 'Displays an image carousel with auto-play',
 
     // Contact page
     'contact_title' => 'Contact Us',

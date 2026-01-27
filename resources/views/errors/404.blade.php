@@ -41,7 +41,7 @@
                 Locations
             </a>
             <a
-                href="{{ page_url('menus') }}"
+                href="{{ restaurant_url('local/menus') }}"
                 class="inline-flex items-center gap-2 px-4 py-2 bg-surface hover:bg-body border border-border text-text rounded-lg transition-colors font-medium"
             >
                 <x-tipowerup-orange-tw::icon name="utensils" class="w-4 h-4" />

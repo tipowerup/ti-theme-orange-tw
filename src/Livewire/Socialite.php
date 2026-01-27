@@ -4,18 +4,44 @@ declare(strict_types=1);
 
 namespace TiPowerUp\OrangeTw\Livewire;
 
-use Livewire\Component;
+use Igniter\Main\Traits\ConfigurableComponent;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 class Socialite extends Component
 {
+    use ConfigurableComponent;
+
     public bool $confirm = false;
+
     public array $links = [];
+
     public string $successPage = '';
+
     public string $errorPage = '';
 
     #[Validate('required|email')]
     public string $email = '';
+
+    public static function componentMeta(): array
+    {
+        return [
+            'code' => 'tipowerup-orange-tw::socialite',
+            'name' => 'Socialite Login',
+            'description' => 'Allows customers to login via social media',
+        ];
+    }
+
+    public function defineProperties(): array
+    {
+        return [
+            'confirm' => [
+                'label' => 'Require email confirmation',
+                'type' => 'switch',
+                'validationRule' => 'required|boolean',
+            ],
+        ];
+    }
 
     public function mount(): void
     {

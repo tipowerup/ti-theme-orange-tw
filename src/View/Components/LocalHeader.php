@@ -7,11 +7,20 @@ namespace TiPowerUp\OrangeTw\View\Components;
 use Igniter\Local\Classes\WorkingSchedule;
 use Igniter\Local\Facades\Location;
 use Igniter\Local\Models\ReviewSettings;
+use Igniter\Main\Traits\ConfigurableComponent;
+use Igniter\Main\Traits\UsesPage;
+use Igniter\System\Facades\Assets;
 use Illuminate\View\Component;
+use Override;
 use TiPowerUp\OrangeTw\Data\LocationData;
+use TiPowerUp\OrangeTw\Livewire\Concerns\WithReviews;
 
 final class LocalHeader extends Component
 {
+    use ConfigurableComponent;
+    use UsesPage;
+    use WithReviews;
+
     public function __construct(
         public bool $showThumb = true,
         public int $localThumbWidth = 320,
@@ -20,13 +29,66 @@ final class LocalHeader extends Component
         public string $reviewSortOrder = 'created_at desc',
         public string $reviewsPage = 'local.reviews',
         public string $currentPage = 'local.menus',
-    ) {}
+    ) {
+        $this->itemPerPage = $this->reviewPerPage;
+        $this->sortOrder = $this->reviewSortOrder;
+    }
 
+    public static function componentMeta(): array
+    {
+        return [
+            'code' => 'tipowerup-orange-tw::local-header',
+            'name' => 'tipowerup.orange-tw::default.component_local_header_title',
+            'description' => 'tipowerup.orange-tw::default.component_local_header_desc',
+        ];
+    }
+
+    public function defineProperties(): array
+    {
+        return [
+            'showThumb' => [
+                'label' => 'Display the location image thumb.',
+                'type' => 'switch',
+            ],
+            'localThumbWidth' => [
+                'label' => 'Location thumb width',
+                'type' => 'number',
+            ],
+            'localThumbHeight' => [
+                'label' => 'Location thumb height',
+                'type' => 'number',
+            ],
+            'reviewPerPage' => [
+                'label' => 'Number of reviews to display per page',
+                'type' => 'number',
+                'validationRule' => 'integer|min:1',
+            ],
+            'reviewSortOrder' => [
+                'label' => 'Default sort order of reviews.',
+                'type' => 'select',
+                'options' => self::getSortOrderOptionsWithReviews(...),
+                'validationRule' => 'required|string',
+            ],
+            'reviewsPage' => [
+                'label' => 'Page to redirect to when the "see more reviews" link is clicked.',
+                'type' => 'select',
+                'options' => self::getThemePageOptions(...),
+                'validationRule' => 'required|regex:/^[a-z0-9\-_\.]+$/i',
+            ],
+        ];
+    }
+
+    #[Override]
+    public function shouldRender(): bool
+    {
+        return ! is_null(resolve('location')->current());
+    }
+
+    #[Override]
     public function render()
     {
-        if (! Location::current()) {
-            return '';
-        }
+        Assets::addCss('igniter.local::/css/starrating.css', 'starrating-css');
+        Assets::addJs('igniter.local::/js/starrating.js', 'starrating-js');
 
         Location::current()->loadCount([
             'reviews' => fn ($q) => $q->isApproved(),
@@ -36,6 +98,11 @@ final class LocalHeader extends Component
             'locationInfo' => LocationData::current(),
             'allowReviews' => ReviewSettings::allowReviews(),
         ]);
+    }
+
+    public function listReviews()
+    {
+        return $this->loadReviewList(1);
     }
 
     public function currentSchedule($locationInfo): WorkingSchedule

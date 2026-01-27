@@ -30,7 +30,7 @@ function onStart()
             <a
                 wire:navigate
                 class="inline-flex items-center text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
-                href="{{ page_url('local.menus') }}"
+                href="{{ restaurant_url('local/menus') }}"
             >
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>

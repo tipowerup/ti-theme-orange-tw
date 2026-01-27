@@ -33,7 +33,7 @@ description: Default layout
 
 @include('tipowerup-orange-tw::includes.bottom-tab-bar')
 
-@livewire('flash-message')
+@livewire('tipowerup-orange-tw::flash-message')
 
 @include('tipowerup-orange-tw::includes.scripts')
 @livewireScripts

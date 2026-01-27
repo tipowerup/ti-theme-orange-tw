@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace TiPowerUp\OrangeTw\Livewire;
 
-use Livewire\Component;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
 class Captcha extends Component
 {
@@ -13,7 +13,9 @@ class Captcha extends Component
     public string $captcha = '';
 
     public string $captchaKey = '';
+
     public string $apiKey = '';
+
     public string $lang = 'en';
 
     public function mount(): void

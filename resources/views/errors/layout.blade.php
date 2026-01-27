@@ -11,7 +11,7 @@
     <link rel="shortcut icon" href="{{ asset('vendor/tipowerup-orange-tw/images/favicon.ico') }}" type="image/x-icon">
 
     {{-- Vite Assets --}}
-    @vite(['resources/src/css/app.css', 'resources/src/js/app.js'], 'vendor/tipowerup-orange-tw')
+    @vite(['resources/src/css/app.css', 'resources/src/js/app.js'], 'vendor/tipowerup-orange-tw/build')
 </head>
 <body class="h-full bg-body text-text antialiased">
     <div class="min-h-full flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">

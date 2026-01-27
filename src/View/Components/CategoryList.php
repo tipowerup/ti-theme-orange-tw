@@ -6,17 +6,59 @@ namespace TiPowerUp\OrangeTw\View\Components;
 
 use Igniter\Cart\Models\Category;
 use Igniter\Local\Facades\Location;
+use Igniter\Main\Traits\ConfigurableComponent;
+use Igniter\Main\Traits\UsesPage;
 use Illuminate\Support\Collection;
 use Illuminate\View\Component;
+use Override;
 
 final class CategoryList extends Component
 {
+    use ConfigurableComponent;
+    use UsesPage;
+
+    protected static ?Collection $categoriesCache = null;
+
+    protected static ?Category $selectedCategoryCache = null;
+
     public function __construct(
         public string $menusPage = 'local.menus',
         public bool $hideEmpty = true,
         public bool $useLinkAnchor = true,
     ) {}
 
+    public static function componentMeta(): array
+    {
+        return [
+            'code' => 'tipowerup-orange-tw::category-list',
+            'name' => 'tipowerup.orange-tw::default.component_category_list_title',
+            'description' => 'tipowerup.orange-tw::default.component_category_list_desc',
+        ];
+    }
+
+    public function defineProperties(): array
+    {
+        return [
+            'menusPage' => [
+                'label' => 'Page to redirect to when a category is clicked.',
+                'type' => 'select',
+                'options' => self::getThemePageOptions(...),
+                'validationRule' => 'required|regex:/^[a-z0-9\-_\.]+$/i',
+            ],
+            'hideEmpty' => [
+                'label' => 'Hide empty categories with no menu items',
+                'type' => 'switch',
+                'validationRule' => 'required|boolean',
+            ],
+            'useLinkAnchor' => [
+                'label' => 'Use link anchor for category links',
+                'type' => 'switch',
+                'validationRule' => 'required|boolean',
+            ],
+        ];
+    }
+
+    #[Override]
     public function render()
     {
         return view('tipowerup-orange-tw::components.category-list', [
@@ -27,29 +69,31 @@ final class CategoryList extends Component
 
     protected function loadCategories(): Collection
     {
-        return once(function (): Collection {
-            $location = Location::current();
+        if (! is_null(self::$categoriesCache)) {
+            return self::$categoriesCache;
+        }
 
-            $query = Category::query()
-                ->with([
-                    'children',
-                    'children.children',
-                ])
-                ->withCount([
-                    'menus' => function ($query) use ($location): void {
-                        if ($location) {
-                            $query->whereHasOrDoesntHaveLocation($location->getKey());
-                        }
-                    },
-                ])
-                ->whereIsEnabled()->sorted();
+        $location = Location::current();
 
-            if ($location) {
-                $query->whereHasOrDoesntHaveLocation($location->getKey());
-            }
+        $query = Category::query()
+            ->with([
+                'children',
+                'children.children',
+            ])
+            ->withCount([
+                'menus' => function ($query) use ($location): void {
+                    if ($location) {
+                        $query->whereHasOrDoesntHaveLocation($location->getKey());
+                    }
+                },
+            ])
+            ->whereIsEnabled()->sorted();
 
-            return $query->get();
-        });
+        if ($location) {
+            $query->whereHasOrDoesntHaveLocation($location->getKey());
+        }
+
+        return self::$categoriesCache = $query->get();
     }
 
     protected function findSelectedCategory(): ?Category
@@ -58,13 +102,15 @@ final class CategoryList extends Component
             return null;
         }
 
-        return once(function () use ($slug): ?Category {
-            $query = Category::query()->whereIsEnabled()->where('permalink_slug', $slug);
-            if ($location = Location::current()) {
-                $query->whereHasOrDoesntHaveLocation($location->getKey());
-            }
+        if (! is_null(self::$selectedCategoryCache)) {
+            return self::$selectedCategoryCache;
+        }
 
-            return $query->first();
-        });
+        $query = Category::query()->whereIsEnabled()->where('permalink_slug', $slug);
+        if ($location = Location::current()) {
+            $query->whereHasOrDoesntHaveLocation($location->getKey());
+        }
+
+        return self::$selectedCategoryCache = $query->first();
     }
 }

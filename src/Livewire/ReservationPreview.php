@@ -4,19 +4,45 @@ declare(strict_types=1);
 
 namespace TiPowerUp\OrangeTw\Livewire;
 
-use Livewire\Component;
+use Igniter\Main\Traits\ConfigurableComponent;
 use Igniter\Reservation\Classes\BookingManager;
 use Igniter\User\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Livewire\Component;
 
 class ReservationPreview extends Component
 {
+    use ConfigurableComponent;
+
     public string $hashParamName = 'hash';
+
     public ?string $hash = null;
+
     public bool $showCancelButton = false;
 
     protected $manager;
+
     protected $reservation = null;
+
+    public static function componentMeta(): array
+    {
+        return [
+            'code' => 'tipowerup-orange-tw::reservation-preview',
+            'name' => 'Reservation Preview',
+            'description' => 'Displays reservation details and allows cancellation',
+        ];
+    }
+
+    public function defineProperties(): array
+    {
+        return [
+            'hashParamName' => [
+                'label' => 'URL routing parameter for the reservation hash.',
+                'type' => 'text',
+                'validationRule' => 'required|alpha',
+            ],
+        ];
+    }
 
     public function boot(): void
     {
@@ -50,12 +76,12 @@ class ReservationPreview extends Component
 
     protected function showCancelButton(): bool
     {
-        return $this->getReservation() && !$this->getReservation()->isCanceled() && $this->getReservation()->isCancelable();
+        return $this->getReservation() && ! $this->getReservation()->isCanceled() && $this->getReservation()->isCancelable();
     }
 
     protected function getReservation()
     {
-        return tap($this->reservation ??= $this->manager->getReservationByHash($this->hash, Auth::customer()), function($reservation): void {
+        return tap($this->reservation ??= $this->manager->getReservationByHash($this->hash, Auth::customer()), function ($reservation): void {
             if ($reservation) {
                 $this->manager->useLocation($reservation->location);
             }

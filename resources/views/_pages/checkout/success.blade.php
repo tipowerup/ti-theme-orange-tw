@@ -73,7 +73,7 @@ permalink: /checkout/success
             @endif
 
             <a
-                href="{{ page_url('local.menus') }}"
+                href="{{ restaurant_url('local/menus') }}"
                 class="block w-full px-6 py-3 bg-surface text-text font-semibold rounded-lg border border-border hover:bg-body transition-colors text-center"
                 wire:navigate
             >

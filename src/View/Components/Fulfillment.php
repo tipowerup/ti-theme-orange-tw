@@ -5,14 +5,38 @@ declare(strict_types=1);
 namespace TiPowerUp\OrangeTw\View\Components;
 
 use Igniter\Local\Facades\Location;
+use Igniter\Main\Traits\ConfigurableComponent;
 use Illuminate\View\Component;
+use Override;
 
 final class Fulfillment extends Component
 {
+    use ConfigurableComponent;
+
     public function __construct(
         public bool $previewMode = false,
     ) {}
 
+    public static function componentMeta(): array
+    {
+        return [
+            'code' => 'tipowerup-orange-tw::fulfillment',
+            'name' => 'tipowerup.orange-tw::default.component_fulfillment_title',
+            'description' => 'tipowerup.orange-tw::default.component_fulfillment_desc',
+        ];
+    }
+
+    public function defineProperties(): array
+    {
+        return [
+            'previewMode' => [
+                'label' => 'Render the component in preview mode',
+                'type' => 'switch',
+            ],
+        ];
+    }
+
+    #[Override]
     public function render()
     {
         return view('tipowerup-orange-tw::components.fulfillment', [

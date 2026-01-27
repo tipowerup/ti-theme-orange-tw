@@ -16,7 +16,7 @@ layout: default
 <section class="bg-gradient-to-b from-body to-surface dark:from-body dark:to-surface border-b border-border dark:border-border">
     <div class="container mx-auto px-4 py-16">
         <div class="max-w-3xl mx-auto">
-            <livewire:local-search.local-search />
+            <livewire:tipowerup-orange-tw::local-search />
         </div>
     </div>
 </section>

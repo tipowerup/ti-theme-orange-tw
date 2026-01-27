@@ -15,12 +15,10 @@ security: guest
                     <livewire:tipowerup-orange-tw::login/>
                 </div>
 
-                {{-- Social Login (if available) --}}
-                @if (class_exists('Igniter\Socialite\Livewire\Socialite'))
-                    <div class="px-6 pb-6 lg:px-8 lg:pb-8 border-t border-border pt-6">
-                        <livewire:igniter-socialite::socialite/>
-                    </div>
-                @endif
+                {{-- Social Login --}}
+                <div class="px-6 pb-6 lg:px-8 lg:pb-8 border-t border-border pt-6">
+                    <livewire:tipowerup-orange-tw::socialite />
+                </div>
             </div>
         </div>
     </div>

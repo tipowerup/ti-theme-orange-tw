@@ -81,10 +81,16 @@ final class Slider extends Component
     }
 
     #[Override]
+    public function shouldRender(): bool
+    {
+        return count($this->slides()) > 0;
+    }
+
+    #[Override]
     public function render()
     {
         return view('tipowerup-orange-tw::components.slider', [
-            'slides' => $this->slides(),
+            'slides' => $this->slides,
         ]);
     }
 

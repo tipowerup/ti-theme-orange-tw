@@ -9,6 +9,7 @@ use Livewire\Component;
 class Modal extends Component
 {
     public bool $show = false;
+
     public string $maxWidth = 'lg';
 
     public function open(): void

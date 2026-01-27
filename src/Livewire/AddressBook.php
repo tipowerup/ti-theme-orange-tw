@@ -4,23 +4,50 @@ declare(strict_types=1);
 
 namespace TiPowerUp\OrangeTw\Livewire;
 
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Main\Traits\ConfigurableComponent;
+use Igniter\System\Models\Country;
+use Igniter\User\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 use TiPowerUp\OrangeTw\Livewire\Forms\AddressBookForm;
-use Igniter\Flame\Exception\ApplicationException;
-use Igniter\System\Models\Country;
-use Igniter\User\Facades\Auth;
 
 class AddressBook extends Component
 {
+    use ConfigurableComponent;
     use WithPagination;
 
     public AddressBookForm $form;
+
     public ?int $addressId = null;
+
     public ?int $defaultAddressId = null;
+
     public bool $showModal = false;
+
     public int $itemsPerPage = 20;
+
     public string $sortOrder = 'created_at desc';
+
+    public static function componentMeta(): array
+    {
+        return [
+            'code' => 'tipowerup-orange-tw::address-book',
+            'name' => 'Address Book',
+            'description' => 'Allows customers to manage their addresses',
+        ];
+    }
+
+    public function defineProperties(): array
+    {
+        return [
+            'itemsPerPage' => [
+                'label' => 'Number of addresses to display per page.',
+                'type' => 'number',
+                'validationRule' => 'required|numeric|min:0',
+            ],
+        ];
+    }
 
     public function mount(): void
     {
@@ -31,7 +58,7 @@ class AddressBook extends Component
     public function updated($property, $value): void
     {
         if ($property === 'addressId') {
-            $this->showModal = !empty($value);
+            $this->showModal = ! empty($value);
             $this->form->reset();
             $this->resetErrorBag();
         }
@@ -104,7 +131,7 @@ class AddressBook extends Component
 
         $customer->saveDefaultAddress($id);
 
-        $this->defaultAddressId = (int)$id;
+        $this->defaultAddressId = (int) $id;
     }
 
     protected function getAddress(?int $addressId)
@@ -114,7 +141,7 @@ class AddressBook extends Component
 
     protected function loadAddresses()
     {
-        if (!$customer = Auth::customer()) {
+        if (! $customer = Auth::customer()) {
             return [];
         }
 

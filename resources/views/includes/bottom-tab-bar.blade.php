@@ -23,9 +23,9 @@
 
         {{-- Menu --}}
         <a
-            href="{{ page_url('menus') }}"
+            href="{{ restaurant_url('local/menus') }}"
             wire:navigate
-            class="flex flex-col items-center justify-center flex-1 h-full transition-colors {{ request()->is('menus*') ? 'text-primary' : 'text-text-muted' }}"
+            class="flex flex-col items-center justify-center flex-1 h-full transition-colors {{ request()->is('*/local/menus*') || request()->is('local/menus*') ? 'text-primary' : 'text-text-muted' }}"
         >
             <x-tipowerup-orange-tw::icon name="book-open" class="w-6 h-6" />
             <span class="text-xs mt-1">Menu</span>

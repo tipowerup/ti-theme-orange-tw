@@ -9,7 +9,9 @@ use Livewire\Component;
 class NewsletterSubscribeForm extends Component
 {
     public string $email = '';
+
     public bool $subscribed = false;
+
     public string $message = '';
 
     protected function rules(): array

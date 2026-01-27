@@ -35,7 +35,7 @@
                 <a href="{{ page_url('locations') }}" class="text-text hover:text-primary transition-colors" wire:navigate>
                     Locations
                 </a>
-                <a href="{{ page_url('menus') }}" class="text-text hover:text-primary transition-colors" wire:navigate>
+                <a href="{{ restaurant_url('local/menus') }}" class="text-text hover:text-primary transition-colors" wire:navigate>
                     Menu
                 </a>
 
@@ -87,7 +87,7 @@
             <a href="{{ page_url('locations') }}" class="block text-text hover:text-primary transition-colors" wire:navigate>
                 Locations
             </a>
-            <a href="{{ page_url('menus') }}" class="block text-text hover:text-primary transition-colors" wire:navigate>
+            <a href="{{ restaurant_url('local/menus') }}" class="block text-text hover:text-primary transition-colors" wire:navigate>
                 Menu
             </a>
             <a href="{{ page_url('checkout/cart') }}" class="block text-text hover:text-primary transition-colors" wire:navigate>
