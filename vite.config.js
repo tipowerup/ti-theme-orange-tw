@@ -9,22 +9,31 @@ export default defineConfig({
                 'resources/src/js/app.js'
             ],
             publicDirectory: 'public',
-            buildDirectory: '',
+            buildDirectory: 'build',
             refresh: true,
         }),
     ],
     build: {
         manifest: true,
-        outDir: 'public',
+        outDir: 'public/build',
         rollupOptions: {
             output: {
-                entryFileNames: 'js/[name].js',
-                chunkFileNames: 'js/[name].js',
+                entryFileNames: 'js/[name]-[hash].js',
+                chunkFileNames: 'js/[name]-[hash].js',
                 assetFileNames: (assetInfo) => {
-                    if (assetInfo.name.endsWith('.css')) {
-                        return 'css/[name][extname]';
+                    const name = assetInfo.names?.[0] ?? assetInfo.name ?? '';
+                    if (name.endsWith('.css')) {
+                        return 'css/[name]-[hash][extname]';
                     }
-                    return 'assets/[name][extname]';
+                    return 'assets/[name]-[hash][extname]';
+                },
+                manualChunks: (id) => {
+                    if (id.includes('node_modules')) {
+                        if (id.includes('alpinejs')) {
+                            return 'alpine';
+                        }
+                        return 'vendor';
+                    }
                 },
             },
         },

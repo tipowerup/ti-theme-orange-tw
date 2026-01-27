@@ -15,10 +15,18 @@
         "vite"
     ],
     "require": {
-        "tastyigniter/core": "^4.0"
-    },
-    "require-dev": {
-        "laravel/boost": "^1.8"
+        "livewire/livewire": "^v3.0",
+        "spatie/laravel-google-fonts": "^1.2",
+        "tastyigniter/core": "^v4.0",
+        "tastyigniter/ti-ext-cart": "^v4.0",
+        "tastyigniter/ti-ext-coupons": "^v4.0",
+        "tastyigniter/ti-ext-frontend": "^v4.0",
+        "tastyigniter/ti-ext-local": "^v4.0",
+        "tastyigniter/ti-ext-pages": "^v4.0",
+        "tastyigniter/ti-ext-payregister": "^v4.0",
+        "tastyigniter/ti-ext-reservation": "^v4.0",
+        "tastyigniter/ti-ext-socialite": "^v4.0",
+        "tastyigniter/ti-ext-user": "^v4.0"
     },
     "autoload": {
         "psr-4": {
@@ -39,7 +47,18 @@
             "meta-path": "/resources/meta",
             "publish-paths": [
                 "/public"
-            ]
+            ],
+            "require": {
+                "igniter.cart": "*",
+                "igniter.coupons": "*",
+                "igniter.frontend": "*",
+                "igniter.local": "*",
+                "igniter.pages": "*",
+                "igniter.payregister": "*",
+                "igniter.reservation": "*",
+                "igniter.socialite": "*",
+                "igniter.user": "*"
+            }
         }
     },
     "minimum-stability": "dev",

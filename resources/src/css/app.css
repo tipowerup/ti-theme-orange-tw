@@ -1,3 +1,59 @@
+/* CSS Variables - Light Mode */
+:root {
+    --color-primary: 249 115 22; /* Orange-500 */
+    --color-primary-light: 251 146 60; /* Orange-400 */
+    --color-primary-dark: 234 88 12; /* Orange-600 */
+
+    --color-secondary: 108 117 125; /* Gray-600 */
+    --color-secondary-light: 156 163 175; /* Gray-400 */
+    --color-secondary-dark: 75 85 99; /* Gray-600 */
+
+    --color-success: 34 197 94; /* Green-500 */
+    --color-danger: 239 68 68; /* Red-500 */
+    --color-warning: 234 179 8; /* Yellow-500 */
+    --color-info: 59 130 246; /* Blue-500 */
+
+    --color-text: 17 24 39; /* Gray-900 */
+    --color-text-muted: 107 114 128; /* Gray-500 */
+
+    --color-body: 255 255 255; /* White */
+    --color-surface: 249 250 251; /* Gray-50 */
+    --color-border: 229 231 235; /* Gray-200 */
+}
+
+/* CSS Variables - Dark Mode */
+.dark {
+    --color-primary: 249 115 22; /* Orange-500 */
+    --color-primary-light: 251 146 60; /* Orange-400 */
+    --color-primary-dark: 234 88 12; /* Orange-600 */
+
+    --color-secondary: 156 163 175; /* Gray-400 */
+    --color-secondary-light: 209 213 219; /* Gray-300 */
+    --color-secondary-dark: 107 114 128; /* Gray-500 */
+
+    --color-success: 34 197 94; /* Green-500 */
+    --color-danger: 239 68 68; /* Red-500 */
+    --color-warning: 234 179 8; /* Yellow-500 */
+    --color-info: 59 130 246; /* Blue-500 */
+
+    --color-text: 243 244 246; /* Gray-100 */
+    --color-text-muted: 156 163 175; /* Gray-400 */
+
+    --color-body: 17 24 39; /* Gray-900 */
+    --color-surface: 31 41 55; /* Gray-800 */
+    --color-border: 55 65 81; /* Gray-700 */
+}
+
+/* View Transitions API */
+@view-transition {
+    navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 0.3s;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,24 +64,69 @@
     }
 
     body {
-        @apply bg-white text-gray-900;
+        @apply bg-body text-text transition-colors duration-200;
     }
 }
 
 @layer components {
     .container {
-        @apply mx-auto px-4 sm:px-6 lg:px-8;
+        @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
     }
 
+    /* Button Components */
     .btn {
-        @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-colors duration-200;
+        @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
     }
 
     .btn-primary {
-        @apply bg-primary-600 text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+        @apply bg-primary text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-body;
     }
 
     .btn-secondary {
-        @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+        @apply bg-secondary text-white hover:bg-secondary-dark focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 dark:focus:ring-offset-body;
+    }
+
+    .btn-outline {
+        @apply border-2 border-primary text-primary hover:bg-primary hover:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-body;
+    }
+
+    /* Card Component */
+    .card {
+        @apply bg-surface border border-border rounded-lg shadow-sm;
+    }
+
+    /* Input Components */
+    .input {
+        @apply block w-full rounded-lg border border-border bg-body text-text px-4 py-2 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 transition-colors duration-200;
+    }
+
+    /* Link Components */
+    .link {
+        @apply text-primary hover:text-primary-dark transition-colors duration-200;
+    }
+
+    /* Badge Components */
+    .badge {
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    }
+
+    .badge-primary {
+        @apply bg-primary/10 text-primary;
+    }
+
+    .badge-success {
+        @apply bg-success/10 text-success;
+    }
+
+    .badge-danger {
+        @apply bg-danger/10 text-danger;
+    }
+
+    .badge-warning {
+        @apply bg-warning/10 text-warning;
+    }
+
+    .badge-info {
+        @apply bg-info/10 text-info;
     }
 }
