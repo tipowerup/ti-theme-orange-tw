@@ -6,6 +6,7 @@ namespace TiPowerUp\OrangeTw\View\Components;
 
 use Igniter\Local\Classes\WorkingSchedule;
 use Igniter\Local\Facades\Location;
+use Igniter\Local\Models\Review as ReviewModel;
 use Igniter\Local\Models\ReviewSettings;
 use Igniter\Main\Traits\ConfigurableComponent;
 use Igniter\Main\Traits\UsesPage;
@@ -13,13 +14,11 @@ use Igniter\System\Facades\Assets;
 use Illuminate\View\Component;
 use Override;
 use TiPowerUp\OrangeTw\Data\LocationData;
-use TiPowerUp\OrangeTw\Livewire\Concerns\WithReviews;
 
 final class LocalHeader extends Component
 {
     use ConfigurableComponent;
     use UsesPage;
-    use WithReviews;
 
     public function __construct(
         public bool $showThumb = true,
@@ -29,10 +28,7 @@ final class LocalHeader extends Component
         public string $reviewSortOrder = 'created_at desc',
         public string $reviewsPage = 'local.reviews',
         public string $currentPage = 'local.menus',
-    ) {
-        $this->itemPerPage = $this->reviewPerPage;
-        $this->sortOrder = $this->reviewSortOrder;
-    }
+    ) {}
 
     public static function componentMeta(): array
     {
@@ -66,7 +62,7 @@ final class LocalHeader extends Component
             'reviewSortOrder' => [
                 'label' => 'Default sort order of reviews.',
                 'type' => 'select',
-                'options' => self::getSortOrderOptionsWithReviews(...),
+                'options' => self::getSortOrderOptions(...),
                 'validationRule' => 'required|string',
             ],
             'reviewsPage' => [
@@ -76,6 +72,13 @@ final class LocalHeader extends Component
                 'validationRule' => 'required|regex:/^[a-z0-9\-_\.]+$/i',
             ],
         ];
+    }
+
+    public static function getSortOrderOptions(): array
+    {
+        return collect((new ReviewModel)->queryModifierGetSorts())
+            ->mapWithKeys(fn ($value, $key): array => [$value => $value])
+            ->all();
     }
 
     #[Override]
@@ -94,15 +97,33 @@ final class LocalHeader extends Component
             'reviews' => fn ($q) => $q->isApproved(),
         ]);
 
+        $locationInfo = LocationData::current();
+
         return view('tipowerup-orange-tw::components.local-header', [
-            'locationInfo' => LocationData::current(),
+            'locationInfo' => $locationInfo,
             'allowReviews' => ReviewSettings::allowReviews(),
+            'schedule' => $this->currentSchedule($locationInfo),
         ]);
     }
 
     public function listReviews()
     {
-        return $this->loadReviewList(1);
+        if (! $location = Location::current()) {
+            return null;
+        }
+
+        return ReviewModel::query()
+            ->with([
+                'customer' => fn ($query) => $query->select('customer_id', 'address_id'),
+                'customer.address' => fn ($query) => $query->select('address_id', 'customer_id', 'city'),
+            ])
+            ->isApproved()
+            ->listFrontEnd([
+                'page' => 1,
+                'pageLimit' => $this->reviewPerPage,
+                'sort' => $this->reviewSortOrder,
+                'location' => $location->getKey(),
+            ]);
     }
 
     public function currentSchedule($locationInfo): WorkingSchedule

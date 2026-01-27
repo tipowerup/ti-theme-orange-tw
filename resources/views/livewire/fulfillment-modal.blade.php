@@ -41,32 +41,32 @@
                     <div>
                         <label class="block text-sm font-medium text-text dark:text-text mb-2">@lang('tipowerup.orange-tw::default.fulfillment.select_type')</label>
                         <div class="grid grid-cols-2 gap-3">
-                            @foreach($orderTypes as $code => $label)
+                            @foreach($orderTypes as $type)
                                 <label
                                     @class([
                                         'flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition-colors',
-                                        'border-primary-600 bg-primary-50 dark:bg-primary-900/30' => $orderType === $code,
-                                        'border-border dark:border-border hover:border-border dark:hover:border-border' => $orderType !== $code,
+                                        'border-primary-600 bg-primary-50 dark:bg-primary-900/30' => $orderType === $type->getCode(),
+                                        'border-border dark:border-border hover:border-border dark:hover:border-border' => $orderType !== $type->getCode(),
                                     ])
                                 >
                                     <input
                                         type="radio"
                                         wire:model.live="orderType"
-                                        value="{{ $code }}"
+                                        value="{{ $type->getCode() }}"
                                         class="sr-only"
                                     />
                                     <i @class([
                                         'fa mr-2',
-                                        'fa-truck' => $code === 'delivery',
-                                        'fa-shopping-bag' => $code === 'collection',
-                                        'text-primary-600 dark:text-primary-400' => $orderType === $code,
-                                        'text-text-muted' => $orderType !== $code,
+                                        'fa-truck' => $type->getCode() === 'delivery',
+                                        'fa-shopping-bag' => $type->getCode() === 'collection',
+                                        'text-primary-600 dark:text-primary-400' => $orderType === $type->getCode(),
+                                        'text-text-muted' => $orderType !== $type->getCode(),
                                     ])></i>
                                     <span @class([
                                         'font-medium',
-                                        'text-primary-600 dark:text-primary-400' => $orderType === $code,
-                                        'text-text dark:text-text' => $orderType !== $code,
-                                    ])>{{ $label }}</span>
+                                        'text-primary-600 dark:text-primary-400' => $orderType === $type->getCode(),
+                                        'text-text dark:text-text' => $orderType !== $type->getCode(),
+                                    ])>{{ $type->getLabel() }}</span>
                                 </label>
                             @endforeach
                         </div>

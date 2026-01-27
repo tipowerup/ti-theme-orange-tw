@@ -12,8 +12,8 @@
             </h2>
             <button
                 type="button"
-                data-bs-dismiss="modal"
-                class="text-text-muted hover:text-text-muted dark:hover:text-text transition-colors"
+                @click="$dispatch('hideModal')"
+                class="text-text-muted hover:text-text dark:hover:text-text transition-colors"
                 aria-label="Close"
             >
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,7 +100,9 @@
                                                 name="menuOptions[{{ $index }}][option_values][]"
                                                 wire:model="menuOptions.{{ $index }}.option_values"
                                                 value="{{ $optionValue->menu_option_value_id }}"
+                                                data-option-price="{{ $optionValue->price }}"
                                                 class="w-4 h-4 text-primary-600 focus:ring-primary-500"
+                                                @change="$root.calculateTotal()"
                                             />
                                             <span class="ml-3 flex-1 text-text dark:text-text">
                                                 {{ $optionValue->name }}
@@ -126,7 +128,9 @@
                                                 type="checkbox"
                                                 wire:model="menuOptions.{{ $index }}.option_values"
                                                 value="{{ $optionValue->menu_option_value_id }}"
+                                                data-option-price="{{ $optionValue->price }}"
                                                 class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500 dark:bg-surface"
+                                                @change="$root.calculateTotal()"
                                             />
                                             <span class="ml-3 flex-1 text-text dark:text-text">
                                                 {{ $optionValue->name }}
@@ -149,10 +153,14 @@
                                     <select
                                         wire:model="menuOptions.{{ $index }}.option_values"
                                         class="w-full px-4 py-2 border border-border dark:border-border rounded-lg bg-body dark:bg-surface text-text dark:text-text focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                        @change="$root.calculateTotal()"
                                     >
                                         <option value="">@lang('tipowerup.orange-tw::default.menu.select_option')</option>
                                         @foreach ($optionValues as $optionValue)
-                                            <option value="{{ $optionValue->menu_option_value_id }}">
+                                            <option
+                                                value="{{ $optionValue->menu_option_value_id }}"
+                                                data-option-price="{{ $optionValue->price }}"
+                                            >
                                                 {{ $optionValue->name }}
                                                 @if (!$hideZeroOptionPrices || $optionValue->price > 0)
                                                     @if ($optionValue->price > 0)

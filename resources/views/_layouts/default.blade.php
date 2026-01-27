@@ -34,6 +34,7 @@ description: Default layout
 @include('tipowerup-orange-tw::includes.bottom-tab-bar')
 
 @livewire('tipowerup-orange-tw::flash-message')
+@livewire('tipowerup-orange-tw::modal-manager')
 
 @include('tipowerup-orange-tw::includes.scripts')
 @livewireScripts

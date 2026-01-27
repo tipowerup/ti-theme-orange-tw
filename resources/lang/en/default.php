@@ -48,6 +48,11 @@ return [
     'component_captcha_desc' => 'Displays a reCaptcha form field',
     'component_local_header_title' => 'Local Header',
     'component_local_header_desc' => 'Displays the local restaurant header with info, reviews, and ratings',
+    'component_fulfillment_modal_title' => 'Fulfillment Modal',
+    'component_fulfillment_modal_desc' => 'Displays a modal for selecting order type and time',
+
+    // Alerts
+    'alert_preview_mode' => 'This action is disabled in preview mode.',
     'component_fulfillment_title' => 'Fulfillment',
     'component_fulfillment_desc' => 'Displays the order fulfillment type and time selector',
     'component_category_list_title' => 'Category List',

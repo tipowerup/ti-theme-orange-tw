@@ -9,6 +9,7 @@ hideFooter: 1
 '[tipowerup-orange-tw::fulfillment]': []
 '[tipowerup-orange-tw::category-list]': []
 '[tipowerup-orange-tw::menu-item-list]': []
+'[tipowerup-orange-tw::cart-box]': []
 '[tipowerup-orange-tw::fulfillment-modal]': []
 ---
 
@@ -58,10 +59,8 @@ hideFooter: 1
         <!-- Cart Sidebar (Desktop Only) -->
         <div class="hidden lg:block">
             <div class="sticky top-32">
-                <div class="bg-body dark:bg-surface border border-border dark:border-border rounded-lg p-4">
-                    <h3 class="text-lg font-semibold text-text dark:text-text mb-4">Your Order</h3>
-                    <!-- Cart content will be added in Phase 3 -->
-                    <p class="text-sm text-text-muted dark:text-text-muted text-center py-8">Your cart is empty</p>
+                <div class="bg-body dark:bg-surface border border-border dark:border-border rounded-lg overflow-hidden shadow-sm">
+                    <livewire:tipowerup-orange-tw::cart-box/>
                 </div>
             </div>
         </div>

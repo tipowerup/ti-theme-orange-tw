@@ -7,7 +7,8 @@
     ])
     @if($menuItemData->mealtimeIsAvailable())
         @if($menuItemData->hasOptions())
-            @click="$dispatch('open-modal', 'cart-item-modal-{{ $menuItemData->id }}')"
+            wire:click="onAddToCart({{ $menuItemData->id }}, {{ $menuItemData->minimumQuantity }}, true)"
+            data-control="menu-item"
         @else
             wire:click="onAddToCart({{ $menuItemData->id }}, {{ $menuItemData->minimumQuantity }}, false)"
             data-control="menu-item"

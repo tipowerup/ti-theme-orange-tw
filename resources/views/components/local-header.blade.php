@@ -46,10 +46,6 @@
 
     <!-- Status and Hours -->
     <div class="flex flex-wrap gap-2">
-        @php
-            $schedule = $this->currentSchedule($locationInfo);
-        @endphp
-
         <span @class([
             'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium',
             'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' => $schedule->isOpen(),

@@ -83,7 +83,7 @@ class MenuItemData
 
     public function specialIsActive(): bool
     {
-        return $this->model->special?->active();
+        return $this->model->special?->active() ?? false;
     }
 
     public function specialDaysRemaining(): ?int
