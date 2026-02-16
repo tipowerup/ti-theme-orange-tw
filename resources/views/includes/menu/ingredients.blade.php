@@ -1,6 +1,7 @@
 <div class="flex flex-wrap gap-2">
     @foreach($ingredients as $ingredient)
         <span
+            wire:key="ingredient-{{ $ingredient->getKey() }}"
             class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-surface dark:bg-surface text-text dark:text-text"
             title="{{ $ingredient->description }}"
         >

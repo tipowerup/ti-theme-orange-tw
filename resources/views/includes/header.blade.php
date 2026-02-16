@@ -28,34 +28,18 @@
             </a>
 
             {{-- Desktop Navigation --}}
-            <div class="hidden md:flex items-center space-x-6">
-                <a href="{{ page_url('home') }}" class="text-text hover:text-primary transition-colors" wire:navigate>
-                    Home
-                </a>
-                <a href="{{ page_url('locations') }}" class="text-text hover:text-primary transition-colors" wire:navigate>
-                    Locations
-                </a>
-                <a href="{{ restaurant_url('local/menus') }}" class="text-text hover:text-primary transition-colors" wire:navigate>
-                    Menu
-                </a>
-
-                {{-- Cart Icon --}}
-                <a href="{{ page_url('checkout/cart') }}" class="relative text-text hover:text-primary transition-colors" wire:navigate>
-                    <x-tipowerup-orange-tw::icon name="shopping-cart" class="w-6 h-6" />
-                    <span class="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                        0
-                    </span>
-                </a>
+            <div class="hidden md:flex items-center">
+                <x-tipowerup-orange-tw::nav code="main-menu" />
 
                 {{-- Dark Mode Toggle --}}
                 @if($theme->dark_mode['enabled'] ?? true)
                     <button
                         @click="toggleDarkMode()"
-                        class="text-text hover:text-primary transition-colors"
+                        class="ml-2 px-3 py-2 rounded-lg text-text hover:text-primary hover:bg-surface transition-colors"
                         aria-label="Toggle dark mode"
                     >
-                        <x-tipowerup-orange-tw::icon name="moon" class="w-6 h-6" x-show="!isDark" />
-                        <x-tipowerup-orange-tw::icon name="sun" class="w-6 h-6" x-show="isDark" />
+                        <x-tipowerup-orange-tw::icon name="moon" class="w-5 h-5" x-show="!isDark" x-cloak />
+                        <x-tipowerup-orange-tw::icon name="sun" class="w-5 h-5" x-show="isDark" x-cloak />
                     </button>
                 @endif
             </div>
@@ -74,34 +58,24 @@
 
         {{-- Mobile Navigation --}}
         <div
-            class="md:hidden mt-4 space-y-4"
+            class="md:hidden mt-4"
             x-show="mobileMenuOpen"
             x-cloak
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0 -translate-y-2"
             x-transition:enter-end="opacity-100 translate-y-0"
         >
-            <a href="{{ page_url('home') }}" class="block text-text hover:text-primary transition-colors" wire:navigate>
-                Home
-            </a>
-            <a href="{{ page_url('locations') }}" class="block text-text hover:text-primary transition-colors" wire:navigate>
-                Locations
-            </a>
-            <a href="{{ restaurant_url('local/menus') }}" class="block text-text hover:text-primary transition-colors" wire:navigate>
-                Menu
-            </a>
-            <a href="{{ page_url('checkout/cart') }}" class="block text-text hover:text-primary transition-colors" wire:navigate>
-                Cart
-            </a>
+            @include('tipowerup-orange-tw::includes.navs.mobile-menu')
 
             @if($theme->dark_mode['enabled'] ?? true)
                 <button
                     @click="toggleDarkMode()"
-                    class="flex items-center space-x-2 text-text hover:text-primary transition-colors"
+                    class="flex items-center w-full px-4 py-2 mt-1 rounded-lg text-text hover:text-primary hover:bg-surface transition-colors"
                 >
-                    <x-tipowerup-orange-tw::icon name="moon" class="w-5 h-5" x-show="!isDark" />
-                    <x-tipowerup-orange-tw::icon name="sun" class="w-5 h-5" x-show="isDark" />
-                    <span x-text="isDark ? 'Light Mode' : 'Dark Mode'"></span>
+                    <x-tipowerup-orange-tw::icon name="moon" class="w-5 h-5 mr-2" x-show="!isDark" x-cloak />
+                    <x-tipowerup-orange-tw::icon name="sun" class="w-5 h-5 mr-2" x-show="isDark" x-cloak />
+                    <span x-show="isDark" x-cloak>@lang('tipowerup.orange-tw::default.nav.light_mode')</span>
+                    <span x-show="!isDark" x-cloak>@lang('tipowerup.orange-tw::default.nav.dark_mode')</span>
                 </button>
             @endif
         </div>

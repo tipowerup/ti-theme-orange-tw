@@ -23,7 +23,7 @@ final class ModalManager extends Component
 
         $this->activeModal = 'modal-'.md5($component.serialize($arguments));
 
-        $this->dispatch('showActiveModal', id: $this->activeModal);
+        $this->dispatch('show-active-modal');
     }
 
     #[On('resetModal')]
@@ -32,7 +32,7 @@ final class ModalManager extends Component
         $this->reset();
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View
     {
         return view('tipowerup-orange-tw::livewire.modal-manager');
     }

@@ -1,47 +1,61 @@
 /* CSS Variables - Light Mode */
 :root {
-    --color-primary: 249 115 22; /* Orange-500 */
-    --color-primary-light: 251 146 60; /* Orange-400 */
-    --color-primary-dark: 234 88 12; /* Orange-600 */
+    /* Primary: #FF4900 - matches ti-theme-orange */
+    --color-primary: 255 73 0;
+    --color-primary-light: 255 138 101; /* Lighter tint for hover states */
+    --color-primary-dark: 204 58 0; /* Darker shade for active states */
+
+    /* Primary scale for Tailwind shades */
+    --color-primary-50: 255 247 244; /* Very light orange tint */
+    --color-primary-100: 255 229 219; /* Light orange tint */
+    --color-primary-400: 255 138 101; /* Medium orange */
+    --color-primary-900: 102 29 0; /* Very dark orange */
 
     --color-secondary: 108 117 125; /* Gray-600 */
     --color-secondary-light: 156 163 175; /* Gray-400 */
     --color-secondary-dark: 75 85 99; /* Gray-600 */
 
-    --color-success: 34 197 94; /* Green-500 */
-    --color-danger: 239 68 68; /* Red-500 */
-    --color-warning: 234 179 8; /* Yellow-500 */
-    --color-info: 59 130 246; /* Blue-500 */
+    --color-success: 40 167 69; /* #28A745 - matches ti-theme-orange */
+    --color-danger: 220 53 69; /* #DC3545 - matches ti-theme-orange */
+    --color-warning: 255 193 7; /* #FFC107 - matches ti-theme-orange */
+    --color-info: 23 162 184; /* #17A2B8 - matches ti-theme-orange */
 
-    --color-text: 17 24 39; /* Gray-900 */
-    --color-text-muted: 107 114 128; /* Gray-500 */
+    --color-text: 33 37 41; /* Gray-900 #212529 */
+    --color-text-muted: 108 117 125; /* Gray-600 #6c757d */
 
     --color-body: 255 255 255; /* White */
-    --color-surface: 249 250 251; /* Gray-50 */
-    --color-border: 229 231 235; /* Gray-200 */
+    --color-surface: 248 249 250; /* Gray-100 #f8f9fa */
+    --color-border: 233 236 239; /* Gray-200 #e9ecef */
 }
 
 /* CSS Variables - Dark Mode */
 .dark {
-    --color-primary: 249 115 22; /* Orange-500 */
-    --color-primary-light: 251 146 60; /* Orange-400 */
-    --color-primary-dark: 234 88 12; /* Orange-600 */
+    /* Primary: Same base but adjusted for dark mode visibility */
+    --color-primary: 255 73 0;
+    --color-primary-light: 255 138 101;
+    --color-primary-dark: 204 58 0;
+
+    /* Primary scale for dark mode */
+    --color-primary-50: 255 247 244;
+    --color-primary-100: 255 229 219;
+    --color-primary-400: 255 138 101;
+    --color-primary-900: 51 15 0; /* Darker for dark mode backgrounds */
 
     --color-secondary: 156 163 175; /* Gray-400 */
     --color-secondary-light: 209 213 219; /* Gray-300 */
     --color-secondary-dark: 107 114 128; /* Gray-500 */
 
-    --color-success: 34 197 94; /* Green-500 */
-    --color-danger: 239 68 68; /* Red-500 */
-    --color-warning: 234 179 8; /* Yellow-500 */
-    --color-info: 59 130 246; /* Blue-500 */
+    --color-success: 40 167 69;
+    --color-danger: 220 53 69;
+    --color-warning: 255 193 7;
+    --color-info: 23 162 184;
 
-    --color-text: 243 244 246; /* Gray-100 */
-    --color-text-muted: 156 163 175; /* Gray-400 */
+    --color-text: 248 249 250; /* Gray-100 */
+    --color-text-muted: 173 181 189; /* Gray-500 #adb5bd */
 
-    --color-body: 17 24 39; /* Gray-900 */
-    --color-surface: 31 41 55; /* Gray-800 */
-    --color-border: 55 65 81; /* Gray-700 */
+    --color-body: 33 37 41; /* Gray-900 */
+    --color-surface: 52 58 64; /* Gray-800 #343a40 */
+    --color-border: 73 80 87; /* Gray-700 #495057 */
 }
 
 /* View Transitions API */
@@ -65,6 +79,15 @@
 
     body {
         @apply bg-body text-text transition-colors duration-200;
+    }
+
+    /* Hide native select arrow for custom styling */
+    select.appearance-none {
+        background-image: none;
+    }
+
+    select.appearance-none::-ms-expand {
+        display: none;
     }
 }
 
@@ -129,4 +152,5 @@
     .badge-info {
         @apply bg-info/10 text-info;
     }
+
 }

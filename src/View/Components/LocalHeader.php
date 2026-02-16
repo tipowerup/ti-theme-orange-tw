@@ -88,7 +88,7 @@ final class LocalHeader extends Component
     }
 
     #[Override]
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View
     {
         Assets::addCss('igniter.local::/css/starrating.css', 'starrating-css');
         Assets::addJs('igniter.local::/js/starrating.js', 'starrating-js');

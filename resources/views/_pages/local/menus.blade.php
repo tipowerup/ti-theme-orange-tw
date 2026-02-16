@@ -20,10 +20,10 @@ hideFooter: 1
             <a
                 href="{{ page_url('locations') }}"
                 wire:navigate
-                class="inline-flex items-center text-text-muted dark:text-text-muted hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                class="inline-flex items-center text-sm font-medium text-text-muted dark:text-text-muted hover:text-primary dark:hover:text-primary transition-colors"
             >
-                <i class="fa fa-arrow-left mr-2"></i>
-                Back to Locations
+                <i class="fa fa-exchange-alt mr-2"></i>
+                @lang('tipowerup.orange-tw::default.local_header.switch_location')
             </a>
         </div>
 
@@ -32,17 +32,21 @@ hideFooter: 1
                 <x-tipowerup-orange-tw::local-header/>
             </div>
 
-            <div class="flex justify-end">
-                <div class="bg-surface dark:bg-surface border border-border dark:border-border rounded-lg p-4 w-full lg:w-auto">
-                    <x-tipowerup-orange-tw::fulfillment/>
-                </div>
+            <div class="flex items-center justify-end">
+                <x-tipowerup-orange-tw::fulfillment/>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Category Navigation (Sticky) -->
-<div class="sticky top-0 z-40 bg-body dark:bg-surface border-b border-border dark:border-border shadow-sm">
+<!-- Category Navigation (Sticky - dynamic position based on navbar) -->
+<div
+    x-data="{ navbarVisible: true }"
+    @navbar-show.window="navbarVisible = true"
+    @navbar-hide.window="navbarVisible = false"
+    class="sticky z-40 bg-body/95 dark:bg-surface/95 backdrop-blur-sm border-b border-border dark:border-border shadow-sm transition-[top] duration-300"
+    :class="navbarVisible ? 'top-[72px]' : 'top-0'"
+>
     <div class="container mx-auto px-4">
         <x-tipowerup-orange-tw::category-list/>
     </div>
@@ -57,8 +61,16 @@ hideFooter: 1
         </div>
 
         <!-- Cart Sidebar (Desktop Only) -->
-        <div class="hidden lg:block">
-            <div class="sticky top-32">
+        <div
+            class="hidden lg:block"
+            x-data="{ navbarVisible: true }"
+            @navbar-show.window="navbarVisible = true"
+            @navbar-hide.window="navbarVisible = false"
+        >
+            <div
+                class="sticky transition-[top] duration-300"
+                :style="{ top: navbarVisible ? '140px' : '68px' }"
+            >
                 <div class="bg-body dark:bg-surface border border-border dark:border-border rounded-lg overflow-hidden shadow-sm">
                     <livewire:tipowerup-orange-tw::cart-box/>
                 </div>

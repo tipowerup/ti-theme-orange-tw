@@ -24,7 +24,7 @@ final class MenuItemList extends Component
 
     public string $sortOrder = 'menu_priority asc';
 
-    public bool $showThumb = true;
+    public bool $showThumb = false;
 
     public int $menuThumbWidth = 95;
 
@@ -115,16 +115,12 @@ final class MenuItemList extends Component
         $this->selectedCategorySlug = request()->route()->parameter('category', '');
     }
 
-    public function onAddToCart(int $menuId, int $quantity, bool $openModal = false): void
+    public function onAddToCart(int $menuId, int $quantity): void
     {
-        if ($openModal) {
-            $this->dispatch('openModal', component: 'tipowerup-orange-tw::cart-item-modal', arguments: [
-                'menuId' => $menuId,
-                'quantity' => $quantity,
-            ]);
-        } else {
-            $this->dispatch('cart-box:add-item', menuId: $menuId, quantity: $quantity);
-        }
+        $this->dispatch('openModal', component: 'tipowerup-orange-tw::cart-item-modal', arguments: [
+            'menuId' => $menuId,
+            'quantity' => $quantity,
+        ]);
     }
 
     protected function loadList(): ListMenuItems

@@ -12,7 +12,7 @@
             </h2>
             <button
                 type="button"
-                @click="$dispatch('hideModal')"
+                @click="$dispatch('hide-modal')"
                 class="text-text-muted hover:text-text dark:hover:text-text transition-colors"
                 aria-label="Close"
             >
@@ -102,7 +102,7 @@
                                                 value="{{ $optionValue->menu_option_value_id }}"
                                                 data-option-price="{{ $optionValue->price }}"
                                                 class="w-4 h-4 text-primary-600 focus:ring-primary-500"
-                                                @change="$root.calculateTotal()"
+                                                @change="calculateTotal()"
                                             />
                                             <span class="ml-3 flex-1 text-text dark:text-text">
                                                 {{ $optionValue->name }}
@@ -130,7 +130,7 @@
                                                 value="{{ $optionValue->menu_option_value_id }}"
                                                 data-option-price="{{ $optionValue->price }}"
                                                 class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500 dark:bg-surface"
-                                                @change="$root.calculateTotal()"
+                                                @change="calculateTotal()"
                                             />
                                             <span class="ml-3 flex-1 text-text dark:text-text">
                                                 {{ $optionValue->name }}
@@ -153,7 +153,7 @@
                                     <select
                                         wire:model="menuOptions.{{ $index }}.option_values"
                                         class="w-full px-4 py-2 border border-border dark:border-border rounded-lg bg-body dark:bg-surface text-text dark:text-text focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                                        @change="$root.calculateTotal()"
+                                        @change="calculateTotal()"
                                     >
                                         <option value="">@lang('tipowerup.orange-tw::default.menu.select_option')</option>
                                         @foreach ($optionValues as $optionValue)
@@ -202,53 +202,62 @@
         </div>
 
         {{-- Modal Footer --}}
-        <div class="p-6 border-t border-border dark:border-border">
-            <div class="flex items-center gap-4">
+        <div class="p-4 border-t border-border dark:border-border">
+            <div class="flex items-center justify-between gap-3">
                 {{-- Quantity Selector --}}
-                <div class="flex items-center gap-2">
-                    <button
-                        x-on:click="decrementQuantity()"
-                        type="button"
-                        class="w-10 h-10 flex items-center justify-center rounded-full border-2 border-border dark:border-border text-text dark:text-text hover:border-primary-500 hover:text-primary-500 transition-colors"
-                        aria-label="@lang('tipowerup.orange-tw::default.cart.decrease_quantity')"
-                    >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
-                        </svg>
-                    </button>
-                    <input
-                        x-model="quantity"
-                        type="text"
-                        inputmode="numeric"
-                        pattern="[0-9]*"
-                        readonly
-                        class="w-16 text-center bg-transparent border-0 text-lg font-semibold text-text dark:text-text"
-                    />
-                    <button
-                        x-on:click="incrementQuantity()"
-                        type="button"
-                        class="w-10 h-10 flex items-center justify-center rounded-full border-2 border-border dark:border-border text-text dark:text-text hover:border-primary-500 hover:text-primary-500 transition-colors"
-                        aria-label="@lang('tipowerup.orange-tw::default.cart.increase_quantity')"
-                    >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                    </button>
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-1">
+                        <button
+                            x-on:click="decrementQuantity()"
+                            type="button"
+                            class="w-9 h-9 flex items-center justify-center rounded-full border-2 border-border dark:border-border text-text dark:text-text hover:border-primary-500 hover:text-primary-500 transition-colors"
+                            aria-label="@lang('tipowerup.orange-tw::default.cart.decrease_quantity')"
+                        >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                            </svg>
+                        </button>
+                        <input
+                            x-model="quantity"
+                            type="text"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                            readonly
+                            class="w-10 text-center bg-transparent border-0 text-base font-semibold text-text dark:text-text"
+                        />
+                        <button
+                            x-on:click="incrementQuantity()"
+                            type="button"
+                            class="w-9 h-9 flex items-center justify-center rounded-full border-2 border-border dark:border-border text-text dark:text-text hover:border-primary-500 hover:text-primary-500 transition-colors"
+                            aria-label="@lang('tipowerup.orange-tw::default.cart.increase_quantity')"
+                        >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    {{-- Current quantity in cart --}}
+                    @if($cartItem)
+                        <span class="text-sm text-text-muted dark:text-text-muted">
+                            {{ $cartItem->qty }} @lang('tipowerup.orange-tw::default.cart.in_cart')
+                        </span>
+                    @endif
                 </div>
 
                 {{-- Add/Update Button --}}
                 <button
                     type="submit"
                     data-attach-loading
-                    class="flex-1 px-6 py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-between"
+                    class="px-5 py-2.5 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors flex items-center gap-3"
                 >
-                    <span>
+                    <span class="whitespace-nowrap text-sm">
                         {!! $cartItem
                             ? lang('igniter.cart::default.button_update')
                             : lang('igniter.cart::default.button_add_to_order')
                         !!}
                     </span>
-                    <span x-text="total" class="font-normal"></span>
+                    <span x-text="total" class="font-normal text-sm"></span>
                 </button>
             </div>
         </div>

@@ -1,7 +1,8 @@
 <div
     x-data="{ show: false }"
-    x-on:showActiveModal.window="show = true"
-    x-on:hideModal.window="show = false; $wire.call('resetModal')"
+    x-on:show-active-modal.window="show = true"
+    x-on:hide-modal.window="show = false; $wire.call('resetModal')"
+    x-on:close-modal.window="show = false; $wire.call('resetModal')"
 >
     <div
         x-show="show"
@@ -19,7 +20,7 @@
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
             class="fixed inset-0 bg-gray-900/75 dark:bg-gray-950/90 backdrop-blur-sm"
-            @click="show = false; $dispatch('hideModal')"
+            @click="show = false; $dispatch('hide-modal')"
         ></div>
 
         {{-- Modal Dialog --}}
@@ -32,7 +33,7 @@
                 x-transition:leave="transition ease-in duration-200"
                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                @click.away="show = false; $dispatch('hideModal')"
+                @click.away="show = false; $dispatch('hide-modal')"
                 class="relative w-full max-w-2xl bg-body dark:bg-surface rounded-lg shadow-xl overflow-hidden"
             >
                 @if ($component)

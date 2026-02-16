@@ -78,7 +78,7 @@
                     >
                         <div class="mb-1">
                             @if ($cartItem->qty > 1)
-                                <span class="font-bold text-text dark:text-text">{{ $cartItem->qty }}x</span>
+                                <span class="font-bold text-text dark:text-text">{{ $cartItem->qty }} x</span>
                             @endif
                             <span class="text-text dark:text-text">{{ $cartItem->name }}</span>
                         </div>
@@ -96,7 +96,7 @@
                     <div class="flex-1">
                         <div class="mb-1">
                             @if ($cartItem->qty > 1)
-                                <span class="font-bold text-text dark:text-text">{{ $cartItem->qty }}x</span>
+                                <span class="font-bold text-text dark:text-text">{{ $cartItem->qty }} x</span>
                             @endif
                             <span class="text-text dark:text-text">{{ $cartItem->name }}</span>
                         </div>

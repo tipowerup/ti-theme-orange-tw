@@ -4,7 +4,6 @@ layout: default
 permalink: /account/reservation/:hash
 security: customer
 
-'[tipowerup-orange-tw::account-menu]': []
 '[tipowerup-orange-tw::leave-review]':
     type: reservation
 ---

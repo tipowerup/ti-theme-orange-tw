@@ -160,6 +160,7 @@ final class Checkout extends Component
         return view('tipowerup-orange-tw::livewire.checkout', [
             'customer' => Auth::customer(),
             'order' => $order = $this->getOrder(),
+            'cart' => $this->cartManager->getCart(),
             'locationCurrent' => Location::current(),
             'locationOrderType' => Location::getOrderTypes()->get($order->order_type),
         ]);

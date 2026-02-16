@@ -1,34 +1,38 @@
-<button
-    type="button"
-    @click="$dispatch('open-modal', 'fulfillment-modal')"
-    class="w-full text-left hover:bg-surface dark:hover:bg-surface rounded-lg p-2 transition-colors"
->
-    <div class="space-y-1">
-        <!-- Order Type -->
-        <div class="flex items-center space-x-2">
-            @if($activeOrderType?->getCode() === 'delivery')
-                <i class="fa fa-truck text-primary-600 dark:text-primary-400"></i>
-                <span class="font-medium text-text dark:text-text">Delivery</span>
-            @else
-                <i class="fa fa-shopping-bag text-primary-600 dark:text-primary-400"></i>
-                <span class="font-medium text-text dark:text-text">Pickup</span>
+<div class="flex items-center text-sm">
+    <i class="far fa-clock text-text-muted mr-2"></i>
+    <span class="text-text dark:text-text">
+        @if (!$activeOrderType || $activeOrderType->isDisabled())
+            @lang('igniter.cart::default.text_is_closed')
+        @else
+            {{ $activeOrderType->getLabel() }} ·
+            @if ($isAsap)
+                @if ($activeOrderType->getSchedule()->isOpen())
+                    @if ($activeOrderType->getLeadTime())
+                        {!! sprintf(lang('igniter.local::default.text_in_min'), $activeOrderType->getLeadTime()) !!}
+                    @else
+                        ASAP
+                    @endif
+                @elseif ($activeOrderType->getSchedule()->isOpening())
+                    {!! sprintf(lang('igniter.local::default.text_starts'), make_carbon($activeOrderType->getSchedule()->getOpenTime())->isoFormat(lang('system::lang.moment.day_time_format_short'))) !!}
+                @elseif ($activeOrderType->getSchedule()->isClosed())
+                    @lang('igniter.cart::default.text_is_closed')
+                @endif
+            @elseif ($activeOrderType->getSchedule()->isOpen() || $activeOrderType->getSchedule()->isOpening())
+                @if($orderDateTime->isToday())
+                    @lang('system::lang.date.today') {{ $orderDateTime->isoFormat(lang('system::lang.moment.time_format')) }}
+                @elseif($orderDateTime->isTomorrow())
+                    @lang('system::lang.date.tomorrow') {{ $orderDateTime->isoFormat(lang('system::lang.moment.time_format')) }}
+                @else
+                    {{ $orderDateTime->isoFormat(lang('system::lang.moment.day_time_format')) }}
+                @endif
             @endif
-            <i class="fa fa-chevron-down text-xs text-text-muted ml-auto"></i>
-        </div>
-
-        <!-- Time -->
-        <div class="text-sm text-text-muted dark:text-text-muted">
-            @if($isAsap)
-                <span class="flex items-center">
-                    <i class="far fa-clock mr-1"></i>
-                    ASAP
-                </span>
-            @else
-                <span class="flex items-center">
-                    <i class="far fa-clock mr-1"></i>
-                    {{ $orderDateTime->format('M d, g:i A') }}
-                </span>
-            @endif
-        </div>
-    </div>
-</button>
+        @endif
+    </span>
+    @unless($previewMode || !$activeOrderType || $activeOrderType->isDisabled())
+        <button
+            type="button"
+            @click="$dispatch('open-modal', 'fulfillment-modal')"
+            class="ml-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
+        >@lang('igniter.local::default.search.text_change')</button>
+    @endunless
+</div>

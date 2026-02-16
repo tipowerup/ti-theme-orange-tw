@@ -10,8 +10,8 @@ use Igniter\Cart\Classes\CartManager;
 use Igniter\Local\Facades\Location;
 use Igniter\Main\Traits\ConfigurableComponent;
 use Igniter\Orange\Contracts\ModalComponent;
-use Igniter\Orange\Data\MenuItemData;
 use Illuminate\Validation\ValidationException;
+use TiPowerUp\OrangeTw\Data\MenuItemData;
 
 final class CartItemModal extends ModalComponent
 {

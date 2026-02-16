@@ -16,6 +16,8 @@ final class Slider extends Component
 
     public array|Collection $slides = [];
 
+    public bool $useDemoSlides = false;
+
     public function __construct(
         public string $code = 'home-slider',
         public string $height = '60vh',
@@ -83,7 +85,7 @@ final class Slider extends Component
     #[Override]
     public function shouldRender(): bool
     {
-        return count($this->slides()) > 0;
+        return count($this->slides()) > 0 || $this->useDemoSlides;
     }
 
     #[Override]
@@ -91,6 +93,8 @@ final class Slider extends Component
     {
         return view('tipowerup-orange-tw::components.slider', [
             'slides' => $this->slides,
+            'useDemoSlides' => $this->useDemoSlides,
+            'demoSlides' => $this->demoSlides(),
         ]);
     }
 
@@ -101,6 +105,44 @@ final class Slider extends Component
             $this->slides = $slider->images;
         }
 
+        if (empty($this->slides) || count($this->slides) === 0) {
+            $this->useDemoSlides = true;
+        }
+
         return $this->slides;
+    }
+
+    /**
+     * Get demo slides when no slider is configured.
+     */
+    protected function demoSlides(): array
+    {
+        return [
+            [
+                'image' => asset('vendor/tipowerup-orange-tw/images/slides/slide-1.jpg'),
+                'title' => lang('tipowerup.orange-tw::default.slider.demo_slide_1_title'),
+                'description' => lang('tipowerup.orange-tw::default.slider.demo_slide_1_text'),
+            ],
+            [
+                'image' => asset('vendor/tipowerup-orange-tw/images/slides/slide-2.jpg'),
+                'title' => lang('tipowerup.orange-tw::default.slider.demo_slide_2_title'),
+                'description' => lang('tipowerup.orange-tw::default.slider.demo_slide_2_text'),
+            ],
+            [
+                'image' => asset('vendor/tipowerup-orange-tw/images/slides/slide-3.jpg'),
+                'title' => lang('tipowerup.orange-tw::default.slider.demo_slide_3_title'),
+                'description' => lang('tipowerup.orange-tw::default.slider.demo_slide_3_text'),
+            ],
+            [
+                'image' => asset('vendor/tipowerup-orange-tw/images/slides/slide-4.jpg'),
+                'title' => lang('tipowerup.orange-tw::default.slider.demo_slide_4_title'),
+                'description' => lang('tipowerup.orange-tw::default.slider.demo_slide_4_text'),
+            ],
+            [
+                'image' => asset('vendor/tipowerup-orange-tw/images/slides/slide-5.jpg'),
+                'title' => lang('tipowerup.orange-tw::default.slider.demo_slide_5_title'),
+                'description' => lang('tipowerup.orange-tw::default.slider.demo_slide_5_text'),
+            ],
+        ];
     }
 }

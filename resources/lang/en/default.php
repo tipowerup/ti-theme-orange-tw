@@ -108,6 +108,7 @@ return [
         'delete_confirm' => 'Are you sure you want to delete this address?',
         'set_default' => 'Set as Default',
         'default_badge' => 'Default',
+        'empty_message' => 'Click the button above to add your first address.',
     ],
 
     // Fulfillment Modal
@@ -217,6 +218,14 @@ return [
         'locations' => 'Locations',
         'cart' => 'Cart',
         'account' => 'Account',
+        'my_account' => 'My Account',
+        'login' => 'Login',
+        'register' => 'Register',
+        'logout' => 'Logout',
+        'reservation' => 'Reservation',
+        'reservations' => 'My Reservations',
+        'recent_orders' => 'Recent Orders',
+        'address_book' => 'Address Book',
         'light_mode' => 'Light Mode',
         'dark_mode' => 'Dark Mode',
     ],
@@ -244,6 +253,7 @@ return [
         'browse_menu' => 'Browse Menu',
         'decrease_quantity' => 'Decrease quantity',
         'increase_quantity' => 'Increase quantity',
+        'in_cart' => 'in cart',
     ],
 
     // Checkout
@@ -257,6 +267,11 @@ return [
         'secure_checkout' => 'Secure Checkout',
         'order_summary' => 'Order Summary',
         'not_available' => 'N/A',
+        'text_logged_in' => 'Already have an account? <a href="%s" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300" wire:navigate>Sign in</a>',
+        'text_logged_out' => 'Welcome back, <b>%s</b>! <a href="%s" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">Logout</a>',
+        'button_confirm' => 'Confirm Order',
+        'button_payment' => 'Continue to Payment',
+        'no_delivery_address' => 'Your delivery address will be determined from your location.',
     ],
 
     // Order
@@ -283,9 +298,25 @@ return [
         'get_started' => 'Get Started Now',
     ],
 
+    // Slider
+    'slider' => [
+        'order_now' => 'Order Now',
+        'demo_slide_1_title' => 'Delicious Food Delivered Fresh',
+        'demo_slide_1_text' => 'Experience the finest cuisine delivered right to your doorstep',
+        'demo_slide_2_title' => 'Fresh Ingredients, Bold Flavors',
+        'demo_slide_2_text' => 'Every dish crafted with passion and the freshest ingredients',
+        'demo_slide_3_title' => 'Fast & Reliable Delivery',
+        'demo_slide_3_text' => 'Your favorite meals delivered hot and fresh, every time',
+        'demo_slide_4_title' => 'Dine In or Take Away',
+        'demo_slide_4_text' => 'Enjoy our delicious menu your way, anywhere you are',
+        'demo_slide_5_title' => 'Taste the Difference',
+        'demo_slide_5_text' => 'Quality food made with love, just for you',
+    ],
+
     // Booking
     'booking' => [
         'start_again' => 'Start again',
+        'select_time' => 'Select a time',
     ],
 
     // Pagination
@@ -309,6 +340,7 @@ return [
 
     // Menu
     'menu' => [
+        'all_categories' => 'All',
         'no_items_title' => 'No menu items found',
         'no_items_text' => 'Try adjusting your search or check back later',
         'select_option' => 'Select an option',
@@ -332,5 +364,20 @@ return [
         'loading_locations' => 'Loading locations...',
         'no_locations_found' => 'No locations found',
         'try_different_search' => 'Try a different search or adjust your filters',
+    ],
+
+    // Local Header
+    'local_header' => [
+        'open_until' => 'Open until :time',
+        'opens_at' => 'Opens at :time',
+        'closed' => 'Closed',
+        'delivery_available' => 'Delivery',
+        'pickup_available' => 'Pickup',
+        'switch_location' => 'Switch Location',
+        'info_title' => 'Location Info',
+        'opening_hours' => 'Opening Hours',
+        'reviews' => 'reviews',
+        'based_on_reviews' => 'Based on :count reviews',
+        'view_all_reviews' => 'View All Reviews',
     ],
 ];

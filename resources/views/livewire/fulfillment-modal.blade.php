@@ -35,13 +35,14 @@
         >
             <h3 class="text-lg font-semibold text-text dark:text-text mb-4">@lang('tipowerup.orange-tw::default.fulfillment.select_type')</h3>
 
-            <form wire:submit="updateFulfillment">
+            <form wire:submit="onConfirm">
                 <div class="space-y-4">
                     <!-- Order Type -->
                     <div>
                         <label class="block text-sm font-medium text-text dark:text-text mb-2">@lang('tipowerup.orange-tw::default.fulfillment.select_type')</label>
                         <div class="grid grid-cols-2 gap-3">
                             @foreach($orderTypes as $type)
+                                <div wire:key="order-type-{{ $type->getCode() }}">
                                 <label
                                     @class([
                                         'flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition-colors',
@@ -68,6 +69,7 @@
                                         'text-text dark:text-text' => $orderType !== $type->getCode(),
                                     ])>{{ $type->getLabel() }}</span>
                                 </label>
+                                </div>
                             @endforeach
                         </div>
                     </div>
@@ -77,53 +79,58 @@
                         <label class="block text-sm font-medium text-text dark:text-text mb-2">@lang('tipowerup.orange-tw::default.fulfillment.select_time')</label>
                         <div class="space-y-3">
                             <label class="flex items-center p-3 border-2 rounded-lg cursor-pointer transition-colors
-                                {{ $orderTime === 'asap' ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/30' : 'border-border dark:border-border hover:border-border dark:hover:border-border' }}">
+                                {{ $isAsap ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/30' : 'border-border dark:border-border hover:border-border dark:hover:border-border' }}">
                                 <input
                                     type="radio"
-                                    wire:model.live="orderTime"
-                                    value="asap"
+                                    wire:model.live="isAsap"
+                                    value="1"
                                     class="sr-only"
                                 />
-                                <i class="far fa-clock mr-2 {{ $orderTime === 'asap' ? 'text-primary-600 dark:text-primary-400' : 'text-text-muted' }}"></i>
-                                <span class="{{ $orderTime === 'asap' ? 'text-primary-600 dark:text-primary-400 font-medium' : 'text-text dark:text-text' }}">@lang('tipowerup.orange-tw::default.fulfillment.asap')</span>
+                                <i class="far fa-clock mr-2 {{ $isAsap ? 'text-primary-600 dark:text-primary-400' : 'text-text-muted' }}"></i>
+                                <span class="{{ $isAsap ? 'text-primary-600 dark:text-primary-400 font-medium' : 'text-text dark:text-text' }}">@lang('tipowerup.orange-tw::default.fulfillment.asap')</span>
                             </label>
 
                             <label class="flex items-center p-3 border-2 rounded-lg cursor-pointer transition-colors
-                                {{ $orderTime === 'later' ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/30' : 'border-border dark:border-border hover:border-border dark:hover:border-border' }}">
+                                {{ !$isAsap ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/30' : 'border-border dark:border-border hover:border-border dark:hover:border-border' }}">
                                 <input
                                     type="radio"
-                                    wire:model.live="orderTime"
-                                    value="later"
+                                    wire:model.live="isAsap"
+                                    value="0"
                                     class="sr-only"
                                 />
-                                <i class="far fa-calendar mr-2 {{ $orderTime === 'later' ? 'text-primary-600 dark:text-primary-400' : 'text-text-muted' }}"></i>
-                                <span class="{{ $orderTime === 'later' ? 'text-primary-600 dark:text-primary-400 font-medium' : 'text-text dark:text-text' }}">@lang('tipowerup.orange-tw::default.fulfillment.schedule')</span>
+                                <i class="far fa-calendar mr-2 {{ !$isAsap ? 'text-primary-600 dark:text-primary-400' : 'text-text-muted' }}"></i>
+                                <span class="{{ !$isAsap ? 'text-primary-600 dark:text-primary-400 font-medium' : 'text-text dark:text-text' }}">@lang('tipowerup.orange-tw::default.fulfillment.schedule')</span>
                             </label>
                         </div>
                     </div>
 
-                    <!-- Date and Time Selection (shown when 'later' is selected) -->
-                    @if($orderTime === 'later')
+                    <!-- Date and Time Selection (shown when not ASAP) -->
+                    @if(!$isAsap)
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-sm font-medium text-text dark:text-text mb-1">Date</label>
-                                <input
-                                    type="date"
-                                    wire:model="orderDate"
+                                <select
+                                    wire:model.live="orderDate"
                                     class="w-full px-3 py-2 border border-border dark:border-border rounded-lg bg-body dark:bg-surface text-text dark:text-text focus:ring-2 focus:ring-primary-500"
-                                    min="{{ now()->format('Y-m-d') }}"
-                                />
+                                >
+                                    <option value="">@lang('tipowerup.orange-tw::default.fulfillment.select_time')</option>
+                                    @foreach($timeslotDates as $dateKey => $dateValue)
+                                        <option value="{{ $dateKey }}">{{ $dateValue }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-text dark:text-text mb-1">Time</label>
                                 <select
-                                    wire:model="orderTimeSlot"
+                                    wire:model="orderTime"
                                     class="w-full px-3 py-2 border border-border dark:border-border rounded-lg bg-body dark:bg-surface text-text dark:text-text focus:ring-2 focus:ring-primary-500"
                                 >
                                     <option value="">@lang('tipowerup.orange-tw::default.fulfillment.select_time')</option>
-                                    @foreach($timeSlots as $slot)
-                                        <option value="{{ $slot }}">{{ \Carbon\Carbon::parse($slot)->format('g:i A') }}</option>
-                                    @endforeach
+                                    @if($orderDate && isset($timeslotTimes[$orderDate]))
+                                        @foreach($timeslotTimes[$orderDate] as $timeKey => $timeValue)
+                                            <option value="{{ $timeKey }}">{{ $timeValue }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                         </div>

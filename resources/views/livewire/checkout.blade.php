@@ -2,13 +2,13 @@
     {{-- Header --}}
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-text dark:text-text mb-2">
-            Checkout - {{ $locationCurrent->getName() }}
+            @lang('tipowerup.orange-tw::default.checkout.title') - {{ $locationCurrent->getName() }}
         </h1>
 
         <div class="text-text-muted dark:text-text-muted">
             {!! $customer
-                ? sprintf('Welcome back, %s! <a href="%s" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">Logout</a>', e($customer->first_name), url('logout'))
-                : sprintf('Have an account? <a href="%s" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300" wire:navigate>Sign in</a>', page_url('account.login'))
+                ? sprintf(lang('tipowerup.orange-tw::default.checkout.text_logged_out'), e($customer->first_name), url('logout'))
+                : sprintf(lang('tipowerup.orange-tw::default.checkout.text_logged_in'), page_url('account.login'))
             !!}
         </div>
     </div>
@@ -35,7 +35,7 @@
 
                         {{-- Your Details --}}
                         <div class="p-6 border-b border-border dark:border-border">
-                            <h2 class="text-xl font-semibold text-text dark:text-text mb-4">Your Details</h2>
+                            <h2 class="text-xl font-semibold text-text dark:text-text mb-4">@lang('tipowerup.orange-tw::default.checkout.your_details')</h2>
                             @include('tipowerup-orange-tw::includes.checkout.fields', [
                                 'fields' => $this->formTabFields('details'),
                             ])
@@ -44,10 +44,7 @@
                         {{-- Order Type & Delivery --}}
                         <div class="p-6 border-b border-border dark:border-border">
                             <div class="p-4 bg-surface dark:bg-surface/50 rounded-lg mb-4">
-                                {{-- Fulfillment component would go here --}}
-                                <p class="text-text dark:text-text">
-                                    Order Type: <span class="font-semibold">{{ ucfirst($order->order_type) }}</span>
-                                </p>
+                                <x-tipowerup-orange-tw::fulfillment />
                             </div>
 
                             @if($order->isDeliveryType())
@@ -64,7 +61,7 @@
                     @elseif($isTwoPageCheckout && $checkoutStep === $this::STEP_PAY)
                         {{-- Two-page checkout: Step 2 - Payment --}}
                         <div class="p-6 border-b border-border dark:border-border">
-                            <h2 class="text-xl font-semibold text-text dark:text-text mb-4">Payment Method</h2>
+                            <h2 class="text-xl font-semibold text-text dark:text-text mb-4">@lang('tipowerup.orange-tw::default.checkout.payment_method')</h2>
                             @include('tipowerup-orange-tw::includes.checkout.fields', [
                                 'fields' => $this->formTabFields('payments'),
                             ])
@@ -80,7 +77,7 @@
                         {{-- One-page checkout --}}
                         {{-- Your Details --}}
                         <div class="p-6 border-b border-border dark:border-border">
-                            <h2 class="text-xl font-semibold text-text dark:text-text mb-4">Your Details</h2>
+                            <h2 class="text-xl font-semibold text-text dark:text-text mb-4">@lang('tipowerup.orange-tw::default.checkout.your_details')</h2>
                             @include('tipowerup-orange-tw::includes.checkout.fields', [
                                 'fields' => $this->formTabFields('details'),
                             ])
@@ -89,10 +86,7 @@
                         {{-- Order Type & Delivery --}}
                         <div class="p-6 border-b border-border dark:border-border">
                             <div class="p-4 bg-surface dark:bg-surface/50 rounded-lg mb-4">
-                                {{-- Fulfillment component would go here --}}
-                                <p class="text-text dark:text-text">
-                                    Order Type: <span class="font-semibold">{{ ucfirst($order->order_type) }}</span>
-                                </p>
+                                <x-tipowerup-orange-tw::fulfillment />
                             </div>
 
                             @if($order->isDeliveryType())
@@ -109,7 +103,7 @@
 
                         {{-- Payment --}}
                         <div class="p-6 border-b border-border dark:border-border">
-                            <h2 class="text-xl font-semibold text-text dark:text-text mb-4">Payment Method</h2>
+                            <h2 class="text-xl font-semibold text-text dark:text-text mb-4">@lang('tipowerup.orange-tw::default.checkout.payment_method')</h2>
                             @include('tipowerup-orange-tw::includes.checkout.fields', [
                                 'fields' => $this->formTabFields('payments'),
                             ])
@@ -132,14 +126,14 @@
                             class="w-full px-6 py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <span wire:loading.remove>
-                                @lang($isTwoPageCheckout && $checkoutStep === $this::STEP_PAY ? 'igniter.orange::default.button_confirm' : 'igniter.orange::default.button_payment')
+                                @lang($isTwoPageCheckout && $checkoutStep !== $this::STEP_PAY ? 'tipowerup.orange-tw::default.checkout.button_payment' : 'tipowerup.orange-tw::default.checkout.button_confirm')
                             </span>
-                            <span wire:loading class="flex items-center gap-2">
+                            <span wire:loading class="inline-flex items-center gap-2">
                                 <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                Processing...
+                                <span>@lang('tipowerup.orange-tw::default.common.processing')</span>
                             </span>
                         </button>
                     </div>

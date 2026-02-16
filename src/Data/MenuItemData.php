@@ -76,7 +76,7 @@ class MenuItemData
         return $this->model->hasMedia('thumb');
     }
 
-    public function getThumb(array $options = [], ?string $tag = null)
+    public function getThumb(array $options = [], ?string $tag = null): string
     {
         return $this->model->getThumbOrBlank($options, $tag);
     }
