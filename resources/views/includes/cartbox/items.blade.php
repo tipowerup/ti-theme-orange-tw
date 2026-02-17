@@ -1,11 +1,11 @@
 <div
-    class="cart-items mb-6"
+    class="cart-items mb-4"
     wire:loading.class="opacity-50"
 >
     <ul class="divide-y divide-border dark:divide-border">
         @foreach ($cart->content()->reverse() as $cartItem)
             <li
-                class="py-4 flex items-start gap-4"
+                class="py-3 flex items-start gap-3"
                 wire:key="cart-item-{{ $cartItem->rowId }}"
             >
                 {{-- Quantity Controls --}}
@@ -15,70 +15,28 @@
                             wire:click="onUpdateItemQuantity('{{ $cartItem->rowId }}', 'minus')"
                             wire:loading.class="opacity-50 pointer-events-none"
                             type="button"
-                            class="w-8 h-8 flex items-center justify-center rounded-full border-2 border-border dark:border-border text-text dark:text-text hover:border-primary-500 hover:text-primary-500 transition-colors"
+                            class="w-6 h-6 flex items-center justify-center rounded-full border border-border dark:border-border text-text dark:text-text hover:border-primary-500 hover:text-primary-500 transition-colors text-md font-medium leading-none"
                             aria-label="@lang('tipowerup.orange-tw::default.cart.decrease_quantity')"
-                        >
-                            <svg
-                                wire:loading.class="hidden"
-                                wire:target="onUpdateItemQuantity('{{ $cartItem->rowId }}', 'minus')"
-                                class="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
-                            </svg>
-                            <svg
-                                wire:loading
-                                wire:target="onUpdateItemQuantity('{{ $cartItem->rowId }}', 'minus')"
-                                class="animate-spin w-4 h-4"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                            >
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                        </button>
+                        >&minus;</button>
                         <button
                             wire:click="onUpdateItemQuantity('{{ $cartItem->rowId }}', 'plus')"
                             wire:loading.class="opacity-50 pointer-events-none"
                             type="button"
-                            class="w-8 h-8 flex items-center justify-center rounded-full border-2 border-border dark:border-border text-text dark:text-text hover:border-primary-500 hover:text-primary-500 transition-colors"
+                            class="w-6 h-6 flex items-center justify-center rounded-full border border-border dark:border-border text-text dark:text-text hover:border-primary-500 hover:text-primary-500 transition-colors text-md font-medium leading-none"
                             aria-label="@lang('tipowerup.orange-tw::default.cart.increase_quantity')"
-                        >
-                            <svg
-                                wire:loading.class="hidden"
-                                wire:target="onUpdateItemQuantity('{{ $cartItem->rowId }}', 'plus')"
-                                class="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                            </svg>
-                            <svg
-                                wire:loading
-                                wire:target="onUpdateItemQuantity('{{ $cartItem->rowId }}', 'plus')"
-                                class="animate-spin w-4 h-4"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                            >
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                        </button>
+                        >+</button>
                     </div>
 
-                    {{-- Item Details (Clickable) --}}
+                    {{-- Item Details (Clickable - opens modal for update) --}}
                     <button
                         class="flex-1 text-left"
                         data-toggle="orange-modal"
                         data-component="tipowerup-orange-tw::cart-item-modal"
                         data-arguments='{"menuId": {{ $cartItem->id }}, "rowId": "{{ $cartItem->rowId }}"}'
                     >
-                        <div class="mb-1">
+                        <div class="mb-0.5 text-sm">
                             @if ($cartItem->qty > 1)
-                                <span class="font-bold text-text dark:text-text">{{ $cartItem->qty }} x</span>
+                                <span class="font-bold text-text dark:text-text">{{ $cartItem->qty }} @lang('igniter.cart::default.text_times')</span>
                             @endif
                             <span class="text-text dark:text-text">{{ $cartItem->name }}</span>
                         </div>
@@ -86,7 +44,7 @@
                         @includeWhen($cartItem->hasOptions(), 'tipowerup-orange-tw::includes.cartbox.item-options', ['itemOptions' => $cartItem->options])
 
                         @if (!empty($cartItem->comment))
-                            <p class="text-sm text-text-muted dark:text-text-muted mt-2 italic">
+                            <p class="text-xs text-text-muted dark:text-text-muted mt-1 italic">
                                 "{{ $cartItem->comment }}"
                             </p>
                         @endif
@@ -94,9 +52,9 @@
                 @else
                     {{-- Preview Mode (Non-clickable) --}}
                     <div class="flex-1">
-                        <div class="mb-1">
+                        <div class="mb-0.5 text-sm">
                             @if ($cartItem->qty > 1)
-                                <span class="font-bold text-text dark:text-text">{{ $cartItem->qty }} x</span>
+                                <span class="font-bold text-text dark:text-text">{{ $cartItem->qty }} @lang('igniter.cart::default.text_times')</span>
                             @endif
                             <span class="text-text dark:text-text">{{ $cartItem->name }}</span>
                         </div>
@@ -104,7 +62,7 @@
                         @includeWhen($cartItem->hasOptions(), 'tipowerup-orange-tw::includes.cartbox.item-options', ['itemOptions' => $cartItem->options])
 
                         @if (!empty($cartItem->comment))
-                            <p class="text-sm text-text-muted dark:text-text-muted mt-2 italic">
+                            <p class="text-xs text-text-muted dark:text-text-muted mt-1 italic">
                                 "{{ $cartItem->comment }}"
                             </p>
                         @endif
@@ -112,9 +70,9 @@
                 @endunless
 
                 {{-- Price --}}
-                <div class="text-right shrink-0">
+                <div class="text-right shrink-0 text-sm">
                     @if ($cartItem->hasConditions())
-                        <div class="text-sm text-text-muted line-through">
+                        <div class="text-xs text-text-muted line-through">
                             {{ currency_format($cartItem->subtotalWithoutConditions()) }}
                         </div>
                     @endif

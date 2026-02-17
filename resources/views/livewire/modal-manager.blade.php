@@ -34,7 +34,7 @@
                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                 @click.away="show = false; $dispatch('hide-modal')"
-                class="relative w-full max-w-2xl bg-body dark:bg-surface rounded-lg shadow-xl overflow-hidden"
+                class="relative w-full max-w-lg bg-body dark:bg-surface rounded-lg shadow-xl overflow-hidden"
             >
                 @if ($component)
                     @livewire($component, $arguments, key($activeModal))

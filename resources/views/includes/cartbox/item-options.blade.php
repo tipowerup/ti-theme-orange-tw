@@ -1,19 +1,16 @@
-<div class="text-sm text-text-muted dark:text-text-muted mt-1">
-    @foreach ($itemOptions as $option)
-        @if ($option->values->isNotEmpty())
-            <div class="flex flex-wrap gap-1">
-                @foreach ($option->values as $value)
-                    <span class="inline-flex items-center">
-                        {{ $value->name }}
-                        @if ($value->price > 0)
-                            <span class="ml-1">(+{{ currency_format($value->price) }})</span>
-                        @endif
-                        @unless($loop->last)
-                            <span class="mx-1">,</span>
-                        @endunless
-                    </span>
-                @endforeach
-            </div>
-        @endif
+<ul class="text-xs text-text-muted dark:text-text-muted mt-0.5 space-y-0.5">
+    @foreach ($itemOptions as $itemOption)
+        <li class="text-text-muted dark:text-text-muted">{{ $itemOption->name }}</li>
+        @foreach ($itemOption->values as $optionValue)
+            <li>
+                @if ($optionValue->qty > 1)
+                    {{ $optionValue->qty }} @lang('igniter.cart::default.text_times')
+                @endif
+                {{ $optionValue->name }}
+                @if ($optionValue->price > 0)
+                    ({{ currency_format($optionValue->subtotal()) }})
+                @endif
+            </li>
+        @endforeach
     @endforeach
-</div>
+</ul>

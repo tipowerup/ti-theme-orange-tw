@@ -4,16 +4,22 @@ declare(strict_types=1);
 
 namespace TiPowerUp\OrangeTw\Livewire;
 
+use DateTime;
 use Exception;
 use Igniter\Cart\Classes\CartManager;
 use Igniter\Cart\Classes\CheckoutForm;
 use Igniter\Cart\Classes\OrderManager;
 use Igniter\Cart\Models\Order;
 use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Geolite\Contracts\GeoQueryInterface;
+use Igniter\Flame\Geolite\Facades\Geocoder;
+use Igniter\Flame\Geolite\GeoQuery;
 use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Traits\EventEmitter;
+use Igniter\Local\Classes\CoveredArea;
 use Igniter\Local\Facades\Location;
 use Igniter\Local\Models\Location as LocationModel;
+use Igniter\Local\Models\LocationArea;
 use Igniter\Main\Traits\ConfigurableComponent;
 use Igniter\Main\Traits\UsesPage;
 use Igniter\Orange\Actions\EnsureUniqueProcess;
@@ -82,6 +88,28 @@ final class Checkout extends Component
 
     public array $fields = [];
 
+    public string $addressSearchQuery = '';
+
+    public array $addressSuggestions = [];
+
+    public bool $isAddressSearching = false;
+
+    public string $geocoder = 'nominatim';
+
+    public bool $saveAddress = true;
+
+    public array $timeslotDates = [];
+
+    public array $timeslotTimes = [];
+
+    public string $orderType = '';
+
+    public bool $isAsap = true;
+
+    public string $orderDate = '';
+
+    public string $orderTime = '';
+
     protected CheckoutForm $checkoutForm;
 
     protected CartManager $cartManager;
@@ -89,6 +117,9 @@ final class Checkout extends Component
     protected OrderManager $orderManager;
 
     protected ?Order $order = null;
+
+    /** @var \Igniter\Local\Classes\Location */
+    protected $location;
 
     public static function componentMeta(): array
     {
@@ -157,12 +188,17 @@ final class Checkout extends Component
 
     public function render()
     {
+        $requiresPayment = ! $this->isInitialCheckoutStep() && $this->getOrder()->order_total > 0;
+
         return view('tipowerup-orange-tw::livewire.checkout', [
             'customer' => Auth::customer(),
             'order' => $order = $this->getOrder(),
             'cart' => $this->cartManager->getCart(),
             'locationCurrent' => Location::current(),
             'locationOrderType' => Location::getOrderTypes()->get($order->order_type),
+            'orderTypes' => $this->location->getActiveOrderTypes(),
+            'requiresTerms' => $this->agreeTermsSlug && ! $this->isInitialCheckoutStep(),
+            'noPaymentGateways' => $requiresPayment && $this->paymentGateways->isEmpty(),
         ]);
     }
 
@@ -178,6 +214,14 @@ final class Checkout extends Component
 
         Assets::addJs('tipowerup-orange-tw::/js/checkout.js', 'checkout-js');
 
+        $this->geocoder = setting('default_geocoder', 'nominatim');
+
+        $this->parseTimeslot($this->location->scheduleTimeslot());
+        $this->orderType = $this->location->orderType();
+        $this->isAsap = $this->location->orderTimeIsAsap();
+        $this->orderDate = $this->location->orderDateTime()->format('Y-m-d');
+        $this->orderTime = $this->location->orderDateTime()->format('H:i');
+
         foreach ($this->paymentGateways as $paymentGateway) {
             $paymentGateway->beforeRenderPaymentForm($paymentGateway, controller());
         }
@@ -188,11 +232,18 @@ final class Checkout extends Component
 
         $this->prepareDeliveryAddress();
 
+        $this->fields['address_1'] ??= '';
+        $this->fields['city'] ??= '';
+        $this->fields['state'] ??= '';
+        $this->fields['postcode'] ??= '';
+        $this->fields['country_id'] ??= null;
+
         return null;
     }
 
     public function boot(): void
     {
+        $this->location = resolve('location');
         $this->orderManager = resolve(OrderManager::class);
         $this->cartManager = resolve(CartManager::class);
         $this->initForm();
@@ -213,9 +264,12 @@ final class Checkout extends Component
     #[Computed]
     public function paymentGateways()
     {
-        return $this->getOrder()->order_total > 0
-            ? $this->orderManager->getPaymentGateways()
-            : collect();
+        if ($this->getOrder()->order_total <= 0) {
+            return collect();
+        }
+
+        return $this->orderManager->getPaymentGateways()
+            ->filter(fn ($gateway) => ! method_exists($gateway, 'isConfigured') || $gateway->isConfigured());
     }
 
     #[On('checkout::validate')]
@@ -229,9 +283,9 @@ final class Checkout extends Component
             return $this->redirect($order->getUrl($this->successPage));
         }
 
-        $order = $this->getOrder();
+        $this->updateFulfillment();
 
-        $this->prepareDeliveryAddress();
+        $order = $this->getOrder();
 
         $data = $this->validateCheckout($order);
 
@@ -253,9 +307,16 @@ final class Checkout extends Component
             return $this->redirect($order->getUrl($this->successPage));
         }
 
+        $this->updateFulfillment();
+
         $order = $this->getOrder();
 
-        $this->prepareDeliveryAddress();
+        // Ensure a configured payment gateway is selected when payment is required
+        if (! $this->isInitialCheckoutStep() && $order->order_total > 0 && $this->paymentGateways->isEmpty()) {
+            throw ValidationException::withMessages([
+                'fields.payment' => lang('tipowerup.orange-tw::default.checkout.no_payment_gateways'),
+            ]);
+        }
 
         $data = $this->validateCheckout($order);
 
@@ -267,6 +328,8 @@ final class Checkout extends Component
             resolve(EnsureUniqueProcess::class)->attemptWithLock($lockKey, function () use ($data, $order): void {
                 $this->orderManager->saveOrder($order, $data);
             });
+
+            $this->saveDeliveryAddress();
 
             if ($this->isInitialCheckoutStep()) {
                 return $this->redirect(Livewire::originalUrl().'?step='.self::STEP_PAY);
@@ -323,6 +386,232 @@ final class Checkout extends Component
         $payment->deletePaymentProfile($customer);
 
         return redirect()->back();
+    }
+
+    #[Computed]
+    public function customerAddresses()
+    {
+        return collect(Auth::customer()?->addresses ?? []);
+    }
+
+    public function onSelectSavedAddress(int $id): void
+    {
+        $customer = Auth::customer();
+        if (! $customer) {
+            return;
+        }
+
+        $address = $this->customerAddresses->firstWhere('address_id', $id);
+        if (! $address) {
+            return;
+        }
+
+        $this->fields['address_1'] = $address->address_1;
+        $this->fields['city'] = $address->city;
+        $this->fields['state'] = $address->state;
+        $this->fields['postcode'] = $address->postcode;
+        $this->fields['country_id'] = $address->country_id;
+        $this->addressSearchQuery = '';
+        $this->isAddressSearching = false;
+        $this->addressSuggestions = [];
+    }
+
+    public function updatedAddressSearchQuery(): void
+    {
+        if (strlen($this->addressSearchQuery) < 5) {
+            $this->isAddressSearching = false;
+            $this->addressSuggestions = [];
+
+            return;
+        }
+
+        try {
+            $this->isAddressSearching = true;
+            $query = GeoQuery::create($this->addressSearchQuery)->withLimit(5);
+            $this->addressSuggestions = $this->fetchAddressSuggestions($query);
+        } catch (Exception $e) {
+            $this->isAddressSearching = false;
+            $this->addressSuggestions = [];
+        }
+    }
+
+    public function onSelectAddressSuggestion(int $index): void
+    {
+        $suggestion = $this->addressSuggestions[$index] ?? null;
+        if (! $suggestion) {
+            return;
+        }
+
+        $this->isAddressSearching = false;
+        $this->addressSearchQuery = '';
+        $this->addressSuggestions = [];
+
+        $data = $suggestion['data'] ?? [];
+
+        if (! empty($data['street_name'])) {
+            $this->fields['address_1'] = trim(($data['street_number'] ?? '').' '.($data['street_name'] ?? ''));
+            $this->fields['city'] = $data['city'] ?? '';
+            $this->fields['state'] = $data['state'] ?? '';
+            $this->fields['postcode'] = $data['postcode'] ?? '';
+
+            if (! empty($data['country_code'])) {
+                $this->fields['country_id'] = array_get(
+                    countries('country_id', 'iso_code_2'),
+                    $data['country_code'],
+                    LocationModel::getDefaultKey(),
+                );
+            }
+        }
+    }
+
+    protected function fetchAddressSuggestions(GeoQueryInterface $query): array
+    {
+        $driver = Geocoder::driver();
+
+        if ($this->geocoder !== 'nominatim') {
+            return $driver->placesAutocomplete($query)->toArray();
+        }
+
+        return $driver->geocodeQuery($query)
+            ->filter(fn ($location) => $location->hasCoordinates())
+            ->map(fn ($location) => [
+                'placeId' => null,
+                'title' => $location->getSubLocality() ?: $location->getLocality() ?: $location->getFormattedAddress(),
+                'description' => $location->getFormattedAddress(),
+                'provider' => 'nominatim',
+                'data' => [
+                    'latitude' => $location->getCoordinates()->getLatitude(),
+                    'longitude' => $location->getCoordinates()->getLongitude(),
+                    'street_number' => $location->getStreetNumber(),
+                    'street_name' => $location->getStreetName(),
+                    'city' => $location->getSubLocality() ?: $location->getLocality(),
+                    'state' => $location->getAdminLevels()->get(1)?->getName() ?? $location->getLocality(),
+                    'postcode' => $location->getPostalCode(),
+                    'country_code' => $location->getCountryCode(),
+                ],
+            ])
+            ->values()
+            ->toArray();
+    }
+
+    public function updatedOrderType(string $value): void
+    {
+        throw_unless($this->location->current(), ValidationException::withMessages([
+            'orderType' => lang('igniter.local::default.alert_location_required'),
+        ]));
+
+        $orderType = $this->location->getOrderType($value);
+
+        throw_unless($orderType, ValidationException::withMessages([
+            'orderType' => lang('igniter.local::default.alert_order_type_required'),
+        ]));
+
+        throw_if($orderType->isDisabled(), ValidationException::withMessages([
+            'orderType' => $orderType->getDisabledDescription(),
+        ]));
+
+        $this->location->updateOrderType($value);
+        $this->parseTimeslot($this->location->scheduleTimeslot());
+        $this->orderDate = $this->location->orderDateTime()->format('Y-m-d');
+        $this->orderTime = $this->location->orderDateTime()->format('H:i');
+        $this->isAsap = $this->location->orderTimeIsAsap();
+        $this->order = null;
+    }
+
+    protected function parseTimeslot(Collection $timeslot): void
+    {
+        $this->timeslotDates = [];
+        $this->timeslotTimes = [];
+
+        $timeslot->collapse()->each(function (DateTime $slot): void {
+            $dateKey = $slot->format('Y-m-d');
+            $hourKey = $slot->format('H:i');
+            $dateValue = make_carbon($slot)->isoFormat(lang('system::lang.moment.day_format'));
+            $hourValue = make_carbon($slot)->isoFormat(lang('system::lang.moment.time_format'));
+
+            $this->timeslotDates[$dateKey] = $dateValue;
+            $this->timeslotTimes[$dateKey][$hourKey] = $hourValue;
+        });
+    }
+
+    protected function updateFulfillment(): void
+    {
+        $this->location->updateOrderType($this->orderType);
+
+        $timeSlotDateTime = $this->isAsap ? now() : make_carbon($this->orderDate.' '.$this->orderTime);
+
+        throw_unless($this->location->checkOrderTime($timeSlotDateTime), ValidationException::withMessages([
+            'isAsap' => sprintf(lang('igniter.local::default.alert_order_is_unavailable'), $this->location->getOrderType()->getLabel()),
+        ]));
+
+        $this->location->updateScheduleTimeSlot($timeSlotDateTime, $this->isAsap);
+    }
+
+    protected function saveDeliveryAddress(): void
+    {
+        $customer = Auth::customer();
+        if (! $customer || ! $this->saveAddress || ! $this->getOrder()->isDeliveryType()) {
+            return;
+        }
+
+        $address1 = trim($this->fields['address_1'] ?? '');
+        $postcode = trim($this->fields['postcode'] ?? '');
+        if (empty($address1)) {
+            return;
+        }
+
+        $exists = $customer->addresses()
+            ->where('address_1', $address1)
+            ->where('postcode', $postcode)
+            ->exists();
+
+        if ($exists) {
+            return;
+        }
+
+        $customer->addresses()->create([
+            'address_1' => $address1,
+            'city' => $this->fields['city'] ?? '',
+            'state' => $this->fields['state'] ?? '',
+            'postcode' => $postcode,
+            'country_id' => $this->fields['country_id'] ?? LocationModel::getDefaultKey(),
+        ]);
+    }
+
+    /**
+     * Validate delivery address without requiring a street number.
+     *
+     * The core OrderManager::validateDeliveryAddress requires both streetNumber
+     * AND streetName from the geocoder result, but street numbers are not stored
+     * in the database and many geocoders (especially Nominatim) don't return them.
+     */
+    protected function validateDeliveryAddress(array $address): void
+    {
+        if (! array_get($address, 'country') && isset($address['country_id'])) {
+            $address['country'] = app('country')->getCountryNameById($address['country_id']);
+        }
+
+        $addressInfo = array_only($address, ['address_1', 'address_2', 'city', 'state', 'postcode', 'country']);
+        if (empty(array_filter($addressInfo))) {
+            throw new ApplicationException(lang('igniter.local::default.alert_invalid_search_query'));
+        }
+
+        $collection = Geocoder::geocode(implode(' ', array_filter($addressInfo)));
+        if ($collection->isEmpty()) {
+            throw new ApplicationException(lang('igniter.local::default.alert_invalid_search_query'));
+        }
+
+        $userLocation = $collection->first();
+
+        $this->location->updateUserPosition($userLocation);
+
+        if (! ($area = $this->location->current()->searchDeliveryArea($userLocation->getCoordinates())) instanceof LocationArea) {
+            throw new ApplicationException(lang('igniter.cart::default.checkout.error_covered_area'));
+        }
+
+        if (! $this->location->isCurrentAreaId($area->area_id)) {
+            $this->location->setCoveredArea(new CoveredArea($area));
+        }
     }
 
     protected function getOrder(): Order
@@ -393,8 +682,8 @@ final class Checkout extends Component
             $validator->after(function ($validator) use ($order): void {
                 if ($order->isDeliveryType()) {
                     rescue(function (): void {
-                        $this->orderManager->validateDeliveryAddress(array_only($this->fields, [
-                            'address_1', 'city', 'state', 'postcode', 'country',
+                        $this->validateDeliveryAddress(array_only($this->fields, [
+                            'address_1', 'city', 'state', 'postcode', 'country', 'country_id',
                         ]));
                     }, function (Throwable $ex) use ($validator): void {
                         $validator->errors()->add('delivery_address', $ex->getMessage());
@@ -438,8 +727,8 @@ final class Checkout extends Component
         $userPosition = Location::userPosition();
         if ($userPosition && $userPosition->isValid()) {
             $this->fields['address_1'] = $userPosition->getStreetNumber().' '.$userPosition->getStreetName();
-            $this->fields['city'] = $userPosition->getSubLocality();
-            $this->fields['state'] = $userPosition->getLocality();
+            $this->fields['city'] = $userPosition->getSubLocality() ?: $userPosition->getLocality();
+            $this->fields['state'] = $userPosition->getAdminLevels()->get(1)?->getName() ?? $userPosition->getLocality();
             $this->fields['postcode'] = $userPosition->getPostalCode();
             $this->fields['country_id'] = array_get(countries('country_id', 'iso_code_2'),
                 $userPosition->getCountryCode(), LocationModel::getDefaultKey());

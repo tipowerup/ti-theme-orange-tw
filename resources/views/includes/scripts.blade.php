@@ -7,10 +7,6 @@
 {{-- Flatpickr Date Picker --}}
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-{{-- International Telephone Input --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.21/js/intlTelInput.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.21/js/utils.js"></script>
-
 {{-- jQuery render plugin - Required for Livewire integration --}}
 <script>
 (function($) {
@@ -71,15 +67,15 @@
                 initialCountry: (app.country && app.country.iso_code_2 || 'us').toLowerCase(),
                 separateDialCode: true,
                 nationalMode: true,
-                preferredCountries: ['us', 'gb', 'ca', 'au'],
-                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.21/js/utils.js"
+                dropdownContainer: document.body,
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.5.3/js/utils.js"
             };
 
             $telephoneInput.after($feedbackEl);
 
-            var telephonePicker = intlTelInput($el.get(0), $.extend(options, $el.data()));
+            var telephonePicker = intlTelInput($el.get(0), options);
 
-            $el.on('keyup change blur', function() {
+            $el.on('keyup change', function() {
                 var event = new Event('telephoneChange', { bubbles: true });
 
                 if ($el.val() && telephonePicker.isValidNumber()) {

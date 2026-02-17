@@ -31,45 +31,6 @@
 {{-- Flatpickr Date Picker --}}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-{{-- International Telephone Input --}}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.21/css/intlTelInput.min.css">
-<style>
-    .iti { width: 100%; }
-    .iti__flag-container { z-index: 10; }
-    .iti__country-list {
-        background: rgb(var(--color-body));
-        border: 1px solid rgb(var(--color-border));
-        border-radius: 0.5rem;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        max-height: 200px;
-    }
-    .iti__country {
-        padding: 8px 12px;
-        color: rgb(var(--color-text));
-    }
-    .iti__country:hover {
-        background: rgb(var(--color-surface));
-    }
-    .iti__country.iti__highlight {
-        background: rgb(var(--color-surface));
-    }
-    .iti__divider {
-        border-bottom: 1px solid rgb(var(--color-border));
-    }
-    .iti__selected-dial-code {
-        color: rgb(var(--color-text));
-    }
-    .iti__arrow {
-        border-top-color: rgb(var(--color-text-muted));
-    }
-    .iti__arrow--up {
-        border-bottom-color: rgb(var(--color-text-muted));
-    }
-    .dark .iti__country-list {
-        background: rgb(var(--color-surface));
-    }
-</style>
-
 {{-- Flatpickr Theme Overrides - Must load after flatpickr base CSS --}}
 <style>
     .flatpickr-calendar {

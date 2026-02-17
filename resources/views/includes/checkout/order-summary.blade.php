@@ -1,4 +1,4 @@
-<div class="bg-body dark:bg-surface rounded-lg shadow-sm border border-border dark:border-border p-6 sticky top-6">
+<div class="bg-body dark:bg-surface rounded-lg shadow-sm border border-border dark:border-border p-6">
     <h2 class="text-xl font-semibold text-text dark:text-text mb-4">@lang('igniter.cart::default.text_basket')</h2>
 
     {{-- Cart items --}}

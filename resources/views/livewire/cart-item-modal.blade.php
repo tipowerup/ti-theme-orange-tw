@@ -86,7 +86,7 @@
                         @if (count($optionValues = $menuOption->menu_option_values))
                             <input
                                 type="hidden"
-                                wire:model.fill="menuOptions.{{ $index }}.menu_option_id"
+                                wire:model.fill="menuOptions.{{ $menuOption->menu_option_id }}.menu_option_id"
                                 value="{{ $menuOption->menu_option_id }}"
                             />
 
@@ -94,15 +94,17 @@
                                 {{-- Radio buttons for single-select --}}
                                 @if ($menuOption->display_type === 'radio')
                                     @foreach ($optionValues as $optionValue)
+                                        @php $menuOptionValueId = $optionValue->menu_option_value_id; @endphp
                                         <label class="flex items-center p-3 border border-border dark:border-border rounded-lg cursor-pointer hover:bg-surface dark:hover:bg-surface transition-colors">
                                             <input
                                                 type="radio"
-                                                name="menuOptions[{{ $index }}][option_values][]"
-                                                wire:model="menuOptions.{{ $index }}.option_values"
-                                                value="{{ $optionValue->menu_option_value_id }}"
+                                                name="menuOptions[{{ $menuOption->menu_option_id }}][option_values][]"
+                                                wire:model.fill="menuOptions.{{ $menuOption->menu_option_id }}.option_values"
+                                                value="{{ $menuOptionValueId }}"
                                                 data-option-price="{{ $optionValue->price }}"
                                                 class="w-4 h-4 text-primary-600 focus:ring-primary-500"
                                                 @change="calculateTotal()"
+                                                @checked(($cartItem && $cartItem->hasOptionValue($menuOptionValueId)) || $optionValue->isDefault())
                                             />
                                             <span class="ml-3 flex-1 text-text dark:text-text">
                                                 {{ $optionValue->name }}
@@ -123,14 +125,17 @@
                                 {{-- Checkboxes for multi-select --}}
                                 @if ($menuOption->display_type === 'checkbox')
                                     @foreach ($optionValues as $optionValue)
+                                        @php $menuOptionValueId = $optionValue->menu_option_value_id; @endphp
                                         <label class="flex items-center p-3 border border-border dark:border-border rounded-lg cursor-pointer hover:bg-surface dark:hover:bg-surface transition-colors">
                                             <input
+                                                x-data="OrangeCartItemCheckbox('{{ $menuOption->menu_option_id }}', {{ $menuOptionValueId }})"
+                                                x-on:change="toggle"
                                                 type="checkbox"
-                                                wire:model="menuOptions.{{ $index }}.option_values"
-                                                value="{{ $optionValue->menu_option_value_id }}"
+                                                name="menuOptions[{{ $menuOption->menu_option_id }}][option_values][{{ $menuOptionValueId }}]"
+                                                value="{{ $menuOptionValueId }}"
                                                 data-option-price="{{ $optionValue->price }}"
                                                 class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500 dark:bg-surface"
-                                                @change="calculateTotal()"
+                                                @checked(($cartItem && $cartItem->hasOptionValue($menuOptionValueId)) || $optionValue->isDefault())
                                             />
                                             <span class="ml-3 flex-1 text-text dark:text-text">
                                                 {{ $optionValue->name }}
@@ -151,7 +156,8 @@
                                 {{-- Select dropdown --}}
                                 @if ($menuOption->display_type === 'select')
                                     <select
-                                        wire:model="menuOptions.{{ $index }}.option_values"
+                                        wire:model.fill="menuOptions.{{ $menuOption->menu_option_id }}.option_values.0"
+                                        name="menuOptions[{{ $menuOption->menu_option_id }}][option_values][]"
                                         class="w-full px-4 py-2 border border-border dark:border-border rounded-lg bg-body dark:bg-surface text-text dark:text-text focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                                         @change="calculateTotal()"
                                     >
@@ -160,6 +166,7 @@
                                             <option
                                                 value="{{ $optionValue->menu_option_value_id }}"
                                                 data-option-price="{{ $optionValue->price }}"
+                                                @selected(($cartItem && $cartItem->hasOptionValue($optionValue->menu_option_value_id)) || $optionValue->isDefault())
                                             >
                                                 {{ $optionValue->name }}
                                                 @if (!$hideZeroOptionPrices || $optionValue->price > 0)
@@ -172,6 +179,78 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                @endif
+
+                                {{-- Quantity inputs --}}
+                                @if ($menuOption->display_type === 'quantity')
+                                    @foreach ($optionValues as $optionIndex => $optionValue)
+                                        @php $menuOptionValueId = $optionValue->menu_option_value_id @endphp
+                                        <div
+                                            x-data="{
+                                                optionQuantity: {{ $this->getOptionQuantityTypeValue($optionValue->menu_option_value_id) }},
+                                                optionPrice: {{ $optionValue->price }}
+                                            }"
+                                            class="flex items-center gap-3 p-3 border border-border dark:border-border rounded-lg"
+                                        >
+                                            <input
+                                                type="hidden"
+                                                name="menuOptions[{{ $index }}][option_values][{{ $optionIndex }}][id]"
+                                                value="{{ $optionValue->menu_option_value_id }}"
+                                            />
+                                            <div
+                                                class="flex items-center gap-2"
+                                                data-option-quantity
+                                            >
+                                                <button
+                                                    class="w-8 h-8 flex items-center justify-center rounded-full border-2 border-border dark:border-border text-text dark:text-text hover:border-primary-500 hover:text-primary-500 transition-colors"
+                                                    x-on:click="optionQuantity = Math.max(0, optionQuantity - 1)"
+                                                    type="button"
+                                                    aria-label="Decrease"
+                                                >
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                                                    </svg>
+                                                </button>
+                                                <input
+                                                    x-model="optionQuantity"
+                                                    x-init="
+                                                        $wire.set('menuOptions.{{ $menuOption->menu_option_id }}.option_values.{{ $menuOptionValueId }}.qty', optionQuantity, false);
+                                                        $watch('optionQuantity', () => {
+                                                            calculateTotal();
+                                                            $wire.set('menuOptions.{{ $menuOption->menu_option_id }}.option_values.{{ $menuOptionValueId }}.qty', optionQuantity, false);
+                                                        });
+                                                    "
+                                                    type="text"
+                                                    class="w-12 text-center bg-transparent border-0 text-base font-semibold text-text dark:text-text"
+                                                    name="menuOptions[{{ $index }}][option_values][{{ $optionIndex }}][qty]"
+                                                    data-option-price="{{ $optionValue->price }}"
+                                                    inputmode="numeric"
+                                                    pattern="[0-9]*"
+                                                    min="0"
+                                                    autocomplete="off"
+                                                    readonly
+                                                />
+                                                <button
+                                                    class="w-8 h-8 flex items-center justify-center rounded-full border-2 border-border dark:border-border text-text dark:text-text hover:border-primary-500 hover:text-primary-500 transition-colors"
+                                                    x-on:click="optionQuantity = Math.max(0, optionQuantity + 1)"
+                                                    type="button"
+                                                    aria-label="Increase"
+                                                >
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <label class="flex-1 text-text dark:text-text">
+                                                {{ $optionValue->name }}
+                                                @if (!$hideZeroOptionPrices || $optionValue->price > 0)
+                                                    <span class="float-right text-text-muted dark:text-text-muted">
+                                                        +<span x-html="app.currencyFormat(optionQuantity < 1 ? optionPrice : optionQuantity * optionPrice)"></span>
+                                                    </span>
+                                                @endif
+                                            </label>
+                                        </div>
+                                    @endforeach
                                 @endif
                             </div>
                         @endif
@@ -237,15 +316,9 @@
                         </button>
                     </div>
 
-                    {{-- Current quantity in cart --}}
-                    @if($cartItem)
-                        <span class="text-sm text-text-muted dark:text-text-muted">
-                            {{ $cartItem->qty }} @lang('tipowerup.orange-tw::default.cart.in_cart')
-                        </span>
-                    @endif
                 </div>
 
-                {{-- Add/Update Button --}}
+                {{-- Add Button --}}
                 <button
                     type="submit"
                     data-attach-loading

@@ -1,4 +1,4 @@
-<div class="mb-6">
+<div class="mb-3">
     <div class="space-y-2">
         {{-- Subtotal --}}
         <div class="flex justify-between text-text dark:text-text">

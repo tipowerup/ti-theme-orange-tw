@@ -26,6 +26,12 @@ final class ModalManager extends Component
         $this->dispatch('show-active-modal');
     }
 
+    #[On('hideModal')]
+    public function hideModal(): void
+    {
+        $this->dispatch('close-modal');
+    }
+
     #[On('resetModal')]
     public function resetModal(): void
     {

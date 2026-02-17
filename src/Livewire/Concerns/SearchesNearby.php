@@ -6,6 +6,7 @@ namespace TiPowerUp\OrangeTw\Livewire\Concerns;
 
 use Exception;
 use Igniter\Flame\Geolite\Facades\Geocoder;
+use Igniter\Flame\Geolite\Contracts\GeoQueryInterface;
 use Igniter\Flame\Geolite\GeoQuery;
 use Igniter\Flame\Geolite\Model\Coordinates;
 use Igniter\Flame\Geolite\Model\Location as GeoliteLocation;
@@ -54,8 +55,6 @@ trait SearchesNearby
 
     public string $geocoder;
 
-    public ?string $orderType = null;
-
     public function definePropertiesSearchNearby(): array
     {
         return [
@@ -76,13 +75,16 @@ trait SearchesNearby
     {
         $this->geocoder = setting('default_geocoder', 'nominatim');
         if ($this->searchAutocompleteEnabled) {
+            Assets::addCss('tipowerup-orange-tw::/css/autocomplete.css', 'autocomplete-css');
             if ($this->geocoder === 'nominatim') {
                 Assets::addCss('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', 'leaflet-css');
                 Assets::addJs('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', 'leaflet-js');
+            } else {
+                Assets::addJs('tipowerup-orange-tw::/js/google-maps.js', 'google-maps-js');
             }
         }
 
-        $this->mapKey = setting('maps_api_key');
+        $this->mapKey = setting('maps_api_key', '');
         $this->searchQuery = Location::getSession('searchQuery');
         $this->deliveryAddress = Auth::customer()?->address?->formatted_address;
     }
@@ -93,7 +95,7 @@ trait SearchesNearby
         return collect(Auth::customer()->addresses ?? []);
     }
 
-    public function onSearchNearby(): void
+    public function onSearchNearby()
     {
         try {
             $userLocation = $this->geocodeUserPosition();
@@ -105,18 +107,18 @@ trait SearchesNearby
 
             request()->route()->setParameter('location', $nearByLocation->permalink_slug);
 
-            $this->redirect(restaurant_url($this->menusPage));
+            return $this->redirect(restaurant_url($this->menusPage));
         } catch (Exception $ex) {
             throw ValidationException::withMessages([$this->searchField => $ex->getMessage()]);
         }
     }
 
-    public function onSelectAddress($id): void
+    public function onSelectAddress($id)
     {
         $this->searchField = 'savedAddress';
 
         throw_unless($address = $this->savedAddresses()->firstWhere('address_id', $id), ValidationException::withMessages([
-            $this->searchField => 'Address not found',
+            $this->searchField => lang('igniter.local::default.alert_no_search_query'),
         ]));
 
         $searchQuery = format_address($address->toArray(), false);
@@ -130,7 +132,7 @@ trait SearchesNearby
 
             request()->route()->setParameter('location', $nearByLocation->permalink_slug);
 
-            $this->redirect(restaurant_url($this->menusPage));
+            return $this->redirect(restaurant_url($this->menusPage));
         }
 
         if ($area = $this->location->current()->searchDeliveryArea($userLocation->getCoordinates())) {
@@ -139,11 +141,13 @@ trait SearchesNearby
             $this->location->putSession('searchQuery', $searchQuery);
         } else {
             throw ValidationException::withMessages([
-                $this->searchField => 'Delivery not available in this area',
+                $this->searchField => lang('igniter.local::default.alert_delivery_area_unavailable'),
             ]);
         }
 
         $this->searchField = 'searchQuery';
+
+        return null;
     }
 
     #[On('userPositionUpdated')]
@@ -171,7 +175,7 @@ trait SearchesNearby
         }
     }
 
-    public function onUpdateSearchQuery(): void
+    public function onUpdateSearchQuery()
     {
         try {
             $userLocation = $this->geocodeUserPosition();
@@ -182,7 +186,7 @@ trait SearchesNearby
             throw ValidationException::withMessages([$this->searchField => $ex->getMessage()]);
         }
 
-        $this->redirect(Livewire::originalUrl(), navigate: true);
+        return $this->redirect(Livewire::originalUrl(), navigate: true);
     }
 
     public function onSelectSuggestion(int $index): void
@@ -213,6 +217,24 @@ trait SearchesNearby
         }
     }
 
+    public function onChangeDeliveryAddress(): void
+    {
+        $this->showAddressPicker = true;
+        if (! $this->searchAutocompleteEnabled) {
+            return;
+        }
+
+        if ($coordinates = Location::userPosition()?->getCoordinates()) {
+            $this->searchPoint = [$coordinates->getLatitude(), $coordinates->getLongitude()];
+            $this->dispatch(
+                'updateDeliveryLocationMap',
+                lat: $coordinates->getLatitude(),
+                lng: $coordinates->getLongitude(),
+                geocoder: $this->geocoder,
+            );
+        }
+    }
+
     public function updatedSearchQuery(): void
     {
         if (! $this->searchAutocompleteEnabled) {
@@ -226,12 +248,40 @@ trait SearchesNearby
                 $this->dispatch('resetMap');
             } else {
                 $this->isSearching = true;
-                $query = GeoQuery::create($this->searchQuery);
-                $this->placesSuggestions = Geocoder::driver()->placesAutocomplete($query)->toArray();
+                $query = GeoQuery::create($this->searchQuery)->withLimit(5);
+                $this->placesSuggestions = $this->fetchPlacesSuggestions($query);
             }
         } catch (Exception $e) {
             throw ValidationException::withMessages([$this->searchField => $e->getMessage()]);
         }
+    }
+
+    /**
+     * Fetch place suggestions using geocodeQuery as a workaround for
+     * NominatimProvider::placesAutocomplete missing User-Agent header.
+     */
+    protected function fetchPlacesSuggestions(GeoQueryInterface $query): array
+    {
+        $driver = Geocoder::driver();
+
+        if ($this->geocoder !== 'nominatim') {
+            return $driver->placesAutocomplete($query)->toArray();
+        }
+
+        return $driver->geocodeQuery($query)
+            ->filter(fn ($location) => $location->hasCoordinates())
+            ->map(fn ($location) => [
+                'placeId' => null,
+                'title' => $location->getSubLocality() ?: $location->getLocality() ?: $location->getFormattedAddress(),
+                'description' => $location->getFormattedAddress(),
+                'provider' => 'nominatim',
+                'data' => [
+                    'latitude' => $location->getCoordinates()->getLatitude(),
+                    'longitude' => $location->getCoordinates()->getLongitude(),
+                ],
+            ])
+            ->values()
+            ->toArray();
     }
 
     protected function getSearchQuery()
@@ -254,7 +304,7 @@ trait SearchesNearby
     protected function geocodeSearchPoint($searchPoint)
     {
         throw_if(count(array_filter($searchPoint)) !== 2, ValidationException::withMessages([
-            $this->searchField => 'Invalid search location',
+            $this->searchField => lang('igniter.local::default.alert_no_search_query'),
         ]));
 
         [$latitude, $longitude] = $searchPoint;
@@ -274,14 +324,14 @@ trait SearchesNearby
             Log::error(implode(PHP_EOL, Geocoder::getLogs()));
 
             throw ValidationException::withMessages([
-                $this->searchField => 'Invalid search query',
+                $this->searchField => lang('igniter.local::default.alert_invalid_search_query'),
             ]);
         }
 
         $userLocation = $collection->first();
         if (! $userLocation->hasCoordinates()) {
             throw ValidationException::withMessages([
-                $this->searchField => 'Invalid search query',
+                $this->searchField => lang('igniter.local::default.alert_invalid_search_query'),
             ]);
         }
 
@@ -301,7 +351,7 @@ trait SearchesNearby
         });
 
         throw_unless($nearByLocation, ValidationException::withMessages([
-            $this->searchField => 'No restaurant found in your area',
+            $this->searchField => lang('igniter.local::default.alert_no_found_restaurant'),
         ]));
 
         return $nearByLocation;
@@ -321,7 +371,7 @@ trait SearchesNearby
     protected function geocodeUserPosition(): mixed
     {
         throw_unless($searchQuery = $this->getSearchQuery(), ValidationException::withMessages([
-            $this->searchField => 'Please enter your location',
+            $this->searchField => lang('igniter.local::default.alert_no_search_query'),
         ]));
 
         return is_array($searchQuery)

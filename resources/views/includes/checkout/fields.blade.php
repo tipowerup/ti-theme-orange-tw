@@ -51,15 +51,16 @@
                         <span class="text-red-600 dark:text-red-400">*</span>
                     @endif
                 </label>
-                <div class="relative" wire:ignore>
+                <div wire:ignore>
                     <input
                         data-control="country-code-picker"
                         data-hidden-input-id="hidden-field-{{ $field->fieldName }}"
-                        type="tel"
+                        data-container-class="w-full"
+                        type="text"
                         id="field-{{ $field->fieldName }}"
                         value="{{ $field->value ?? '' }}"
                         @if($field->required) required @endif
-                        class="w-full px-4 py-2 border border-border dark:border-border rounded-lg bg-body dark:bg-surface text-text dark:text-text placeholder-text-muted dark:placeholder-text-muted focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        class="w-full pr-4 py-2 border border-border dark:border-border rounded-lg bg-body dark:bg-surface text-text dark:text-text placeholder-text-muted dark:placeholder-text-muted focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     />
                     <input
                         type="hidden"
@@ -154,7 +155,7 @@
                             <div
                                 @class([
                                     'border rounded-lg p-4 transition-colors',
-                                    'border-primary-500 bg-primary-50 dark:bg-primary-900/20' => $paymentIsSelected,
+                                    'border-primary-500 bg-primary-50 dark:bg-primary-900/20 selected' => $paymentIsSelected,
                                     'border-border dark:border-border hover:border-primary-300 dark:hover:border-primary-700' => !$paymentIsSelected,
                                 ])
                                 data-checkout-payment
@@ -201,9 +202,7 @@
                                     </div>
                                 </label>
                                 @if($paymentIsSelected && ($viewName = $paymentMethod->getPaymentFormViewName()))
-                                    <div class="mt-4 pt-4 border-t border-border dark:border-border">
-                                        @include($viewName)
-                                    </div>
+                                    @include($viewName)
                                 @endif
                             </div>
                         @endforeach

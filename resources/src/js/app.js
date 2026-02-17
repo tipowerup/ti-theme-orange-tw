@@ -1,4 +1,7 @@
 import currency from 'currency.js';
+import intlTelInput from 'intl-tel-input';
+
+window.intlTelInput = intlTelInput;
 
 /**
  * Currency.js - expose globally for currency formatting
@@ -77,6 +80,33 @@ window.OrangeCartItem = () => {
             this.$watch('quantity', () => {
                 this.calculateTotal();
             });
+        }
+    };
+};
+
+/**
+ * Cart Item Checkbox Option - Alpine component for syncing checkbox values with Livewire
+ * Used by cart-item-modal.blade.php for checkbox option types
+ */
+window.OrangeCartItemCheckbox = (optionKey, optionValueId) => {
+    return {
+        key: optionKey,
+        id: optionValueId,
+        init() {
+            this.$wire.menuOptions[this.key] ??= { option_values: [] };
+            const values = this.$wire.menuOptions[this.key].option_values;
+            if (this.$el.checked && !values.includes(this.id)) {
+                values.push(this.id);
+            }
+            this.$wire.set(`menuOptions.${this.key}.option_values`, values, false);
+        },
+        toggle() {
+            const values = this.$wire.menuOptions[this.key]?.option_values ?? [];
+            const updated = this.$el.checked
+                ? [...new Set([...values, this.id])]
+                : values.filter(v => v !== this.id);
+            this.$wire.set(`menuOptions.${this.key}.option_values`, updated, false);
+            calculateTotal();
         }
     };
 };

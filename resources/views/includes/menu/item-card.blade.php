@@ -19,7 +19,7 @@
         <!-- Menu Item Content -->
         <div class="flex-1 min-w-0 flex flex-col">
             <div class="flex items-start justify-between mb-2">
-                <h3 class="text-base font-semibold text-text dark:text-text leading-tight">{{ $menuItemData->name }}</h3>
+                <h3 class="text-sm font-semibold text-text dark:text-text leading-tight">{{ $menuItemData->name }}</h3>
                 @unless($showThumb)
                     <button
                         type="button"
@@ -42,14 +42,14 @@
             <!-- Description - fixed height for 2 lines -->
             <div class="flex-grow mb-3 min-h-[2.5rem]">
                 @if($menuItemData->description)
-                    <p class="text-sm text-text-muted dark:text-text-muted line-clamp-2 leading-tight">
+                    <p class="text-xs text-text-muted dark:text-text-muted line-clamp-2 leading-tight">
                         {!! $menuItemData->description !!}
                     </p>
                 @endif
             </div>
 
             <!-- Price and Meta - always at bottom -->
-            <div class="flex flex-wrap items-center gap-2 text-sm mt-auto">
+            <div class="flex flex-wrap items-center gap-2 text-xs mt-auto">
                 <span class="font-semibold text-text dark:text-text">
                     @if ($menuItemData->specialIsActive())
                         <span class="line-through text-text-muted mr-1">{!! currency_format($menuItemData->priceBeforeSpecial) !!}</span>

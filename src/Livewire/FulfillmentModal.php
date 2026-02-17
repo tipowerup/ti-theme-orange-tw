@@ -12,12 +12,15 @@ use Igniter\System\Facades\Assets;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Session;
 use Livewire\Component;
 use Livewire\Livewire;
+use TiPowerUp\OrangeTw\Livewire\Concerns\SearchesNearby;
 
 final class FulfillmentModal extends Component
 {
     use ConfigurableComponent;
+    use SearchesNearby;
 
     public array $timeslotDates = [];
 
@@ -33,7 +36,14 @@ final class FulfillmentModal extends Component
 
     public string $defaultOrderType = Location::DELIVERY;
 
+    public bool $showAddressPicker = false;
+
+    public ?bool $hideDeliveryAddress = null;
+
     public ?bool $previewMode = false;
+
+    #[Session]
+    public ?string $newSearchQuery = null;
 
     /**
      * @var \Igniter\Local\Classes\Location
@@ -51,7 +61,7 @@ final class FulfillmentModal extends Component
 
     public function defineProperties(): array
     {
-        return [
+        return array_merge([
             'previewMode' => [
                 'label' => 'Render the component in preview mode to avoid making changes to order fulfillment.',
                 'type' => 'switch',
@@ -61,7 +71,7 @@ final class FulfillmentModal extends Component
                 'type' => 'select',
                 'options' => [Location::class, 'getOrderTypeOptions'],
             ],
-        ];
+        ], $this->definePropertiesSearchNearby());
     }
 
     public function render(): \Illuminate\Contracts\View\View
@@ -73,6 +83,8 @@ final class FulfillmentModal extends Component
 
     public function mount(): void
     {
+        $this->mountSearchesNearby();
+
         Assets::addJs('tipowerup-orange-tw::/js/fulfillment.js', 'fulfillment-js');
 
         $this->parseTimeslot($this->location->scheduleTimeslot());
@@ -81,6 +93,7 @@ final class FulfillmentModal extends Component
         $this->isAsap = $this->location->orderTimeIsAsap();
         $this->orderDate = $this->location->orderDateTime()->format('Y-m-d');
         $this->orderTime = $this->location->orderDateTime()->format('H:i');
+        $this->hideDeliveryAddress = !$this->location->orderTypeIsDelivery();
 
         $this->updateCurrentOrderType();
     }
@@ -114,6 +127,7 @@ final class FulfillmentModal extends Component
             'isAsap' => ['required', 'boolean'],
             'orderDate' => ['required_if:isAsap,0'],
             'orderTime' => ['required_if:isAsap,0'],
+            'searchQuery' => ['required_if:showAddressPicker,1'],
         ]);
 
         throw_if($this->previewMode, ValidationException::withMessages([
@@ -127,6 +141,21 @@ final class FulfillmentModal extends Component
         $this->updateOrderType();
 
         $this->updateTimeslot();
+
+        if ($this->showAddressPicker && ($this->searchQuery || $this->searchPoint)) {
+            $userLocation = $this->geocodeUserPosition();
+            if ($area = $this->location->current()->searchDeliveryArea($userLocation->getCoordinates())) {
+                $this->location->updateUserPosition($userLocation);
+                $this->location->updateNearbyArea($area);
+                $this->location->putSession('searchQuery', $this->searchQuery);
+            } else {
+                throw ValidationException::withMessages([
+                    'searchQuery' => lang('igniter.local::default.alert_delivery_area_unavailable'),
+                ]);
+            }
+        }
+
+        $this->showAddressPicker = false;
 
         Event::dispatch('igniter.orange.fulfilmentUpdated');
 

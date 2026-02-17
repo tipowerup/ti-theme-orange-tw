@@ -16,17 +16,18 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {{-- Checkout Form --}}
         <div class="lg:col-span-2">
-            <div class="bg-body dark:bg-surface rounded-lg shadow-sm border border-border dark:border-border">
+            <div
+                class="bg-body dark:bg-surface rounded-lg shadow-sm border border-border dark:border-border"
+                data-control="checkout"
+                data-partial="checkoutForm"
+                data-payment-input-name="fields.payment"
+                data-validate-event="checkout::validate"
+                data-confirm-event="checkout::confirm"
+                data-choose-payment-event="checkout::choose-payment"
+                data-delete-payment-profile-event="checkout::delete-payment-profile"
+            >
                 <form
                     id="checkout-form"
-                    data-control="checkout"
-                    data-partial="checkoutForm"
-                    data-payment-input-name="fields.payment"
-                    data-validate-event="checkout::validate"
-                    data-confirm-event="checkout::confirm"
-                    data-choose-payment-event="checkout::choose-payment"
-                    data-delete-payment-profile-event="checkout::delete-payment-profile"
-                    wire:submit="onConfirm"
                     novalidate
                 >
                     @if ($isTwoPageCheckout && $checkoutStep !== $this::STEP_PAY)
@@ -41,22 +42,21 @@
                             ])
                         </div>
 
-                        {{-- Order Type & Delivery --}}
+                        {{-- Order Type & Time --}}
                         <div class="p-6 border-b border-border dark:border-border">
-                            <div class="p-4 bg-surface dark:bg-surface/50 rounded-lg mb-4">
-                                <x-tipowerup-orange-tw::fulfillment />
-                            </div>
-
-                            @if($order->isDeliveryType())
-                                @include('tipowerup-orange-tw::includes.checkout.delivery-address')
-                            @endif
+                            @include('tipowerup-orange-tw::includes.checkout.fulfillment')
                         </div>
 
-                        {{-- Comments --}}
+                        {{-- Delivery Address --}}
+                        @if($order->isDeliveryType())
+                            <div class="p-6 border-b border-border dark:border-border">
+                                @include('tipowerup-orange-tw::includes.checkout.delivery-address')
+                            </div>
+                        @endif
+
+                        {{-- Notes (Collapsible) --}}
                         <div class="p-6 border-b border-border dark:border-border">
-                            @include('tipowerup-orange-tw::includes.checkout.fields', [
-                                'fields' => $this->formTabFields('comments'),
-                            ])
+                            @include('tipowerup-orange-tw::includes.checkout.notes')
                         </div>
                     @elseif($isTwoPageCheckout && $checkoutStep === $this::STEP_PAY)
                         {{-- Two-page checkout: Step 2 - Payment --}}
@@ -83,22 +83,21 @@
                             ])
                         </div>
 
-                        {{-- Order Type & Delivery --}}
+                        {{-- Order Type & Time --}}
                         <div class="p-6 border-b border-border dark:border-border">
-                            <div class="p-4 bg-surface dark:bg-surface/50 rounded-lg mb-4">
-                                <x-tipowerup-orange-tw::fulfillment />
-                            </div>
-
-                            @if($order->isDeliveryType())
-                                @include('tipowerup-orange-tw::includes.checkout.delivery-address')
-                            @endif
+                            @include('tipowerup-orange-tw::includes.checkout.fulfillment')
                         </div>
 
-                        {{-- Comments --}}
+                        {{-- Delivery Address --}}
+                        @if($order->isDeliveryType())
+                            <div class="p-6 border-b border-border dark:border-border">
+                                @include('tipowerup-orange-tw::includes.checkout.delivery-address')
+                            </div>
+                        @endif
+
+                        {{-- Notes (Collapsible) --}}
                         <div class="p-6 border-b border-border dark:border-border">
-                            @include('tipowerup-orange-tw::includes.checkout.fields', [
-                                'fields' => $this->formTabFields('comments'),
-                            ])
+                            @include('tipowerup-orange-tw::includes.checkout.notes')
                         </div>
 
                         {{-- Payment --}}
@@ -117,22 +116,38 @@
                         </div>
                     @endif
 
+                    {{-- No Payment Gateways Warning --}}
+                    @if($noPaymentGateways)
+                        <div class="p-6 border-b border-border dark:border-border">
+                            <div class="flex items-center gap-3 p-4 bg-warning/10 border border-warning/30 rounded-lg">
+                                <i class="fa fa-exclamation-triangle text-warning text-lg"></i>
+                                <p class="text-sm text-text dark:text-text">
+                                    @lang('tipowerup.orange-tw::default.checkout.no_payment_gateways')
+                                </p>
+                            </div>
+                        </div>
+                    @endif
+
                     {{-- Submit Button --}}
                     <div class="p-6">
                         <button
                             wire:loading.attr="disabled"
                             data-checkout-control="submit"
                             type="submit"
+                            @if($noPaymentGateways)
+                                disabled
+                            @endif
+                            @if($requiresTerms)
+                                x-data="{ agreed: @entangle('fields.termsAgreed') }"
+                                x-bind:disabled="!agreed"
+                            @endif
                             class="w-full px-6 py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <span wire:loading.remove>
                                 @lang($isTwoPageCheckout && $checkoutStep !== $this::STEP_PAY ? 'tipowerup.orange-tw::default.checkout.button_payment' : 'tipowerup.orange-tw::default.checkout.button_confirm')
                             </span>
                             <span wire:loading class="inline-flex items-center gap-2">
-                                <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
+                                <i class="fa fa-spinner fa-spin"></i>
                                 <span>@lang('tipowerup.orange-tw::default.common.processing')</span>
                             </span>
                         </button>
@@ -142,8 +157,18 @@
         </div>
 
         {{-- Order Summary Sidebar --}}
-        <div class="lg:col-span-1">
-            @include('tipowerup-orange-tw::includes.checkout.order-summary')
+        <div
+            class="lg:col-span-1"
+            x-data="{ navVisible: true }"
+            @navbar-show.window="navVisible = true"
+            @navbar-hide.window="navVisible = false"
+        >
+            <div
+                class="sticky transition-[top] duration-300"
+                :style="'top: ' + (navVisible ? '5.5rem' : '1.5rem')"
+            >
+                @include('tipowerup-orange-tw::includes.checkout.order-summary')
+            </div>
         </div>
     </div>
 </div>

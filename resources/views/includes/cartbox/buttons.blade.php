@@ -31,13 +31,5 @@
             </span>
         </button>
 
-        {{-- Continue shopping link --}}
-        <a
-            href="{{ restaurant_url('local/menus') }}"
-            class="block text-center text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
-            wire:navigate
-        >
-            @lang('tipowerup.orange-tw::default.cart.continue_shopping')
-        </a>
     </div>
 @endif
