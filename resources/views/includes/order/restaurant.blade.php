@@ -1,5 +1,5 @@
 <h6 class="text-sm font-semibold text-text-muted dark:text-text-muted uppercase tracking-wide mb-3">
-    @lang('igniter.cart::default.checkout.text_restaurant')
+    @lang('igniter.cart::default.orders.text_restaurant')
 </h6>
 
 <div class="text-text dark:text-text">

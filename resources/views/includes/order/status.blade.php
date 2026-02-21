@@ -36,6 +36,18 @@
 
 <p class="text-text-muted dark:text-text-muted mb-6">@lang('igniter.cart::default.checkout.text_success_message')</p>
 
+@if ($showContinueShopping)
+    <div class="mb-6">
+        <a
+            href="{{ restaurant_url('local/menus') }}"
+            class="inline-block px-6 py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors"
+            wire:navigate
+        >
+            <i class="fa fa-shopping-cart mr-2"></i>@lang('tipowerup.orange-tw::default.cart.continue_shopping')
+        </a>
+    </div>
+@endif
+
 <div class="flex flex-wrap gap-3 justify-center">
     @if (!$hideReorderBtn)
         <button

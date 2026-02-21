@@ -1,4 +1,4 @@
-<div wire:poll.120s>
+<div wire:poll.30s>
     @if (!$order)
         <div class="bg-body dark:bg-surface rounded-lg shadow-sm mb-6">
             <div class="p-6 text-center text-text-muted dark:text-text-muted">

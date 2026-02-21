@@ -19,19 +19,19 @@
   ],
   "style": [
     {
-      "path": "$/tipowerup-orange-tw/css/app.css",
+      "path": "/vendor/tipowerup-orange-tw/css/app.css",
       "name": "app-css",
       "attributes": {
-        "data-navigate-track": "reload"
+        "data-navigate-once": true
       }
     }
   ],
   "script": [
     {
-      "path": "$/tipowerup-orange-tw/js/app.js",
+      "path": "/vendor/tipowerup-orange-tw/js/app.js",
       "name": "app-js",
       "attributes": {
-        "data-navigate-track": "reload"
+        "data-navigate-once": true
       }
     }
   ]

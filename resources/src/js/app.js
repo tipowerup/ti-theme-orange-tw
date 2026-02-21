@@ -220,15 +220,5 @@ document.addEventListener('alpine:init', () => {
             });
         }
     }));
-});
 
-/**
- * View Transitions API Helper
- */
-if ('startViewTransition' in document) {
-    document.addEventListener('livewire:navigate', (event) => {
-        document.startViewTransition(() => {
-            // Livewire will handle the navigation
-        });
-    });
-}
+});

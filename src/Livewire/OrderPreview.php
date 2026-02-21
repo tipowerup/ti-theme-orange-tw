@@ -39,6 +39,8 @@ final class OrderPreview extends Component
 
     public bool $hideReorderBtn = true;
 
+    public bool $showContinueShopping = false;
+
     public bool $showCancelButton = false;
 
     protected OrderManager $orderManager;
@@ -88,6 +90,11 @@ final class OrderPreview extends Component
             ],
             'hideReorderBtn' => [
                 'label' => 'When rendering the component on the checkout confirmation page, hide the re-order button',
+                'type' => 'switch',
+                'validationRule' => 'required|boolean',
+            ],
+            'showContinueShopping' => [
+                'label' => 'Show the continue shopping button in the status section',
                 'type' => 'switch',
                 'validationRule' => 'required|boolean',
             ],

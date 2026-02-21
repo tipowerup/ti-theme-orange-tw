@@ -236,7 +236,7 @@ final class Checkout extends Component
         $this->fields['city'] ??= '';
         $this->fields['state'] ??= '';
         $this->fields['postcode'] ??= '';
-        $this->fields['country_id'] ??= null;
+        $this->fields['country_id'] ??= LocationModel::getDefaultKey();
 
         return null;
     }
