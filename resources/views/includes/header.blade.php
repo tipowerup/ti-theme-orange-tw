@@ -1,7 +1,7 @@
 <header
     x-data="stickyHeader()"
     x-init="init()"
-    class="fixed top-0 left-0 right-0 z-50 bg-body/95 backdrop-blur-sm border-b border-border transition-transform duration-300"
+    class="fixed top-0 left-0 right-0 z-50 bg-body/95 backdrop-blur-xs border-b border-border transition-transform duration-300"
     :class="{ '-translate-y-full': !show }"
 >
     <nav class="container mx-auto px-4 py-4" x-data="{ mobileMenuOpen: false }">
@@ -32,7 +32,7 @@
                 <x-tipowerup-orange-tw::nav code="main-menu" />
 
                 {{-- Dark Mode Toggle --}}
-                @if($theme->dark_mode['enabled'] ?? true)
+                @if($themeData['dark_mode']['enabled'] ?? true)
                     <button
                         @click="toggleDarkMode()"
                         class="ml-2 px-3 py-2 rounded-lg text-text hover:text-primary hover:bg-surface transition-colors"
@@ -67,7 +67,7 @@
         >
             @include('tipowerup-orange-tw::includes.navs.mobile-menu')
 
-            @if($theme->dark_mode['enabled'] ?? true)
+            @if($themeData['dark_mode']['enabled'] ?? true)
                 <button
                     @click="toggleDarkMode()"
                     class="flex items-center w-full px-4 py-2 mt-1 rounded-lg text-text hover:text-primary hover:bg-surface transition-colors"

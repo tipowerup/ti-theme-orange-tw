@@ -78,10 +78,11 @@
 
     <button
         type="submit"
-        class="w-full px-6 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+        class="w-full px-6 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors text-lg inline-flex flex-nowrap items-center justify-center gap-2 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
         wire:loading.attr="disabled"
     >
+        <i wire:loading class="fa fa-spinner fa-spin"></i>
         <span wire:loading.remove>@lang('igniter.reservation::default.button_find_table')</span>
-        <span wire:loading>@lang('igniter.local::default.text_please_wait')</span>
+        <span wire:loading>@lang('tipowerup.orange-tw::default.common.processing')</span>
     </button>
 </form>

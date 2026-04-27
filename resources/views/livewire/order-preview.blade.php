@@ -1,12 +1,12 @@
 <div wire:poll.30s>
     @if (!$order)
-        <div class="bg-body dark:bg-surface rounded-lg shadow-sm mb-6">
+        <div class="bg-body dark:bg-surface rounded-lg shadow-xs mb-6">
             <div class="p-6 text-center text-text-muted dark:text-text-muted">
                 No order found
             </div>
         </div>
     @else
-        <div class="bg-body dark:bg-surface rounded-lg shadow-sm mb-6">
+        <div class="bg-body dark:bg-surface rounded-lg shadow-xs mb-6">
             <div class="p-6 text-center" id="ti-order-status">
                 @include('tipowerup-orange-tw::includes.order.status')
             </div>
@@ -15,13 +15,13 @@
         @auth('igniter-customer')
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 space-y-6">
-                    <div class="bg-body dark:bg-surface rounded-lg shadow-sm">
+                    <div class="bg-body dark:bg-surface rounded-lg shadow-xs">
                         <div class="p-6">
                             @include('tipowerup-orange-tw::includes.order.restaurant', ['location' => $order->location])
                         </div>
                     </div>
 
-                    <div class="bg-body dark:bg-surface rounded-lg shadow-sm">
+                    <div class="bg-body dark:bg-surface rounded-lg shadow-xs">
                         <div class="p-6">
                             @include('tipowerup-orange-tw::includes.order.items')
                         </div>
@@ -33,7 +33,7 @@
                 </div>
             </div>
         @else
-            <div class="bg-body dark:bg-surface rounded-lg shadow-sm">
+            <div class="bg-body dark:bg-surface rounded-lg shadow-xs">
                 <div class="p-6 text-center">
                     <a
                         href="{{ $loginUrl }}"

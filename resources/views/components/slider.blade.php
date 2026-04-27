@@ -1,42 +1,6 @@
-@php
-    $slideItems = $useDemoSlides ? $demoSlides : $slides;
-    $slideCount = count($slideItems);
-@endphp
-
 <div>
     <div
-        x-data="{
-            currentSlide: 0,
-            slides: {{ $slideCount }},
-            autoplay: true,
-            interval: {{ $delayInterval }},
-            timer: null,
-            init() {
-                if (this.autoplay && this.slides > 1) {
-                    this.startAutoplay();
-                }
-            },
-            startAutoplay() {
-                this.timer = setInterval(() => {
-                    this.next();
-                }, this.interval);
-            },
-            stopAutoplay() {
-                if (this.timer) {
-                    clearInterval(this.timer);
-                    this.timer = null;
-                }
-            },
-            next() {
-                this.currentSlide = (this.currentSlide + 1) % this.slides;
-            },
-            prev() {
-                this.currentSlide = (this.currentSlide - 1 + this.slides) % this.slides;
-            },
-            goTo(index) {
-                this.currentSlide = index;
-            }
-        }"
+        x-data="slider({ slideCount: {{ $slideCount }}, interval: {{ $delayInterval }} })"
         @mouseenter="stopAutoplay()"
         @mouseleave="autoplay && slides > 1 ? startAutoplay() : null"
         class="relative overflow-hidden bg-body"
@@ -78,16 +42,25 @@
                                     <p class="text-lg md:text-xl text-white/80 mb-8 leading-relaxed drop-shadow-md">
                                         {{ $slide['description'] }}
                                     </p>
-                                    <a
-                                        href="{{ page_url('locations') }}"
-                                        wire:navigate
-                                        class="inline-flex items-center px-8 py-4 bg-primary hover:bg-primary-700 text-white font-semibold rounded-lg transition-all shadow-lg hover:shadow-xl hover:scale-105"
-                                    >
-                                        @lang('tipowerup.orange-tw::default.slider.order_now')
-                                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                        </svg>
-                                    </a>
+                                    @if($slide['cta_text'] !== '')
+                                        <a
+                                            href="{{ $slide['cta_link'] !== '' ? $slide['cta_link'] : $ctaUrl }}"
+                                            @unless($slide['cta_is_external']) wire:navigate @endunless
+                                            class="inline-flex items-center px-8 py-4 bg-primary hover:bg-primary-700 text-white font-semibold rounded-lg transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                                        >
+                                            {{ $slide['cta_text'] }}
+                                            <i class="fa fa-arrow-right ml-2"></i>
+                                        </a>
+                                    @else
+                                        <a
+                                            href="{{ $ctaUrl }}"
+                                            wire:navigate
+                                            class="inline-flex items-center px-8 py-4 bg-primary hover:bg-primary-700 text-white font-semibold rounded-lg transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                                        >
+                                            @lang('tipowerup.orange-tw::default.slider.order_now')
+                                            <i class="fa fa-arrow-right ml-2"></i>
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -146,7 +119,7 @@
             <button
                 @click="prev()"
                 type="button"
-                class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-full p-3 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50"
+                class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-xs text-white rounded-full p-3 transition-all duration-200 hover:scale-110 focus:outline-hidden focus:ring-2 focus:ring-white/50"
                 aria-label="Previous slide"
             >
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -157,7 +130,7 @@
             <button
                 @click="next()"
                 type="button"
-                class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-full p-3 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50"
+                class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-xs text-white rounded-full p-3 transition-all duration-200 hover:scale-110 focus:outline-hidden focus:ring-2 focus:ring-white/50"
                 aria-label="Next slide"
             >
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

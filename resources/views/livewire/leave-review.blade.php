@@ -79,11 +79,12 @@
                     </p>
                     <button
                         type="submit"
-                        class="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors inline-flex flex-nowrap items-center justify-center gap-2 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
                         wire:loading.attr="disabled"
                     >
+                        <i wire:loading class="fa fa-spinner fa-spin"></i>
                         <span wire:loading.remove>@lang('igniter.local::default.review.button_review')</span>
-                        <span wire:loading>@lang('igniter.local::default.text_please_wait')</span>
+                        <span wire:loading>@lang('tipowerup.orange-tw::default.common.processing')</span>
                     </button>
                 </div>
             </form>

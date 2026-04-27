@@ -26,13 +26,5 @@
       }
     }
   ],
-  "script": [
-    {
-      "path": "/vendor/tipowerup-orange-tw/js/app.js",
-      "name": "app-js",
-      "attributes": {
-        "data-navigate-once": true
-      }
-    }
-  ]
+  "script": []
 }

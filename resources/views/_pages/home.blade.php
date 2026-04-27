@@ -25,75 +25,111 @@ layout: default
 <x-tipowerup-orange-tw::featured-items />
 
 <!-- How It Works Section -->
+@php($isSingleLocation = \Igniter\Local\Models\Location::whereIsEnabled()->count() === 1)
 <section class="py-16 bg-surface dark:bg-surface">
     <div class="container mx-auto px-4">
         <div class="text-center mb-12">
             <h2 class="text-3xl md:text-4xl font-bold text-text dark:text-text mb-4">
-                How It Works
+                {{ $isSingleLocation ? 'Ordering Made Simple' : 'How It Works' }}
             </h2>
             <p class="text-lg text-text-muted dark:text-text">
-                Order your favorite food in three simple steps
+                {{ $isSingleLocation ? 'From our kitchen to your table in three easy steps' : 'Great food from nearby restaurants in three simple steps' }}
             </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <!-- Step 1 -->
-            <div class="text-center">
-                <div class="w-20 h-20 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg class="w-10 h-10 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
+            @if ($isSingleLocation)
+                <!-- Step 1: Browse -->
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-book-open text-3xl text-primary-600 dark:text-primary-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-text dark:text-text mb-3">
+                        Browse the Menu
+                    </h3>
+                    <p class="text-text-muted dark:text-text-muted">
+                        Explore our dishes and add your favorites to the cart
+                    </p>
                 </div>
-                <h3 class="text-xl font-semibold text-text dark:text-text mb-3">
-                    Search Location
-                </h3>
-                <p class="text-text-muted dark:text-text-muted">
-                    Enter your address to find nearby restaurants
-                </p>
-            </div>
 
-            <!-- Step 2 -->
-            <div class="text-center">
-                <div class="w-20 h-20 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg class="w-10 h-10 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
+                <!-- Step 2: Order -->
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-receipt text-3xl text-primary-600 dark:text-primary-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-text dark:text-text mb-3">
+                        Place Your Order
+                    </h3>
+                    <p class="text-text-muted dark:text-text-muted">
+                        Choose delivery or pickup and check out in a few taps
+                    </p>
                 </div>
-                <h3 class="text-xl font-semibold text-text dark:text-text mb-3">
-                    Choose Your Meal
-                </h3>
-                <p class="text-text-muted dark:text-text-muted">
-                    Browse the menu and add items to your cart
-                </p>
-            </div>
 
-            <!-- Step 3 -->
-            <div class="text-center">
-                <div class="w-20 h-20 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg class="w-10 h-10 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
+                <!-- Step 3: Enjoy -->
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-utensils text-3xl text-primary-600 dark:text-primary-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-text dark:text-text mb-3">
+                        Enjoy Your Meal
+                    </h3>
+                    <p class="text-text-muted dark:text-text-muted">
+                        We'll have it hot and ready, fresh from our kitchen
+                    </p>
                 </div>
-                <h3 class="text-xl font-semibold text-text dark:text-text mb-3">
-                    Enjoy Your Food
-                </h3>
-                <p class="text-text-muted dark:text-text-muted">
-                    Get your food delivered or pick it up yourself
-                </p>
-            </div>
+            @else
+                <!-- Step 1: Find -->
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-map-marker-alt text-3xl text-primary-600 dark:text-primary-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-text dark:text-text mb-3">
+                        Find a Restaurant
+                    </h3>
+                    <p class="text-text-muted dark:text-text-muted">
+                        Enter your address to see which restaurants deliver to you
+                    </p>
+                </div>
+
+                <!-- Step 2: Order -->
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-book-open text-3xl text-primary-600 dark:text-primary-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-text dark:text-text mb-3">
+                        Browse &amp; Order
+                    </h3>
+                    <p class="text-text-muted dark:text-text-muted">
+                        Pick your dishes, customise them, and place your order
+                    </p>
+                </div>
+
+                <!-- Step 3: Enjoy -->
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-utensils text-3xl text-primary-600 dark:text-primary-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-text dark:text-text mb-3">
+                        Delivery or Pickup
+                    </h3>
+                    <p class="text-text-muted dark:text-text-muted">
+                        Get it delivered to your door, or pick it up yourself
+                    </p>
+                </div>
+            @endif
         </div>
 
-        <div class="text-center mt-12">
-            <a
-                href="{{ restaurant_url('local.menus') }}"
-                wire:navigate
-                class="inline-flex items-center px-8 py-4 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white font-semibold rounded-lg transition-colors duration-200 text-lg shadow-lg hover:shadow-xl"
-            >
-                Get Started Now
-                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-            </a>
-        </div>
+        @unless ($isSingleLocation)
+            <div class="text-center mt-12">
+                <a
+                    href="{{ restaurant_url('local.menus') }}"
+                    wire:navigate
+                    class="inline-flex items-center px-8 py-4 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white font-semibold rounded-lg transition-colors duration-200 text-lg shadow-lg hover:shadow-xl"
+                >
+                    Get Started Now
+                    <i class="fa fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        @endunless
     </div>
 </section>

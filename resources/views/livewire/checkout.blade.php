@@ -17,7 +17,7 @@
         {{-- Checkout Form --}}
         <div class="lg:col-span-2">
             <div
-                class="bg-body dark:bg-surface rounded-lg shadow-sm border border-border dark:border-border"
+                class="bg-body dark:bg-surface rounded-lg shadow-xs border border-border dark:border-border"
                 data-control="checkout"
                 data-partial="checkoutForm"
                 data-payment-input-name="fields.payment"
@@ -141,15 +141,13 @@
                                 x-data="{ agreed: @entangle('fields.termsAgreed') }"
                                 x-bind:disabled="!agreed"
                             @endif
-                            class="w-full px-6 py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            class="w-full px-6 py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors inline-flex flex-nowrap items-center justify-center gap-2 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
                         >
+                            <i wire:loading class="fa fa-spinner fa-spin"></i>
                             <span wire:loading.remove>
                                 @lang($isTwoPageCheckout && $checkoutStep !== $this::STEP_PAY ? 'tipowerup.orange-tw::default.checkout.button_payment' : 'tipowerup.orange-tw::default.checkout.button_confirm')
                             </span>
-                            <span wire:loading class="inline-flex items-center gap-2">
-                                <i class="fa fa-spinner fa-spin"></i>
-                                <span>@lang('tipowerup.orange-tw::default.common.processing')</span>
-                            </span>
+                            <span wire:loading>@lang('tipowerup.orange-tw::default.common.processing')</span>
                         </button>
                     </div>
                 </form>

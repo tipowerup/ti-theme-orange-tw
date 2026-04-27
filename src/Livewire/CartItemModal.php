@@ -11,7 +11,7 @@ use Igniter\Local\Facades\Location;
 use Igniter\Main\Traits\ConfigurableComponent;
 use Igniter\Orange\Contracts\ModalComponent;
 use Illuminate\Validation\ValidationException;
-use TiPowerUp\OrangeTw\Data\MenuItemData;
+use TiPowerUp\ThemeToolkit\Data\MenuItemData;
 
 final class CartItemModal extends ModalComponent
 {

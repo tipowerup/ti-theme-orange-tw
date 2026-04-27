@@ -8,7 +8,7 @@
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        class="fixed inset-0 z-50 bg-body/50 backdrop-blur-sm"
+        class="fixed inset-0 z-50 bg-body/50 backdrop-blur-xs"
         @click="$wire.close()"
         style="display: none;"
     ></div>
@@ -28,16 +28,7 @@
         <div class="flex min-h-full items-center justify-center p-4">
             <div
                 @click.away="$wire.close()"
-                class="relative w-full bg-body rounded-lg shadow-xl"
-                :class="{
-                    'max-w-sm': $wire.maxWidth === 'sm',
-                    'max-w-md': $wire.maxWidth === 'md',
-                    'max-w-lg': $wire.maxWidth === 'lg',
-                    'max-w-xl': $wire.maxWidth === 'xl',
-                    'max-w-2xl': $wire.maxWidth === '2xl',
-                    'max-w-4xl': $wire.maxWidth === '4xl',
-                    'max-w-6xl': $wire.maxWidth === '6xl',
-                }"
+                class="relative w-full bg-body rounded-lg shadow-xl {{ $this->maxWidthClass() }}"
             >
                 {{-- Close Button --}}
                 <button

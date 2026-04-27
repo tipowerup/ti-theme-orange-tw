@@ -1,4 +1,4 @@
-<div class="bg-body dark:bg-surface rounded-lg shadow-sm">
+<div class="bg-body dark:bg-surface rounded-lg shadow-xs">
     <div class="p-6">
         <h5 class="text-lg font-medium text-text dark:text-text mb-6">
             @lang('igniter.user::default.text_edit_details')
@@ -79,7 +79,7 @@
                         type="checkbox"
                         wire:model="form.newsletter"
                         id="newsletter"
-                        class="w-4 h-4 text-primary-600 border-border dark:border-border rounded focus:ring-primary-500 dark:bg-surface"
+                        class="w-4 h-4 text-primary-600 border-border dark:border-border rounded-sm focus:ring-primary-500 dark:bg-surface"
                         value="1"
                     />
                     <span class="ml-2 text-sm text-text dark:text-text">
@@ -150,13 +150,12 @@
             <div class="flex justify-end">
                 <button
                     type="submit"
-                    class="px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-md transition-colors disabled:opacity-50"
+                    class="px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-md transition-colors inline-flex flex-nowrap items-center justify-center gap-2 whitespace-nowrap disabled:opacity-50"
                     wire:loading.attr="disabled"
                 >
+                    <i wire:loading class="fa fa-spinner fa-spin"></i>
                     <span wire:loading.remove>@lang('igniter.user::default.settings.button_save')</span>
-                    <span wire:loading>
-                        <i class="fa fa-spinner fa-spin mr-2"></i>Saving...
-                    </span>
+                    <span wire:loading>Saving...</span>
                 </button>
             </div>
         </form>

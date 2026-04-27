@@ -61,8 +61,8 @@
             return
 
         this.$form.off('submitCheckoutForm')
+        this.$checkoutBtn.data('skipValidation', false)
 
-        $(this.paymentInputSelector, document).prop('disabled', true)
         Livewire.dispatch(this.options.choosePaymentEvent, {code: $paymentInput.data('paymentCode')});
     }
 
@@ -106,7 +106,7 @@
             case 'payment-label':
             case 'choose-payment':
                 this.choosePayment($el)
-                return false
+                return
             case 'delete-payment-profile':
                 this.deletePaymentProfile($el, event)
                 return false

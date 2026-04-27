@@ -1,13 +1,13 @@
 <a
     href="{{ $locationData->url($menusPage) }}"
     wire:navigate
-    class="block bg-body dark:bg-surface border border-border dark:border-border rounded-lg p-4 hover:shadow-lg transition-shadow group"
+    class="block bg-body dark:bg-surface border border-border dark:border-border rounded-lg p-4 hover:shadow-lg transition-shadow-sm group"
 >
     <div class="flex flex-col sm:flex-row gap-4">
         <!-- Left Section: Image and Info -->
         <div class="flex-1 flex flex-col sm:flex-row gap-4">
             @if($showThumb && $locationData->hasThumb())
-                <div class="w-full sm:w-24 h-32 sm:h-20 flex-shrink-0">
+                <div class="w-full sm:w-24 h-32 sm:h-20 shrink-0">
                     <img
                         src="{{ $locationData->getThumb(['width' => 128, 'height' => 128]) }}"
                         srcset="{{ $locationData->getThumb(['width' => 128, 'height' => 128]) }} 1x,
@@ -62,7 +62,7 @@
         </div>
 
         <!-- Right Section: Status -->
-        <div class="sm:text-right space-y-1 flex-shrink-0">
+        <div class="sm:text-right space-y-1 shrink-0">
             <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
                 @if($locationData->openingSchedule()->isOpen())
                     bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300

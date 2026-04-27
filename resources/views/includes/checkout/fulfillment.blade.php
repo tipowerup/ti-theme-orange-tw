@@ -1,23 +1,10 @@
 <div
-    x-data="{
+    x-data="checkoutFulfillment({
         isAsap: @js($isAsap),
         orderDate: @js($orderDate),
         orderTime: @js($orderTime),
-        showTimePicker: @js(!$isAsap),
         timeslot: @js($timeslotTimes),
-        init() {
-            this.$wire.$watch('orderDate', value => { this.orderDate = value; });
-            this.$wire.$watch('isAsap', value => {
-                this.isAsap = value == 1;
-                this.showTimePicker = value == 0;
-            });
-        },
-        setAsap(value) {
-            this.isAsap = value == 1;
-            this.showTimePicker = value == 0;
-            this.$wire.set('isAsap', value == 1);
-        }
-    }"
+    })"
     class="space-y-4"
 >
     {{-- Order Type Toggle --}}

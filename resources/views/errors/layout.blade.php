@@ -38,7 +38,7 @@
             </div>
 
             {{-- Error Content --}}
-            <div class="bg-surface border border-border rounded-lg p-8 shadow-sm">
+            <div class="bg-surface border border-border rounded-lg p-8 shadow-xs">
                 @yield('content')
             </div>
 

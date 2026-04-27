@@ -1,4 +1,4 @@
-<div class="bg-surface rounded-lg shadow-sm mb-6">
+<div class="bg-surface rounded-lg shadow-xs mb-6">
     <div class="p-6">
         <h5 class="text-lg font-medium text-text mb-0">
             {{ sprintf(lang('igniter.user::default.text_welcome'), $customerName) }}
@@ -7,7 +7,7 @@
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-    <div class="bg-surface rounded-lg shadow-sm">
+    <div class="bg-surface rounded-lg shadow-xs">
         <div class="p-6">
             @if ($hasDefaultAddress)
                 <div class="flex justify-between items-start mb-3">
@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <div class="bg-surface rounded-lg shadow-sm">
+    <div class="bg-surface rounded-lg shadow-xs">
         <div class="p-6 text-center">
             <p class="mb-4">
                 <i class="fa fa-shopping-basket text-4xl text-text-muted"></i>

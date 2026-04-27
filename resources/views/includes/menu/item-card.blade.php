@@ -24,7 +24,7 @@
                     <button
                         type="button"
                         @class([
-                            'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors ml-2',
+                            'shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors ml-2',
                             'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 hover:bg-primary-200 dark:hover:bg-primary-900/50' => $menuItemData->mealtimeIsAvailable(),
                             'bg-surface dark:bg-surface text-text-muted' => !$menuItemData->mealtimeIsAvailable(),
                         ])
@@ -88,7 +88,7 @@
 
         <!-- Menu Item Image -->
         @if($showThumb && $menuItemData->hasThumb())
-            <div class="flex-shrink-0">
+            <div class="shrink-0">
                 <img
                     src="{{ $menuItemData->getThumb(['width' => 96, 'height' => 96]) }}"
                     srcset="{{ $menuItemData->getThumb(['width' => 96, 'height' => 96]) }} 1x,

@@ -64,7 +64,7 @@
                     type="checkbox"
                     wire:model="form.remember"
                     value="1"
-                    class="w-4 h-4 text-primary-600 bg-body dark:bg-surface border-border dark:border-border rounded focus:ring-primary-500 dark:focus:ring-primary-400 focus:ring-2 transition-colors"
+                    class="w-4 h-4 text-primary-600 bg-body dark:bg-surface border-border dark:border-border rounded-sm focus:ring-primary-500 dark:focus:ring-primary-400 focus:ring-2 transition-colors"
                 />
                 <label for="remember" class="ml-2 text-sm text-text dark:text-text">
                     @lang('igniter.user::default.login.label_remember')
@@ -87,16 +87,11 @@
             <button
                 type="submit"
                 wire:loading.attr="disabled"
-                class="w-full px-6 py-3 text-white bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-surface disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full px-6 py-3 text-white bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 rounded-lg font-medium transition-colors focus:outline-hidden focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-surface inline-flex flex-nowrap items-center justify-center gap-2 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
             >
+                <i wire:loading class="fa fa-spinner fa-spin"></i>
                 <span wire:loading.remove>@lang('igniter.user::default.login.button_login')</span>
-                <span wire:loading class="flex items-center justify-center">
-                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Processing...
-                </span>
+                <span wire:loading>Processing...</span>
             </button>
         </div>
     </form>

@@ -9,7 +9,7 @@ security: guest
 <div class="container mx-auto px-4 py-8 lg:py-16">
     <div class="flex justify-center">
         <div class="w-full max-w-md">
-            <div class="bg-surface rounded-lg border border-border shadow-sm">
+            <div class="bg-surface rounded-lg border border-border shadow-xs">
                 {{-- Login Component --}}
                 <div class="p-6 lg:p-8">
                     <livewire:tipowerup-orange-tw::login/>

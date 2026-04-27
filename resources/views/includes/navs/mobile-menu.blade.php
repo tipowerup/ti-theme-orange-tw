@@ -1,20 +1,7 @@
-@php
-    use Igniter\User\Facades\Auth;
-    use Igniter\Pages\Classes\MenuManager;
-    use Igniter\Pages\Models\Menu;
-
-    $themeCode = controller()->getTheme()->getName();
-    $menuItems = [];
-
-    if ($menu = Menu::whereCode('main-menu')->where('theme_code', $themeCode)->first()) {
-        $menuItems = resolve(MenuManager::class)->generateReferences($menu, controller()->getLayout());
-    }
-@endphp
-
 <div class="space-y-1">
     @foreach ($menuItems as $navItem)
-        @continue(Auth::isLogged() && in_array($navItem->code, ['login', 'register']))
-        @continue(!Auth::isLogged() && in_array($navItem->code, ['account', 'recent-orders']))
+        @continue(\Igniter\User\Facades\Auth::isLogged() && in_array($navItem->code, ['login', 'register']))
+        @continue(!\Igniter\User\Facades\Auth::isLogged() && in_array($navItem->code, ['account', 'recent-orders']))
 
         @if($navItem->items)
             {{-- Dropdown Menu (Mobile) --}}

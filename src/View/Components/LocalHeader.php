@@ -13,7 +13,7 @@ use Igniter\Main\Traits\UsesPage;
 use Igniter\System\Facades\Assets;
 use Illuminate\View\Component;
 use Override;
-use TiPowerUp\OrangeTw\Data\LocationData;
+use TiPowerUp\ThemeToolkit\Data\LocationData;
 
 final class LocalHeader extends Component
 {
@@ -98,11 +98,15 @@ final class LocalHeader extends Component
         ]);
 
         $locationInfo = LocationData::current();
+        $reviewsScore = (float) $locationInfo->reviewsScore();
+        $fullStars = (int) floor($reviewsScore);
 
         return view('tipowerup-orange-tw::components.local-header', [
             'locationInfo' => $locationInfo,
             'allowReviews' => ReviewSettings::allowReviews(),
             'schedule' => $this->currentSchedule($locationInfo),
+            'fullStars' => $fullStars,
+            'halfStar' => ($reviewsScore - $fullStars) >= 0.5,
         ]);
     }
 

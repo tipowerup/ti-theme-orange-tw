@@ -13,7 +13,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
-use TiPowerUp\OrangeTw\Data\LocationData;
+use TiPowerUp\ThemeToolkit\Data\LocationData;
 
 final class LocationList extends Component
 {
@@ -127,7 +127,9 @@ final class LocationList extends Component
             $options['enabled'] = true;
         }
 
-        if ($coordinates = Location::userPosition()->getCoordinates()) {
+        $coordinates = Location::userPosition()->getCoordinates();
+
+        if ($coordinates) {
             $options['position'] = [[
                 'latitude' => $coordinates->getLatitude(),
                 'longitude' => $coordinates->getLongitude(),
@@ -136,7 +138,9 @@ final class LocationList extends Component
 
         $options['pageLimit'] = $this->itemPerPage;
         $options['search'] = $this->search;
-        $options['sort'] = array_get($this->sorters, $this->orderBy.'.condition', 'location_name asc');
+
+        $sortKey = (! $coordinates && $this->orderBy === 'distance') ? 'name' : $this->orderBy;
+        $options['sort'] = array_get($this->sorters, $sortKey.'.condition', 'location_name asc');
 
         $query = LocationModel::query()->withCount([
             'reviews' => fn ($q) => $q->isApproved(),

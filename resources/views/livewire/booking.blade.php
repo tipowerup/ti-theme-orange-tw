@@ -1,12 +1,12 @@
 <div>
-    <div class="bg-body dark:bg-surface rounded-lg shadow-md mt-6">
-        <div class="p-6 border-b border-border dark:border-border">
-            {!! $customer
-                ? sprintf(lang('igniter.orange::default.text_logged_out'), e($customer->first_name), url('logout'))
-                : sprintf(lang('igniter.orange::default.text_logged_in'), page_url('account.login'))
-            !!}
-        </div>
+    <div class="auth-session-banner text-right text-xs text-text-muted dark:text-text-muted mt-6 mb-2">
+        {!! $customer
+            ? sprintf(lang('igniter.orange::default.text_logged_out'), e($customer->first_name), url('logout'))
+            : sprintf(lang('igniter.orange::default.text_logged_in'), page_url('account.login'))
+        !!}
+    </div>
 
+    <div class="bg-body dark:bg-surface rounded-lg shadow-md">
         <div class="p-6">
             <div
                 data-control="booking"
@@ -40,18 +40,16 @@
         </div>
     </div>
 
-    @if (in_array($pickerStep, [$this::STEP_BOOKING, $this::STEP_TIMESLOT]))
+    @if ($pickerStep == $this::STEP_TIMESLOT)
         <div class="bg-body dark:bg-surface rounded-lg shadow-md mt-6">
             <div class="p-6">
                 <a
                     wire:navigate
                     href="{{ page_url('reservation.reservation') }}"
-                    class="inline-flex items-center text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+                    class="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
                 >
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                    </svg>
-                    Start again
+                    <i class="fa fa-arrow-left"></i>
+                    @lang('tipowerup.orange-tw::default.booking.start_again')
                 </a>
             </div>
         </div>

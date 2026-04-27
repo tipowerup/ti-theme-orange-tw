@@ -1,10 +1,4 @@
-@php
-    use Igniter\Local\Models\Location;
-    $location = Location::getDefault();
-    $hasCoordinates = $location && $location->getLatLng();
-@endphp
-
-@if($hasCoordinates)
+@if($defaultLocation && $defaultLocation->location_lat && $defaultLocation->location_lng)
     <div class="mt-12">
         <div class="bg-body dark:bg-surface rounded-lg shadow-lg overflow-hidden">
             <div class="p-6 border-b border-border dark:border-border">
@@ -14,22 +8,22 @@
             </div>
 
             <div class="relative">
-                @if($location->hasMedia('thumb'))
+                @if($defaultLocation->hasMedia('thumb'))
                     <!-- Map Image Preview (if location has a map image) -->
                     <div class="aspect-video w-full">
                         <img
-                            src="{{ $location->getThumb() }}"
+                            src="{{ $defaultLocation->getThumb() }}"
                             alt="Location Map"
                             class="w-full h-full object-cover"
                         />
                     </div>
                 @else
-                    <!-- Google Maps Embed or Placeholder -->
                     @php
-                        [$lat, $lng] = $location->getLatLng();
-                        $mapUrl = "https://www.google.com/maps/embed/v1/place?key=" . config('services.google.maps_api_key', '')
-                                . "&q={$lat},{$lng}"
-                                . "&zoom=15";
+                        $lat = $defaultLocation->location_lat;
+                        $lng = $defaultLocation->location_lng;
+                        $mapUrl = 'https://www.google.com/maps/embed/v1/place?key='.config('services.google.maps_api_key', '')
+                            ."&q={$lat},{$lng}"
+                            .'&zoom=15';
                     @endphp
 
                     @if(config('services.google.maps_api_key'))
@@ -78,10 +72,10 @@
                 @endif
 
                 <!-- Get Directions Link -->
-                @if($location->getAddress())
+                @if($defaultLocation->getAddress())
                     <div class="absolute bottom-4 right-4">
                         <a
-                            href="https://www.google.com/maps/dir/?api=1&destination={{ urlencode($location->getAddress()->format()) }}"
+                            href="https://www.google.com/maps/dir/?api=1&destination={{ urlencode($defaultLocation->getAddress()['format'] ?? '') }}"
                             target="_blank"
                             rel="noopener noreferrer"
                             class="inline-flex items-center gap-2 px-4 py-2 bg-body dark:bg-surface hover:bg-surface dark:hover:bg-surface text-text dark:text-text font-medium rounded-lg shadow-lg border border-border dark:border-border transition-colors duration-200"

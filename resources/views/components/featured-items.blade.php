@@ -45,7 +45,7 @@
                                     <h3 class="text-xl font-semibold text-text group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                                         {{ $featuredItem->name }}
                                     </h3>
-                                    <span class="text-lg font-bold text-primary-600 dark:text-primary-400 ml-2 flex-shrink-0">
+                                    <span class="text-lg font-bold text-primary-600 dark:text-primary-400 ml-2 shrink-0">
                                         {{ currency_format($featuredItem->price()) }}
                                     </span>
                                 </div>

@@ -44,7 +44,7 @@ hideFooter: 1
     x-data="{ navbarVisible: true }"
     @navbar-show.window="navbarVisible = true"
     @navbar-hide.window="navbarVisible = false"
-    class="sticky z-40 bg-body/95 dark:bg-surface/95 backdrop-blur-sm border-b border-border dark:border-border shadow-sm transition-[top] duration-300"
+    class="sticky z-40 bg-body/95 dark:bg-surface/95 backdrop-blur-xs border-b border-border dark:border-border shadow-xs transition-[top] duration-300"
     :class="navbarVisible ? 'top-[72px]' : 'top-0'"
 >
     <div class="container mx-auto px-4">
@@ -71,7 +71,7 @@ hideFooter: 1
                 class="sticky transition-[top] duration-300 flex flex-col"
                 :style="{ top: navbarVisible ? '140px' : '68px', maxHeight: navbarVisible ? 'calc(100vh - 156px)' : 'calc(100vh - 84px)' }"
             >
-                <div class="bg-body dark:bg-surface border border-border dark:border-border rounded-lg shadow-sm overflow-hidden">
+                <div class="bg-body dark:bg-surface border border-border dark:border-border rounded-lg shadow-xs overflow-hidden">
                     <livewire:tipowerup-orange-tw::cart-box/>
                 </div>
             </div>

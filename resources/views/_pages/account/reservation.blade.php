@@ -10,14 +10,14 @@ security: customer
 <div class="container mx-auto px-4 py-8 lg:py-16">
     <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
         {{-- Account Menu Sidebar --}}
-        <aside class="w-full lg:w-64 flex-shrink-0">
+        <aside class="w-full lg:w-64 shrink-0">
             <x-tipowerup-orange-tw::nav code="account-menu" />
         </aside>
 
         {{-- Main Content --}}
         <main class="flex-1 space-y-6">
             {{-- Location Header --}}
-            <div class="bg-surface rounded-lg border border-border shadow-sm">
+            <div class="bg-surface rounded-lg border border-border shadow-xs">
                 <div class="p-6">
                     <x-tipowerup-orange-tw::local-header/>
                 </div>

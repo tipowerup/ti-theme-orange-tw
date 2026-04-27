@@ -22,6 +22,15 @@ class Modal extends Component
         $this->show = false;
     }
 
+    /**
+     * Tailwind max-width utility class derived from the configured size.
+     * Supported sizes are enumerated in app.css via `@source inline(...)`.
+     */
+    public function maxWidthClass(): string
+    {
+        return "max-w-{$this->maxWidth}";
+    }
+
     public function render()
     {
         return view('tipowerup-orange-tw::livewire.modal');

@@ -19,7 +19,7 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
-            class="fixed inset-0 bg-gray-900/75 dark:bg-gray-950/90 backdrop-blur-sm"
+            class="fixed inset-0 bg-gray-900/75 dark:bg-gray-950/90 backdrop-blur-xs"
             @click="show = false; $dispatch('hide-modal')"
         ></div>
 

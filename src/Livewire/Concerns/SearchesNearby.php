@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace TiPowerUp\OrangeTw\Livewire\Concerns;
 
 use Exception;
-use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Flame\Geolite\Contracts\GeoQueryInterface;
+use Igniter\Flame\Geolite\Facades\Geocoder;
 use Igniter\Flame\Geolite\GeoQuery;
 use Igniter\Flame\Geolite\Model\Coordinates;
 use Igniter\Flame\Geolite\Model\Location as GeoliteLocation;
@@ -79,9 +79,8 @@ trait SearchesNearby
             if ($this->geocoder === 'nominatim') {
                 Assets::addCss('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', 'leaflet-css');
                 Assets::addJs('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', 'leaflet-js');
-            } else {
-                Assets::addJs('tipowerup-orange-tw::/js/google-maps.js', 'google-maps-js');
             }
+            // google-maps.js is bundled in app.js — no per-page load needed.
         }
 
         $this->mapKey = setting('maps_api_key', '');

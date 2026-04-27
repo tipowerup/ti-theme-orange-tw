@@ -1,4 +1,4 @@
-<div class="bg-body dark:bg-surface rounded-lg border border-border dark:border-border shadow-sm">
+<div class="bg-body dark:bg-surface rounded-lg border border-border dark:border-border shadow-xs">
     {{-- Header --}}
     <div class="px-6 py-4 border-b border-border dark:border-border flex items-center justify-between">
         <h2 class="text-xl font-semibold text-text dark:text-text">
@@ -29,7 +29,7 @@
                         role="button"
                     >
                         <div class="flex items-start gap-3">
-                            <div class="flex-shrink-0 mt-1">
+                            <div class="shrink-0 mt-1">
                                 <svg class="w-5 h-5 text-text-muted dark:text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -45,7 +45,7 @@
                                     </span>
                                 @endif
                             </div>
-                            <div class="flex-shrink-0">
+                            <div class="shrink-0">
                                 <svg class="w-5 h-5 text-text-muted dark:text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                                 </svg>
@@ -93,7 +93,7 @@
         >
             <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                 {{-- Background overlay --}}
-                <div class="fixed inset-0 bg-surface bg-opacity-75 dark:bg-body dark:bg-opacity-75 transition-opacity" aria-hidden="true" wire:click="$set('showModal', false)"></div>
+                <div class="fixed inset-0 bg-surface/75 dark:bg-body/75 transition-opacity" aria-hidden="true" wire:click="$set('showModal', false)"></div>
 
                 {{-- Center modal --}}
                 <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
@@ -109,10 +109,18 @@
                 >
                     <form wire:submit="save">
                         <div class="bg-body dark:bg-surface px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                            <div class="mb-4">
+                            <div class="flex items-center justify-between mb-4">
                                 <h3 class="text-lg leading-6 font-medium text-text dark:text-text" id="modal-title">
                                     {{ $selectAddress ? lang('igniter.user::default.account.button_update') : lang('igniter.user::default.account.button_add') }} @lang('igniter.user::default.text_address')
                                 </h3>
+                                <button
+                                    type="button"
+                                    wire:click="$set('showModal', false)"
+                                    class="text-text-muted dark:text-text-muted hover:text-text dark:hover:text-text transition-colors focus:outline-hidden focus:ring-2 focus:ring-primary-500 rounded-md p-1"
+                                    aria-label="@lang('igniter::admin.button_close')"
+                                >
+                                    <i class="fa fa-times text-lg"></i>
+                                </button>
                             </div>
 
                             <input type="hidden" wire:model="form.address_id" />
@@ -227,7 +235,7 @@
                                     <input
                                         wire:model="form.is_default"
                                         type="checkbox"
-                                        class="rounded border-border dark:border-border text-primary-600 focus:ring-primary-500 dark:bg-surface"
+                                        class="rounded-sm border-border dark:border-border text-primary-600 focus:ring-primary-500 dark:bg-surface"
                                     />
                                     <span class="ml-2 text-sm text-text dark:text-text">
                                         @lang('igniter.user::default.text_set_default')
@@ -240,34 +248,38 @@
                         </div>
 
                         {{-- Footer --}}
-                        <div class="bg-surface dark:bg-body px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-2">
-                            <button
-                                type="submit"
-                                wire:loading.attr="disabled"
-                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                {{ $selectAddress ? lang('igniter.user::default.account.button_update') : lang('igniter.user::default.account.button_add') }}
-                            </button>
+                        <div class="bg-surface dark:bg-body px-4 py-3 sm:px-6">
+                            <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3">
+                                {{-- Left: Delete link (edit mode only) --}}
+                                <div>
+                                    @if($selectAddress)
+                                        <button
+                                            type="button"
+                                            wire:click="delete({{ $selectAddress->address_id }})"
+                                            wire:loading.attr="disabled"
+                                            wire:confirm="@lang('tipowerup.orange-tw::default.address_book.delete_confirm')"
+                                            class="inline-flex items-center gap-1.5 text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 focus:outline-hidden focus:underline disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                        >
+                                            <i class="fa fa-trash-o text-xs"></i>
+                                            @lang('igniter.user::default.account.text_delete')
+                                        </button>
+                                    @endif
+                                </div>
 
-                            @if($selectAddress)
-                                <button
-                                    type="button"
-                                    wire:click="delete({{ $selectAddress->address_id }})"
-                                    wire:loading.attr="disabled"
-                                    wire:confirm="@lang('tipowerup.orange-tw::default.address_book.delete_confirm')"
-                                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-surface focus:ring-red-500 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    @lang('igniter.user::default.account.text_delete')
-                                </button>
-                            @endif
-
-                            <button
-                                type="button"
-                                wire:click="$set('showModal', false)"
-                                class="mt-3 w-full inline-flex justify-center rounded-md border border-border dark:border-border shadow-sm px-4 py-2 bg-body dark:bg-surface text-base font-medium text-text dark:text-text hover:bg-surface dark:hover:bg-surface focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:w-auto sm:text-sm"
-                            >
-                                @lang('igniter::admin.button_close')
-                            </button>
+                                {{-- Right: Save --}}
+                                <div class="sm:text-right">
+                                    <button
+                                        type="submit"
+                                        wire:loading.attr="disabled"
+                                        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md border border-transparent shadow-xs px-4 py-2 bg-primary-600 text-sm font-medium text-white hover:bg-primary-700 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        <span wire:loading wire:target="save" class="inline-block">
+                                            <i class="fa fa-circle-o-notch fa-spin"></i>
+                                        </span>
+                                        {{ $selectAddress ? lang('igniter.user::default.account.button_update') : lang('igniter.user::default.account.button_add') }}
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>

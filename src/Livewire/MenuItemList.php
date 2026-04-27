@@ -9,7 +9,7 @@ use Igniter\Main\Traits\ConfigurableComponent;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
-use TiPowerUp\OrangeTw\Actions\ListMenuItems;
+use TiPowerUp\ThemeToolkit\Actions\ListMenuItems;
 
 final class MenuItemList extends Component
 {

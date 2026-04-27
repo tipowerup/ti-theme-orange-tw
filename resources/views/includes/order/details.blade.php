@@ -1,5 +1,5 @@
 @if ($order->isDeliveryType())
-    <div class="bg-body dark:bg-surface rounded-lg shadow-sm mb-4">
+    <div class="bg-body dark:bg-surface rounded-lg shadow-xs mb-4">
         <div class="p-6">
             <h6 class="text-sm font-semibold text-text-muted dark:text-text-muted uppercase tracking-wide mb-3">
                 @lang('igniter.cart::default.checkout.text_delivery_address')
@@ -14,7 +14,7 @@
     </div>
 @endif
 
-<div class="bg-body dark:bg-surface rounded-lg shadow-sm mb-4">
+<div class="bg-body dark:bg-surface rounded-lg shadow-xs mb-4">
     <div class="p-6">
         <h6 class="text-sm font-semibold text-text-muted dark:text-text-muted uppercase tracking-wide mb-3">
             @lang('igniter.cart::default.checkout.text_comment')
@@ -25,7 +25,7 @@
     </div>
 </div>
 
-<div class="bg-body dark:bg-surface rounded-lg shadow-sm">
+<div class="bg-body dark:bg-surface rounded-lg shadow-xs">
     <div class="p-6">
         <h6 class="text-sm font-semibold text-text-muted dark:text-text-muted uppercase tracking-wide mb-3">
             @lang('igniter.cart::default.checkout.label_payment_method')

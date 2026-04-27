@@ -17,6 +17,8 @@ yarn-error.log
 public/build/*
 public/css/*
 public/js/*
+public/assets/*
+public/.vite/
 public/hot
 public/manifest.json
 .claude

@@ -10,7 +10,6 @@ use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Local\Facades\Location;
 use Igniter\Main\Traits\ConfigurableComponent;
 use Igniter\Main\Traits\UsesPage;
-use Igniter\System\Facades\Assets;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -68,9 +67,6 @@ final class CartBox extends Component
 
     public function mount(): void
     {
-        Assets::addJs('tipowerup-orange-tw::/js/cart-item-options.js', 'cart-item-options-js');
-        Assets::addJs('tipowerup-orange-tw::/js/cart-item.js', 'cart-item-js');
-
         $this->prepareProps();
     }
 
@@ -88,7 +84,7 @@ final class CartBox extends Component
 
     public function onOpenItemModal(string $rowId, int $menuId): void
     {
-        $this->dispatch('showModal', component: 'tipowerup-orange-tw::cart-item-modal', arguments: ['menuId' => $menuId, 'rowId' => $rowId]);
+        $this->dispatch('openModal', component: 'tipowerup-orange-tw::cart-item-modal', arguments: ['menuId' => $menuId, 'rowId' => $rowId]);
     }
 
     #[On('hideModal')]

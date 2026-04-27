@@ -29,10 +29,9 @@
 
                     {{-- Item Details (Clickable - opens modal for update) --}}
                     <button
+                        type="button"
                         class="flex-1 text-left"
-                        data-toggle="orange-modal"
-                        data-component="tipowerup-orange-tw::cart-item-modal"
-                        data-arguments='{"menuId": {{ $cartItem->id }}, "rowId": "{{ $cartItem->rowId }}"}'
+                        wire:click="onOpenItemModal('{{ $cartItem->rowId }}', {{ $cartItem->id }})"
                     >
                         <div class="mb-0.5 text-sm">
                             @if ($cartItem->qty > 1)

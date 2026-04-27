@@ -21,13 +21,7 @@
 
     @if($selectedMenuId)
         <button
-            x-data="{
-                init() {
-                    this.$nextTick(() => {
-                        this.$el.click();
-                    });
-                }
-            }"
+            x-data="autoClick"
             type="button"
             class="hidden"
             @click="$dispatch('open-modal', 'cart-item-modal-{{ $selectedMenuId }}')"

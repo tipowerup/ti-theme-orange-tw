@@ -173,8 +173,9 @@ final class Booking extends Component
         }
 
         Assets::addCss('igniter.admin::css/formwidgets/datepicker.css', 'datepicker-css');
-        Assets::addJs('igniter-orange::/js/booking.js', 'booking-js');
-        Assets::addCss('igniter-orange::/css/booking.css', 'booking-css');
+        // booking.js/booking.css from ti-theme-orange are intentionally not loaded —
+        // the booking date-picker init is bundled in our app.js using flatpickr()
+        // directly (not the $.fn.flatpickr jQuery plugin, which we don't ship).
 
         $this->prepareDates();
         $this->prepareProps();
@@ -342,6 +343,12 @@ final class Booking extends Component
     public function disabledDaysOfWeek(): array
     {
         return [];
+    }
+
+    #[Computed]
+    public function selectedDateIsToday(): bool
+    {
+        return make_carbon($this->date)->isToday();
     }
 
     protected function prepareProps(): void

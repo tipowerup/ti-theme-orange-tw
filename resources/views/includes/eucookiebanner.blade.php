@@ -1,33 +1,6 @@
-@php
-    $gdprEnabled = $theme->enable_gdpr ?? false;
-    $privacyPage = isset($theme->gdpr_more_info_link)
-        ? \Igniter\Pages\Models\Page::find($theme->gdpr_more_info_link)
-        : null;
-    $cookieMessage = $theme->gdpr_cookie_message ?? 'We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.';
-    $moreInfoText = $theme->gdpr_more_info_text ?? 'Learn more';
-    $acceptText = $theme->gdpr_accept_text ?? 'Accept All';
-    $declineText = $theme->gdpr_decline_text ?? 'Decline';
-@endphp
-
 @if($gdprEnabled)
 <div
-    x-data="{
-        showBanner: false,
-        init() {
-            // Check if user has already made a choice
-            if (!localStorage.getItem('cookie-consent')) {
-                this.showBanner = true;
-            }
-        },
-        acceptCookies() {
-            localStorage.setItem('cookie-consent', 'accepted');
-            this.showBanner = false;
-        },
-        declineCookies() {
-            localStorage.setItem('cookie-consent', 'declined');
-            this.showBanner = false;
-        }
-    }"
+    x-data="cookieBanner()"
     x-show="showBanner"
     x-cloak
     x-transition:enter="transition ease-out duration-300"
@@ -42,12 +15,12 @@
     aria-describedby="cookie-banner-description"
 >
     <div class="container mx-auto max-w-5xl">
-        <div class="bg-surface/95 backdrop-blur-sm border border-border rounded-lg shadow-lg p-4 md:p-6">
+        <div class="bg-surface/95 backdrop-blur-xs border border-border rounded-lg shadow-lg p-4 md:p-6">
             <div class="flex flex-col md:flex-row items-start md:items-center gap-4">
                 {{-- Cookie Icon --}}
-                <div class="flex-shrink-0">
+                <div class="shrink-0">
                     <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                        <x-tipowerup-orange-tw::icon name="cookie" class="w-6 h-6 text-primary" />
+                        <i class="fa fa-cookie-bite text-xl text-primary" aria-hidden="true"></i>
                     </div>
                 </div>
 
@@ -73,7 +46,7 @@
                     <button
                         type="button"
                         @click="declineCookies()"
-                        class="px-4 py-2 bg-body hover:bg-surface border border-border text-text rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-surface text-sm font-medium"
+                        class="px-4 py-2 bg-body hover:bg-surface border border-border text-text rounded-lg transition-colors focus:outline-hidden focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-surface text-sm font-medium"
                         aria-label="Decline cookies"
                     >
                         {{ $declineText }}
@@ -81,7 +54,7 @@
                     <button
                         type="button"
                         @click="acceptCookies()"
-                        class="px-4 py-2 bg-primary hover:bg-primary-600 text-white rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-surface text-sm font-medium"
+                        class="px-4 py-2 bg-primary hover:bg-primary-600 text-white rounded-lg transition-colors focus:outline-hidden focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-surface text-sm font-medium"
                         aria-label="Accept all cookies"
                     >
                         {{ $acceptText }}

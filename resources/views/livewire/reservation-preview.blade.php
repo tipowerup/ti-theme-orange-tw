@@ -1,6 +1,6 @@
 <div>
     @if ($showCancelButton)
-        <div class="mb-6 bg-body dark:bg-surface rounded-lg border border-border dark:border-border shadow-sm">
+        <div class="mb-6 bg-body dark:bg-surface rounded-lg border border-border dark:border-border shadow-xs">
             <div class="p-6 text-center">
                 <button
                     wire:click="cancel"
@@ -17,7 +17,7 @@
         </div>
     @endif
 
-    <div class="bg-body dark:bg-surface rounded-lg border border-border dark:border-border shadow-sm overflow-hidden">
+    <div class="bg-body dark:bg-surface rounded-lg border border-border dark:border-border shadow-xs overflow-hidden">
         @if ($reservation)
             @include('tipowerup-orange-tw::includes.reservation.details', ['reservation' => $reservation])
         @else

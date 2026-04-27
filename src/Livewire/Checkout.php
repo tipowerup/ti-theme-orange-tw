@@ -23,7 +23,6 @@ use Igniter\Local\Models\LocationArea;
 use Igniter\Main\Traits\ConfigurableComponent;
 use Igniter\Main\Traits\UsesPage;
 use Igniter\Orange\Actions\EnsureUniqueProcess;
-use Igniter\System\Facades\Assets;
 use Igniter\User\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
@@ -97,6 +96,11 @@ final class Checkout extends Component
     public string $geocoder = 'nominatim';
 
     public bool $saveAddress = true;
+
+    /** When true, show the manual address form; otherwise show the saved-address picker. */
+    public bool $useNewAddressForm = false;
+
+    public ?int $selectedAddressId = null;
 
     public array $timeslotDates = [];
 
@@ -211,8 +215,6 @@ final class Checkout extends Component
         if (! is_null($this->checkCheckoutSecurity())) {
             return $this->redirect(restaurant_url($this->menusPage));
         }
-
-        Assets::addJs('tipowerup-orange-tw::/js/checkout.js', 'checkout-js');
 
         $this->geocoder = setting('default_geocoder', 'nominatim');
 
@@ -329,8 +331,6 @@ final class Checkout extends Component
                 $this->orderManager->saveOrder($order, $data);
             });
 
-            $this->saveDeliveryAddress();
-
             if ($this->isInitialCheckoutStep()) {
                 return $this->redirect(Livewire::originalUrl().'?step='.self::STEP_PAY);
             }
@@ -394,6 +394,50 @@ final class Checkout extends Component
         return collect(Auth::customer()?->addresses ?? []);
     }
 
+    #[Computed]
+    public function defaultAddressId(): ?int
+    {
+        $customer = Auth::customer();
+
+        return $customer && $customer->address_id ? (int) $customer->address_id : null;
+    }
+
+    #[Computed]
+    public function hasSavedAddresses(): bool
+    {
+        return auth('igniter-customer')->check() && $this->customerAddresses->isNotEmpty();
+    }
+
+    #[Computed]
+    public function sortedSavedAddresses(): Collection
+    {
+        if (! $this->hasSavedAddresses) {
+            return collect();
+        }
+
+        $defaultId = $this->defaultAddressId;
+
+        return $this->customerAddresses
+            ->sortBy(fn ($a) => (int) $a->address_id === $defaultId ? 0 : 1)
+            ->values();
+    }
+
+    #[Computed]
+    public function selectedSavedAddress()
+    {
+        if (! $this->hasSavedAddresses || ! $this->selectedAddressId) {
+            return null;
+        }
+
+        return $this->sortedSavedAddresses->firstWhere('address_id', $this->selectedAddressId);
+    }
+
+    #[Computed]
+    public function showSavedAddressPicker(): bool
+    {
+        return $this->hasSavedAddresses && ! $this->useNewAddressForm;
+    }
+
     public function onSelectSavedAddress(int $id): void
     {
         $customer = Auth::customer();
@@ -406,6 +450,7 @@ final class Checkout extends Component
             return;
         }
 
+        $this->selectedAddressId = (int) $id;
         $this->fields['address_1'] = $address->address_1;
         $this->fields['city'] = $address->city;
         $this->fields['state'] = $address->state;
@@ -414,6 +459,17 @@ final class Checkout extends Component
         $this->addressSearchQuery = '';
         $this->isAddressSearching = false;
         $this->addressSuggestions = [];
+        $this->useNewAddressForm = false;
+    }
+
+    public function onUseNewAddressForm(): void
+    {
+        $this->useNewAddressForm = true;
+    }
+
+    public function onUseSavedAddressPicker(): void
+    {
+        $this->useNewAddressForm = false;
     }
 
     public function updatedAddressSearchQuery(): void
@@ -448,20 +504,125 @@ final class Checkout extends Component
 
         $data = $suggestion['data'] ?? [];
 
-        if (! empty($data['street_name'])) {
-            $this->fields['address_1'] = trim(($data['street_number'] ?? '').' '.($data['street_name'] ?? ''));
-            $this->fields['city'] = $data['city'] ?? '';
-            $this->fields['state'] = $data['state'] ?? '';
-            $this->fields['postcode'] = $data['postcode'] ?? '';
+        if (empty($data['street_name'])) {
+            $provider = (string) ($suggestion['provider'] ?? '');
+            $placeId = (string) ($suggestion['placeId'] ?? '');
 
-            if (! empty($data['country_code'])) {
-                $this->fields['country_id'] = array_get(
-                    countries('country_id', 'iso_code_2'),
-                    $data['country_code'],
-                    LocationModel::getDefaultKey(),
-                );
+            if ($provider === 'google' && $placeId !== '') {
+                $data = array_merge($data, $this->fetchGooglePlaceDetails($placeId));
+            } elseif (! empty($suggestion['title'])) {
+                $data = array_merge($data, $this->geocodeSuggestion((string) $suggestion['title']));
             }
         }
+
+        $address1 = trim(($data['street_number'] ?? '').' '.($data['street_name'] ?? ''));
+        if ($address1 === '') {
+            $address1 = (string) ($suggestion['title'] ?? $suggestion['description'] ?? '');
+        }
+
+        $this->fields['address_1'] = $address1;
+        $this->fields['city'] = $data['city'] ?? ($this->fields['city'] ?? '');
+        $this->fields['state'] = $data['state'] ?? ($this->fields['state'] ?? '');
+        $this->fields['postcode'] = $data['postcode'] ?? ($this->fields['postcode'] ?? '');
+
+        if (! empty($data['country_code'])) {
+            $this->fields['country_id'] = array_get(
+                countries('country_id', 'iso_code_2'),
+                $data['country_code'],
+                LocationModel::getDefaultKey(),
+            );
+        }
+
+        $this->selectedAddressId = null;
+        $this->useNewAddressForm = true;
+    }
+
+    /**
+     * Fetch structured address details from Google Place Details using the
+     * Autocomplete session token (so the entire keystroke session + the details
+     * call are billed as a single Autocomplete session, ~$0.017 flat).
+     *
+     * @return array<string, mixed>
+     */
+    protected function fetchGooglePlaceDetails(string $placeId): array
+    {
+        $apiKey = (string) (config('igniter-geocoder.providers.google.apiKey') ?: setting('maps_api_key'));
+        $endpoint = (string) config(
+            'igniter-geocoder.providers.google.endpoints.places',
+            'https://places.googleapis.com/v1/places',
+        );
+
+        if ($apiKey === '' || $placeId === '') {
+            return [];
+        }
+
+        $sessionToken = (string) session('gm_places_session_token', '');
+        $url = rtrim($endpoint, '/').'/'.$placeId.($sessionToken !== '' ? '?sessionToken='.$sessionToken : '');
+
+        try {
+            $response = \Illuminate\Support\Facades\Http::withHeaders([
+                'X-Goog-Api-Key' => $apiKey,
+                'X-Goog-FieldMask' => 'addressComponents,location,formattedAddress',
+            ])->timeout(15)->get($url);
+        } catch (Throwable) {
+            return [];
+        }
+
+        if (! $response->successful()) {
+            return [];
+        }
+
+        $body = $response->json();
+
+        session()->forget(['gm_places_session_token', 'gm_places_session_token_expires_at']);
+
+        $components = collect($body['addressComponents'] ?? []);
+        $pick = fn (string $type): ?string => $components
+            ->first(fn ($c) => in_array($type, $c['types'] ?? [], true))['longText'] ?? null;
+        $pickShort = fn (string $type): ?string => $components
+            ->first(fn ($c) => in_array($type, $c['types'] ?? [], true))['shortText'] ?? null;
+
+        return [
+            'street_number' => $pick('street_number'),
+            'street_name' => $pick('route'),
+            'city' => $pick('locality') ?: $pick('sublocality') ?: $pick('postal_town'),
+            'state' => $pick('administrative_area_level_1'),
+            'postcode' => $pick('postal_code'),
+            'country_code' => $pickShort('country'),
+            'latitude' => $body['location']['latitude'] ?? null,
+            'longitude' => $body['location']['longitude'] ?? null,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function geocodeSuggestion(string $text): array
+    {
+        try {
+            $location = Geocoder::driver()
+                ->geocodeQuery(GeoQuery::create($text)->withLimit(1))
+                ->first();
+        } catch (Throwable) {
+            return [];
+        }
+
+        if (! $location) {
+            return [];
+        }
+
+        $coordinates = $location->getCoordinates();
+
+        return [
+            'street_number' => $location->getStreetNumber(),
+            'street_name' => $location->getStreetName(),
+            'city' => $location->getSubLocality() ?: $location->getLocality(),
+            'state' => $location->getAdminLevels()->get(1)?->getName() ?? $location->getLocality(),
+            'postcode' => $location->getPostalCode(),
+            'country_code' => $location->getCountryCode(),
+            'latitude' => $coordinates?->getLatitude(),
+            'longitude' => $coordinates?->getLongitude(),
+        ];
     }
 
     protected function fetchAddressSuggestions(GeoQueryInterface $query): array
@@ -545,37 +706,6 @@ final class Checkout extends Component
         ]));
 
         $this->location->updateScheduleTimeSlot($timeSlotDateTime, $this->isAsap);
-    }
-
-    protected function saveDeliveryAddress(): void
-    {
-        $customer = Auth::customer();
-        if (! $customer || ! $this->saveAddress || ! $this->getOrder()->isDeliveryType()) {
-            return;
-        }
-
-        $address1 = trim($this->fields['address_1'] ?? '');
-        $postcode = trim($this->fields['postcode'] ?? '');
-        if (empty($address1)) {
-            return;
-        }
-
-        $exists = $customer->addresses()
-            ->where('address_1', $address1)
-            ->where('postcode', $postcode)
-            ->exists();
-
-        if ($exists) {
-            return;
-        }
-
-        $customer->addresses()->create([
-            'address_1' => $address1,
-            'city' => $this->fields['city'] ?? '',
-            'state' => $this->fields['state'] ?? '',
-            'postcode' => $postcode,
-            'country_id' => $this->fields['country_id'] ?? LocationModel::getDefaultKey(),
-        ]);
     }
 
     /**
@@ -704,6 +834,10 @@ final class Checkout extends Component
             $data,
         );
 
+        if ($order->isDeliveryType() && $this->selectedAddressId) {
+            $data['address_id'] = $this->selectedAddressId;
+        }
+
         $this->orderManager->applyCurrentPaymentFee($this->fields['payment']);
 
         Event::dispatch('igniter.orange.validateCheckout', [$data, $order]);
@@ -722,6 +856,23 @@ final class Checkout extends Component
     {
         if (! $this->getOrder()->isDeliveryType()) {
             return;
+        }
+
+        $customer = Auth::customer();
+        if ($customer && $this->customerAddresses->isNotEmpty()) {
+            $defaultAddress = $this->customerAddresses->firstWhere('address_id', $customer->address_id)
+                ?? $this->customerAddresses->first();
+
+            if ($defaultAddress) {
+                $this->selectedAddressId = (int) $defaultAddress->address_id;
+                $this->fields['address_1'] = $defaultAddress->address_1;
+                $this->fields['city'] = $defaultAddress->city;
+                $this->fields['state'] = $defaultAddress->state;
+                $this->fields['postcode'] = $defaultAddress->postcode;
+                $this->fields['country_id'] = $defaultAddress->country_id;
+
+                return;
+            }
         }
 
         $userPosition = Location::userPosition();

@@ -48,7 +48,7 @@
         @endif
 
         {{-- Modal Body --}}
-        <div class="flex-1 overflow-y-auto p-6">
+        <div class="flex-1 overflow-y-auto scrollbar-themed p-6">
             {{-- Description --}}
             @if (strlen($menuItemData->description))
                 <p class="text-text-muted dark:text-text-muted mb-6">{!! $menuItemData->description !!}</p>
@@ -94,17 +94,16 @@
                                 {{-- Radio buttons for single-select --}}
                                 @if ($menuOption->display_type === 'radio')
                                     @foreach ($optionValues as $optionValue)
-                                        @php $menuOptionValueId = $optionValue->menu_option_value_id; @endphp
                                         <label class="flex items-center p-3 border border-border dark:border-border rounded-lg cursor-pointer hover:bg-surface dark:hover:bg-surface transition-colors">
                                             <input
                                                 type="radio"
                                                 name="menuOptions[{{ $menuOption->menu_option_id }}][option_values][]"
                                                 wire:model.fill="menuOptions.{{ $menuOption->menu_option_id }}.option_values"
-                                                value="{{ $menuOptionValueId }}"
+                                                value="{{ $optionValue->menu_option_value_id }}"
                                                 data-option-price="{{ $optionValue->price }}"
                                                 class="w-4 h-4 text-primary-600 focus:ring-primary-500"
                                                 @change="calculateTotal()"
-                                                @checked(($cartItem && $cartItem->hasOptionValue($menuOptionValueId)) || $optionValue->isDefault())
+                                                @checked(($cartItem && $cartItem->hasOptionValue($optionValue->menu_option_value_id)) || $optionValue->isDefault())
                                             />
                                             <span class="ml-3 flex-1 text-text dark:text-text">
                                                 {{ $optionValue->name }}
@@ -125,17 +124,16 @@
                                 {{-- Checkboxes for multi-select --}}
                                 @if ($menuOption->display_type === 'checkbox')
                                     @foreach ($optionValues as $optionValue)
-                                        @php $menuOptionValueId = $optionValue->menu_option_value_id; @endphp
                                         <label class="flex items-center p-3 border border-border dark:border-border rounded-lg cursor-pointer hover:bg-surface dark:hover:bg-surface transition-colors">
                                             <input
-                                                x-data="OrangeCartItemCheckbox('{{ $menuOption->menu_option_id }}', {{ $menuOptionValueId }})"
+                                                x-data="OrangeCartItemCheckbox('{{ $menuOption->menu_option_id }}', {{ $optionValue->menu_option_value_id }})"
                                                 x-on:change="toggle"
                                                 type="checkbox"
-                                                name="menuOptions[{{ $menuOption->menu_option_id }}][option_values][{{ $menuOptionValueId }}]"
-                                                value="{{ $menuOptionValueId }}"
+                                                name="menuOptions[{{ $menuOption->menu_option_id }}][option_values][{{ $optionValue->menu_option_value_id }}]"
+                                                value="{{ $optionValue->menu_option_value_id }}"
                                                 data-option-price="{{ $optionValue->price }}"
-                                                class="w-4 h-4 text-primary-600 border-border rounded focus:ring-primary-500 dark:bg-surface"
-                                                @checked(($cartItem && $cartItem->hasOptionValue($menuOptionValueId)) || $optionValue->isDefault())
+                                                class="w-4 h-4 text-primary-600 border-border rounded-sm focus:ring-primary-500 dark:bg-surface"
+                                                @checked(($cartItem && $cartItem->hasOptionValue($optionValue->menu_option_value_id)) || $optionValue->isDefault())
                                             />
                                             <span class="ml-3 flex-1 text-text dark:text-text">
                                                 {{ $optionValue->name }}
@@ -184,12 +182,8 @@
                                 {{-- Quantity inputs --}}
                                 @if ($menuOption->display_type === 'quantity')
                                     @foreach ($optionValues as $optionIndex => $optionValue)
-                                        @php $menuOptionValueId = $optionValue->menu_option_value_id @endphp
                                         <div
-                                            x-data="{
-                                                optionQuantity: {{ $this->getOptionQuantityTypeValue($optionValue->menu_option_value_id) }},
-                                                optionPrice: {{ $optionValue->price }}
-                                            }"
+                                            x-data="quantityOption({ quantity: {{ $this->getOptionQuantityTypeValue($optionValue->menu_option_value_id) }}, price: {{ $optionValue->price }} })"
                                             class="flex items-center gap-3 p-3 border border-border dark:border-border rounded-lg"
                                         >
                                             <input
@@ -214,10 +208,10 @@
                                                 <input
                                                     x-model="optionQuantity"
                                                     x-init="
-                                                        $wire.set('menuOptions.{{ $menuOption->menu_option_id }}.option_values.{{ $menuOptionValueId }}.qty', optionQuantity, false);
+                                                        $wire.set('menuOptions.{{ $menuOption->menu_option_id }}.option_values.{{ $optionValue->menu_option_value_id }}.qty', optionQuantity, false);
                                                         $watch('optionQuantity', () => {
                                                             calculateTotal();
-                                                            $wire.set('menuOptions.{{ $menuOption->menu_option_id }}.option_values.{{ $menuOptionValueId }}.qty', optionQuantity, false);
+                                                            $wire.set('menuOptions.{{ $menuOption->menu_option_id }}.option_values.{{ $optionValue->menu_option_value_id }}.qty', optionQuantity, false);
                                                         });
                                                     "
                                                     type="text"

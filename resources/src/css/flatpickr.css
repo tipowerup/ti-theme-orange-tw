@@ -1,0 +1,181 @@
+/**
+ * Flatpickr theme overrides.
+ * Must load after flatpickr/dist/flatpickr.css (handled by import order in app.css).
+ */
+
+/* --- Popup calendar chrome ---------------------------------------------- */
+.flatpickr-calendar {
+    background: var(--color-body);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+.flatpickr-calendar.inline {
+    box-shadow: none;
+}
+
+.flatpickr-months {
+    background: var(--color-surface);
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+.flatpickr-months .flatpickr-month {
+    color: var(--color-text);
+    fill: var(--color-text);
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+    color: var(--color-text);
+    font-weight: 600;
+    background: transparent;
+}
+.flatpickr-current-month .flatpickr-monthDropdown-months:hover {
+    background: var(--color-surface);
+}
+.flatpickr-current-month input.cur-year,
+.dark .flatpickr-current-month input.cur-year {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+    fill: var(--color-text);
+}
+.flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-months .flatpickr-next-month:hover svg {
+    fill: var(--color-primary);
+}
+
+/* --- Weekday + day grid ------------------------------------------------- */
+.flatpickr-weekdays {
+    background: var(--color-surface);
+}
+span.flatpickr-weekday {
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.flatpickr-days {
+    border-color: var(--color-border);
+}
+.dayContainer {
+    background: var(--color-body);
+}
+
+.flatpickr-day {
+    color: var(--color-text);
+    border-radius: 0.5rem;
+}
+.flatpickr-day:hover {
+    background: var(--color-surface);
+    border-color: var(--color-surface);
+}
+.flatpickr-day.today {
+    border-color: var(--color-primary);
+}
+.flatpickr-day.today:hover {
+    background: color-mix(in oklab, var(--color-primary) 10%, transparent);
+}
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover,
+.flatpickr-day.selected:focus,
+span.flatpickr-day.selected,
+span.flatpickr-day.selected:hover,
+span.flatpickr-day.selected:focus {
+    background: var(--color-primary);
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #ffffff;
+}
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover {
+    color: var(--color-text-muted);
+    opacity: 0.5;
+}
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+    color: var(--color-text-muted);
+}
+.flatpickr-day.prevMonthDay:hover,
+.flatpickr-day.nextMonthDay:hover {
+    background: var(--color-surface);
+    border-color: var(--color-surface);
+}
+
+/* --- Time picker -------------------------------------------------------- */
+.flatpickr-time {
+    border-top: 1px solid var(--color-border);
+}
+.flatpickr-time input,
+.flatpickr-time .flatpickr-am-pm {
+    color: var(--color-text);
+}
+.numInputWrapper:hover {
+    background: var(--color-surface);
+}
+.numInputWrapper span {
+    border-color: var(--color-border);
+}
+.numInputWrapper span:hover {
+    background: var(--color-surface);
+}
+.numInputWrapper span svg path {
+    fill: var(--color-text-muted);
+}
+
+/* --- Inline calendar layout (ported from ti-theme-orange booking.css) --- */
+.timeslot {
+    padding: 6px 20px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.flatpickr-wrapper,
+.flatpickr-calendar.inline,
+.flatpickr-days,
+.dayContainer,
+.flatpickr-rContainer {
+    width: 100%;
+    max-width: 100%;
+}
+
+.flatpickr-calendar.inline {
+    box-shadow: none;
+    background: transparent;
+}
+.flatpickr-calendar.inline .flatpickr-months .flatpickr-month,
+.flatpickr-calendar.inline .flatpickr-weekdays,
+.flatpickr-calendar.inline span.flatpickr-weekday,
+.flatpickr-calendar.inline .flatpickr-current-month .flatpickr-monthDropdown-months {
+    background: transparent;
+}
+.flatpickr-calendar.inline .flatpickr-months .flatpickr-next-month {
+    right: 50px;
+}
+.flatpickr-calendar.inline .flatpickr-months .flatpickr-prev-month {
+    left: 50px;
+    right: auto;
+}
+.flatpickr-calendar.inline .flatpickr-days,
+.flatpickr-calendar.inline .flatpickr-innerContainer {
+    border: 0 none;
+}
+.flatpickr-calendar.inline .flatpickr-day {
+    border-radius: 5px;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    line-height: 48px;
+    font-size: 18px;
+    font-weight: 500;
+}
+.flatpickr-calendar.inline .flatpickr-months .flatpickr-month,
+.flatpickr-calendar.inline .flatpickr-months .flatpickr-next-month,
+.flatpickr-calendar.inline .flatpickr-months .flatpickr-prev-month {
+    height: 48px;
+}
+.flatpickr-calendar.inline .flatpickr-months .flatpickr-next-month svg,
+.flatpickr-calendar.inline .flatpickr-months .flatpickr-prev-month svg {
+    width: 20px;
+    height: 20px;
+}

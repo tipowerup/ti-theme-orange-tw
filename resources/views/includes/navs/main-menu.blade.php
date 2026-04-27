@@ -1,11 +1,7 @@
-@php
-    use Igniter\User\Facades\Auth;
-@endphp
-
 <ul class="flex items-center space-x-1">
     @foreach ($menuItems as $navItem)
-        @continue(Auth::isLogged() && in_array($navItem->code, ['login', 'register']))
-        @continue(!Auth::isLogged() && in_array($navItem->code, ['account', 'recent-orders']))
+        @continue(\Igniter\User\Facades\Auth::isLogged() && in_array($navItem->code, ['login', 'register']))
+        @continue(!\Igniter\User\Facades\Auth::isLogged() && in_array($navItem->code, ['account', 'recent-orders']))
 
         <li class="relative" @if($navItem->items) x-data="{ open: false }" @endif>
             @if($navItem->items)

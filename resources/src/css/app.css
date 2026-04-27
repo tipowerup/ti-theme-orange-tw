@@ -1,78 +1,43 @@
-@import 'intl-tel-input/build/css/intlTelInput.css';
+/*
+ * app.css — entry stylesheet for the orange-tw theme.
+ *
+ * Build chain (Tailwind v4 + Vite):
+ *   1. `@import "tailwindcss"` pulls in v4's preflight + utility engine.
+ *   2. The toolkit's `theme.css` declares `@theme` tokens (palette + neutrals
+ *      + font), `@plugin` forms/typography, `@custom-variant dark`, and
+ *      `.dark` neutral overrides. Tailwind generates utilities (bg-primary,
+ *      text-text, etc.) keyed off those tokens.
+ *   3. Vendor CSS (FontAwesome, flatpickr, intl-tel-input) layered next.
+ *   4. Theme-specific base styles, component utilities, and third-party
+ *      overrides below.
+ */
 
-/* CSS Variables - Light Mode */
-:root {
-    /* Primary: #FF4900 - matches ti-theme-orange */
-    --color-primary: 255 73 0;
-    --color-primary-light: 255 138 101; /* Lighter tint for hover states */
-    --color-primary-dark: 204 58 0; /* Darker shade for active states */
+@import "tailwindcss";
+@import "@tipowerup/ti-theme-toolkit/theme.css";
 
-    /* Primary scale for Tailwind shades */
-    --color-primary-50: 255 247 244; /* Very light orange tint */
-    --color-primary-100: 255 229 219; /* Light orange tint */
-    --color-primary-400: 255 138 101; /* Medium orange */
-    --color-primary-900: 102 29 0; /* Very dark orange */
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+@import "flatpickr/dist/flatpickr.css";
+@import "./flatpickr.css";
+@import "intl-tel-input/build/css/intlTelInput.css";
 
-    --color-secondary: 108 117 125; /* Gray-600 */
-    --color-secondary-light: 156 163 175; /* Gray-400 */
-    --color-secondary-dark: 75 85 99; /* Gray-600 */
+/*
+ * Tell v4's content scanner where the Blade templates and PHP view components
+ * live. Without these, only files near app.css are indexed, so utilities used
+ * exclusively in Blade markup would be purged.
+ */
+@source "../../../resources/views";
+@source "../../../src/View/Components";
 
-    --color-success: 40 167 69; /* #28A745 - matches ti-theme-orange */
-    --color-danger: 220 53 69; /* #DC3545 - matches ti-theme-orange */
-    --color-warning: 255 193 7; /* #FFC107 - matches ti-theme-orange */
-    --color-info: 23 162 184; /* #17A2B8 - matches ti-theme-orange */
+/*
+ * Modal max-width utilities — assembled at runtime from the Modal Livewire
+ * component's $maxWidth property, so they wouldn't otherwise be detected by
+ * Tailwind's content scanner.
+ */
+@source inline("max-w-{sm,md,lg,xl,2xl,4xl,6xl}");
 
-    --color-text: 33 37 41; /* Gray-900 #212529 */
-    --color-text-muted: 108 117 125; /* Gray-600 #6c757d */
-
-    --color-body: 255 255 255; /* White */
-    --color-surface: 248 249 250; /* Gray-100 #f8f9fa */
-    --color-border: 233 236 239; /* Gray-200 #e9ecef */
-}
-
-/* CSS Variables - Dark Mode */
-.dark {
-    /* Primary: Same base but adjusted for dark mode visibility */
-    --color-primary: 255 73 0;
-    --color-primary-light: 255 138 101;
-    --color-primary-dark: 204 58 0;
-
-    /* Primary scale for dark mode */
-    --color-primary-50: 255 247 244;
-    --color-primary-100: 255 229 219;
-    --color-primary-400: 255 138 101;
-    --color-primary-900: 51 15 0; /* Darker for dark mode backgrounds */
-
-    --color-secondary: 156 163 175; /* Gray-400 */
-    --color-secondary-light: 209 213 219; /* Gray-300 */
-    --color-secondary-dark: 107 114 128; /* Gray-500 */
-
-    --color-success: 40 167 69;
-    --color-danger: 220 53 69;
-    --color-warning: 255 193 7;
-    --color-info: 23 162 184;
-
-    --color-text: 248 249 250; /* Gray-100 */
-    --color-text-muted: 173 181 189; /* Gray-500 #adb5bd */
-
-    --color-body: 33 37 41; /* Gray-900 */
-    --color-surface: 52 58 64; /* Gray-800 #343a40 */
-    --color-border: 73 80 87; /* Gray-700 #495057 */
-}
-
-/* View Transitions API */
-@view-transition {
-    navigation: auto;
-}
-
-::view-transition-old(root),
-::view-transition-new(root) {
-    animation-duration: 0.3s;
-}
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* -------------------------------------------------------------------------
+ * Base
+ * ------------------------------------------------------------------------- */
 
 @layer base {
     html {
@@ -91,91 +56,95 @@
     select.appearance-none::-ms-expand {
         display: none;
     }
+
+    button:not(:disabled),
+    [role="button"]:not(:disabled),
+    summary {
+        cursor: pointer;
+    }
 }
 
-@layer components {
-    .container {
-        @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
-    }
+/* -------------------------------------------------------------------------
+ * Component utilities — `@utility` registers a class that participates in
+ * the variant system (hover:, focus:, dark:, lg:, etc.) just like a
+ * built-in utility.
+ * ------------------------------------------------------------------------- */
 
-    /* Button Components */
-    .btn {
-        @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
-    }
-
-    .btn-primary {
-        @apply bg-primary text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-body;
-    }
-
-    .btn-secondary {
-        @apply bg-secondary text-white hover:bg-secondary-dark focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 dark:focus:ring-offset-body;
-    }
-
-    .btn-outline {
-        @apply border-2 border-primary text-primary hover:bg-primary hover:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-body;
-    }
-
-    /* Card Component */
-    .card {
-        @apply bg-surface border border-border rounded-lg shadow-sm;
-    }
-
-    /* Input Components */
-    .input {
-        @apply block w-full rounded-lg border border-border bg-body text-text px-4 py-2 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-20 transition-colors duration-200;
-    }
-
-    /* Link Components */
-    .link {
-        @apply text-primary hover:text-primary-dark transition-colors duration-200;
-    }
-
-    /* Badge Components */
-    .badge {
-        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-    }
-
-    .badge-primary {
-        @apply bg-primary/10 text-primary;
-    }
-
-    .badge-success {
-        @apply bg-success/10 text-success;
-    }
-
-    .badge-danger {
-        @apply bg-danger/10 text-danger;
-    }
-
-    .badge-warning {
-        @apply bg-warning/10 text-warning;
-    }
-
-    .badge-info {
-        @apply bg-info/10 text-info;
-    }
-
+@utility container {
+    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
 }
 
-/*
+@utility btn {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+@utility btn-primary {
+    @apply bg-primary text-white hover:bg-primary-dark focus:outline-hidden focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-body;
+}
+
+@utility btn-secondary {
+    @apply bg-secondary text-white hover:bg-secondary-dark focus:outline-hidden focus:ring-2 focus:ring-secondary focus:ring-offset-2 dark:focus:ring-offset-body;
+}
+
+@utility btn-outline {
+    @apply border-2 border-primary text-primary hover:bg-primary hover:text-white focus:outline-hidden focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-body;
+}
+
+@utility card {
+    @apply bg-surface border border-border rounded-lg shadow-xs;
+}
+
+@utility input {
+    @apply block w-full rounded-lg border border-border bg-body text-text px-4 py-2 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors duration-200;
+}
+
+@utility link {
+    @apply text-primary hover:text-primary-dark transition-colors duration-200;
+}
+
+@utility badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+@utility badge-primary {
+    @apply bg-primary/10 text-primary;
+}
+
+@utility badge-success {
+    @apply bg-success/10 text-success;
+}
+
+@utility badge-danger {
+    @apply bg-danger/10 text-danger;
+}
+
+@utility badge-warning {
+    @apply bg-warning/10 text-warning;
+}
+
+@utility badge-info {
+    @apply bg-info/10 text-info;
+}
+
+/* -------------------------------------------------------------------------
  * Payment Gateway Form Overrides
- * Styles Bootstrap classes used by ti-ext-payregister & ti-ext-paystack
- * payment_form.blade.php partials so they fit this Tailwind theme.
- */
+ * Bootstrap-classed markup from ti-ext-payregister & ti-ext-paystack — styled
+ * to fit this Tailwind theme. CSS variables resolve to full colors, so
+ * `var(--color-X)` is used directly (no `rgb()` wrapping). For partial opacity
+ * we use `color-mix(in oklab, …, transparent)` since the variable already
+ * carries an `rgb(...)` value.
+ * ------------------------------------------------------------------------- */
 
-/* Container */
 html .payment-form {
     margin-left: 0;
     margin-top: 0.75rem;
     width: 100%;
 }
 
-/* Form group spacing */
 html .payment-form .form-group {
     margin-bottom: 0;
 }
 
-/* Radio / Checkbox wrapper */
 html .payment-form .form-check {
     display: flex;
     align-items: flex-start;
@@ -184,14 +153,13 @@ html .payment-form .form-check {
     margin-top: 0.5rem;
 }
 
-/* Radio & Checkbox inputs */
 html .payment-form .form-check-input {
     width: 1rem;
     height: 1rem;
     margin-top: 0.175rem;
     flex-shrink: 0;
-    accent-color: rgb(var(--color-primary));
-    border: 1px solid rgb(var(--color-border));
+    accent-color: var(--color-primary);
+    border: 1px solid var(--color-border);
     border-radius: 0.25rem;
     cursor: pointer;
     appearance: auto;
@@ -202,23 +170,21 @@ html .payment-form .form-check-input[type="radio"] {
 }
 
 html .payment-form .form-check-input:checked {
-    border-color: rgb(var(--color-primary));
+    border-color: var(--color-primary);
 }
 
 html .payment-form .form-check-input:focus {
-    outline: 2px solid rgb(var(--color-primary) / 0.4);
+    outline: 2px solid color-mix(in oklab, var(--color-primary) 40%, transparent);
     outline-offset: 1px;
 }
 
-/* Labels */
 html .payment-form .form-check-label {
     font-size: 0.875rem;
-    color: rgb(var(--color-text));
+    color: var(--color-text);
     cursor: pointer;
     line-height: 1.4;
 }
 
-/* Saved card row */
 html .payment-form .d-flex {
     display: flex;
 }
@@ -231,18 +197,16 @@ html .payment-form .justify-content-between {
     justify-content: space-between;
 }
 
-/* Card brand & dots */
 html .payment-form .d-flex b {
     font-size: 0.875rem;
-    color: rgb(var(--color-text));
+    color: var(--color-text);
     letter-spacing: 0.05em;
 }
 
-/* Delete card link */
 html .payment-form a.text-danger,
 html .payment-form .text-danger a,
 html .payment-form button.text-danger {
-    color: rgb(var(--color-danger));
+    color: var(--color-danger);
     font-size: 0.8125rem;
     text-decoration: none;
     transition: opacity 0.15s;
@@ -253,14 +217,12 @@ html .payment-form button.text-danger:hover {
     opacity: 0.75;
 }
 
-/* Error messages */
 html .payment-form .text-danger {
-    color: rgb(var(--color-danger));
+    color: var(--color-danger);
     font-size: 0.8125rem;
     margin-top: 0.375rem;
 }
 
-/* Delete button styled as link */
 html .payment-form .btn-link {
     background: none;
     border: none;
@@ -274,7 +236,6 @@ html .payment-form .btn-link.btn-sm {
     font-size: 0.8125rem;
 }
 
-/* Bootstrap utility shims */
 html .payment-form .w-100 {
     width: 100%;
 }
@@ -295,23 +256,21 @@ html .payment-form .hide {
     display: none;
 }
 
-/* Stripe card element container */
 html .payment-form #stripe-card-element,
 html .payment-form #square-card-element {
     padding: 0.625rem 0.75rem;
-    border: 1px solid rgb(var(--color-border));
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    background: rgb(var(--color-body));
+    background: var(--color-body);
     transition: border-color 0.15s;
 }
 
 html .payment-form #stripe-card-element:focus-within,
 html .payment-form #square-card-element:focus-within {
-    border-color: rgb(var(--color-primary));
-    box-shadow: 0 0 0 2px rgb(var(--color-primary) / 0.2);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-primary) 20%, transparent);
 }
 
-/* Font Awesome icons in payment forms */
 html .payment-form .fa,
 html .payment-form .fas,
 html .payment-form .fab {
@@ -331,10 +290,9 @@ html .payment-form .fa-2x {
 html .payment-form .fa-credit-card,
 html .payment-form .fa-trash,
 html .payment-form [class*="fa-cc-"] {
-    color: rgb(var(--color-text-muted));
+    color: var(--color-text-muted);
 }
 
-/* Paystack specific - label with justify-content-between */
 html .payment-form label.d-flex {
     display: flex;
     width: 100%;
@@ -342,45 +300,47 @@ html .payment-form label.d-flex {
     cursor: pointer;
 }
 
-/* intl-tel-input - Tailwind theme overrides */
+/* -------------------------------------------------------------------------
+ * intl-tel-input — Tailwind theme overrides
+ * ------------------------------------------------------------------------- */
+
 html .iti {
     width: 100%;
 }
 
-
 html .iti .iti__selected-flag {
-    border-right: 1px solid rgb(var(--color-border));
-    background: rgb(var(--color-surface));
+    border-right: 1px solid var(--color-border);
+    background: var(--color-surface);
 }
 
 html .iti--separate-dial-code .iti__selected-dial-code {
-    color: rgb(var(--color-text));
+    color: var(--color-text);
     font-size: 0.875rem;
 }
 
 html .iti__country-list {
-    background: rgb(var(--color-body));
-    border: 1px solid rgb(var(--color-border));
+    background: var(--color-body);
+    border: 1px solid var(--color-border);
     border-radius: 0.5rem;
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     z-index: 100;
 }
 
 html .iti__country-list .iti__country {
-    color: rgb(var(--color-text));
+    color: var(--color-text);
 }
 
 html .iti__country-list .iti__country:hover,
 html .iti__country-list .iti__country.iti__highlight {
-    background: rgb(var(--color-surface));
+    background: var(--color-surface);
 }
 
 html .iti__country-list .iti__divider {
-    border-color: rgb(var(--color-border));
+    border-color: var(--color-border);
 }
 
 html .iti__country-list .iti__dial-code {
-    color: rgb(var(--color-text-muted));
+    color: var(--color-text-muted);
 }
 
 html .iti__flag {
@@ -391,4 +351,54 @@ html .iti__flag {
     html .iti__flag {
         background-image: url('/vendor/tipowerup-orange-tw/img/flags@2x.png');
     }
+}
+
+/* -------------------------------------------------------------------------
+ * Auth session banner — "Welcome back..." / "Already have an account..."
+ * ------------------------------------------------------------------------- */
+
+.auth-session-banner a {
+    color: var(--color-primary);
+    font-weight: 500;
+    transition: color 0.15s;
+}
+
+.auth-session-banner a:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}
+
+.auth-session-banner b {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+/* -------------------------------------------------------------------------
+ * Themed scrollbar — apply to scrollable modal/panel bodies
+ * ------------------------------------------------------------------------- */
+
+.scrollbar-themed {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+}
+
+.scrollbar-themed::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.scrollbar-themed::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollbar-themed::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+.scrollbar-themed::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-text-muted);
+    background-clip: content-box;
 }

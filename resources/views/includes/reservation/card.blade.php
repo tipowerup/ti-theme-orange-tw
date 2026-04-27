@@ -1,5 +1,5 @@
 {{-- Mobile Reservation Card --}}
-<div class="bg-body dark:bg-surface rounded-lg border border-border dark:border-border shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+<div class="bg-body dark:bg-surface rounded-lg border border-border dark:border-border shadow-xs overflow-hidden hover:shadow-md transition-shadow-sm">
     <div class="p-4">
         <div class="flex items-start justify-between mb-3">
             <a

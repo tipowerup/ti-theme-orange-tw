@@ -9,7 +9,7 @@ security: customer
 ---
 <div class="container mx-auto px-4 py-8">
     <div class="flex flex-col lg:flex-row gap-6">
-        <div class="lg:w-64 flex-shrink-0">
+        <div class="lg:w-64 shrink-0">
             <x-tipowerup-orange-tw::nav code="account-menu" />
         </div>
 

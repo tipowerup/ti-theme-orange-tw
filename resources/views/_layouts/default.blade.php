@@ -7,10 +7,9 @@ description: Default layout
     lang="{{ App::getLocale() }}"
     class="h-full"
     x-data="darkMode()"
-    :class="{ 'dark': isDark }"
+    style="{!! $themeBrandStyle ?? '' !!}"
 >
 <head>
-    <meta name="view-transition" content="same-origin">
     @include('tipowerup-orange-tw::includes.head')
     @include('tipowerup-orange-tw::includes.theme-vars')
     @livewireStyles
@@ -32,6 +31,8 @@ description: Default layout
 @endunless
 
 @include('tipowerup-orange-tw::includes.bottom-tab-bar')
+
+@include('tipowerup-orange-tw::includes.eucookiebanner')
 
 @livewire('tipowerup-orange-tw::flash-message')
 @livewire('tipowerup-orange-tw::modal-manager')

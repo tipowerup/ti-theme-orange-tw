@@ -5,7 +5,7 @@
             <img
                 src="{{ $locationInfo->getThumb(['width' => $localThumbWidth, 'height' => $localThumbHeight]) }}"
                 alt="{{ $locationInfo->name }}"
-                class="w-20 h-20 rounded-lg object-cover flex-shrink-0"
+                class="w-20 h-20 rounded-lg object-cover shrink-0"
             />
         @endif
 
@@ -50,11 +50,6 @@
                     @click="$dispatch('open-modal', 'reviews-modal')"
                 >
                     <div class="flex items-center">
-                        @php
-                            $score = $locationInfo->reviewsScore();
-                            $fullStars = floor($score);
-                            $halfStar = $score - $fullStars >= 0.5;
-                        @endphp
                         @for($i = 0; $i < 5; $i++)
                             @if($i < $fullStars)
                                 <i class="fas fa-star text-yellow-400 text-sm"></i>

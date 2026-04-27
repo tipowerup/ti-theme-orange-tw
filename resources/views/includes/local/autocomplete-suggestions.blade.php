@@ -1,13 +1,5 @@
 <div
-    x-data="{
-        selectedIndex: -1,
-        suggestions: @js($placesSuggestions),
-        init() {
-            this.$watch('suggestions', value => {
-                this.selectedIndex = -1;
-            });
-        }
-    }"
+    x-data="autocompleteSuggestions({ suggestions: @js($placesSuggestions) })"
     @keydown.arrow-down.prevent="selectedIndex = Math.min(selectedIndex + 1, suggestions.length - 1)"
     @keydown.arrow-up.prevent="selectedIndex = Math.max(selectedIndex - 1, -1)"
     @keydown.enter.prevent="selectedIndex >= 0 && $wire.onSelectSuggestion(selectedIndex)"

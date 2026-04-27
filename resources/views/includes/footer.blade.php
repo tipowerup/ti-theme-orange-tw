@@ -11,25 +11,26 @@
                 </p>
 
                 {{-- Social Links --}}
-                @if($theme->social ?? false)
+                @php($social = $themeData['social'] ?? [])
+                @if(array_filter($social))
                     <div class="flex space-x-4">
-                        @if($theme->social['facebook'] ?? false)
-                            <a href="{{ $theme->social['facebook'] }}" target="_blank" rel="noopener" class="text-text-muted hover:text-primary transition-colors" aria-label="Facebook">
+                        @if(!empty($social['facebook']))
+                            <a href="{{ $social['facebook'] }}" target="_blank" rel="noopener" class="text-text-muted hover:text-primary transition-colors" aria-label="Facebook">
                                 <x-tipowerup-orange-tw::icon name="facebook" class="w-5 h-5" />
                             </a>
                         @endif
-                        @if($theme->social['twitter'] ?? false)
-                            <a href="{{ $theme->social['twitter'] }}" target="_blank" rel="noopener" class="text-text-muted hover:text-primary transition-colors" aria-label="Twitter">
+                        @if(!empty($social['twitter']))
+                            <a href="{{ $social['twitter'] }}" target="_blank" rel="noopener" class="text-text-muted hover:text-primary transition-colors" aria-label="Twitter">
                                 <x-tipowerup-orange-tw::icon name="twitter" class="w-5 h-5" />
                             </a>
                         @endif
-                        @if($theme->social['instagram'] ?? false)
-                            <a href="{{ $theme->social['instagram'] }}" target="_blank" rel="noopener" class="text-text-muted hover:text-primary transition-colors" aria-label="Instagram">
+                        @if(!empty($social['instagram']))
+                            <a href="{{ $social['instagram'] }}" target="_blank" rel="noopener" class="text-text-muted hover:text-primary transition-colors" aria-label="Instagram">
                                 <x-tipowerup-orange-tw::icon name="instagram" class="w-5 h-5" />
                             </a>
                         @endif
-                        @if($theme->social['youtube'] ?? false)
-                            <a href="{{ $theme->social['youtube'] }}" target="_blank" rel="noopener" class="text-text-muted hover:text-primary transition-colors" aria-label="YouTube">
+                        @if(!empty($social['youtube']))
+                            <a href="{{ $social['youtube'] }}" target="_blank" rel="noopener" class="text-text-muted hover:text-primary transition-colors" aria-label="YouTube">
                                 <x-tipowerup-orange-tw::icon name="youtube" class="w-5 h-5" />
                             </a>
                         @endif
@@ -37,53 +38,9 @@
                 @endif
             </div>
 
-            {{-- Quick Links --}}
-            <div>
-                <h3 class="text-lg font-semibold text-text mb-4">Quick Links</h3>
-                <ul class="space-y-2">
-                    <li>
-                        <a href="{{ page_url('home') }}" class="text-text-muted hover:text-primary transition-colors" wire:navigate>
-                            Home
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ page_url('locations') }}" class="text-text-muted hover:text-primary transition-colors" wire:navigate>
-                            Locations
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ restaurant_url('local/menus') }}" class="text-text-muted hover:text-primary transition-colors" wire:navigate>
-                            Menu
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ page_url('account/login') }}" class="text-text-muted hover:text-primary transition-colors" wire:navigate>
-                            Account
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            {{-- Legal Links --}}
-            <div>
-                <h3 class="text-lg font-semibold text-text mb-4">Legal</h3>
-                <ul class="space-y-2">
-                    <li>
-                        <a href="{{ page_url('privacy') }}" class="text-text-muted hover:text-primary transition-colors" wire:navigate>
-                            Privacy Policy
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ page_url('terms') }}" class="text-text-muted hover:text-primary transition-colors" wire:navigate>
-                            Terms of Service
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ page_url('contact') }}" class="text-text-muted hover:text-primary transition-colors" wire:navigate>
-                            Contact Us
-                        </a>
-                    </li>
-                </ul>
+            {{-- Dynamic footer menu (theme pages + static pages from admin) --}}
+            <div class="md:col-span-2">
+                <x-tipowerup-orange-tw::nav code="footer-menu" />
             </div>
         </div>
 

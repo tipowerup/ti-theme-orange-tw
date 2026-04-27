@@ -36,7 +36,7 @@
                                 value="{{ $key }}"
                                 class="w-4 h-4 text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600"
                             />
-                            <span class="ml-2 text-sm text-text dark:text-text">{{ $label }}</span>
+                            <span class="ml-2 text-sm text-text dark:text-text">@lang($label)</span>
                         </label>
                     @endforeach
                 </div>
@@ -138,7 +138,7 @@
                 x-transition:leave="ease-in duration-200"
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
-                class="fixed inset-0 bg-black bg-opacity-50"
+                class="fixed inset-0 bg-black/50"
                 @click="open = false"
             ></div>
 
@@ -165,7 +165,7 @@
                             />
                             <button
                                 type="button"
-                                class="p-2 hover:bg-surface dark:hover:bg-surface rounded"
+                                class="p-2 hover:bg-surface dark:hover:bg-surface rounded-sm"
                                 wire:loading.class="opacity-50"
                             >
                                 <i class="fa fa-location-arrow text-primary-600 dark:text-primary-400"></i>

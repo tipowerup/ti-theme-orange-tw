@@ -107,7 +107,7 @@
                         type="checkbox"
                         id="field-{{ $field->fieldName }}"
                         @if($field->required) required @endif
-                        class="w-4 h-4 mt-1 text-primary-600 border-border dark:border-border rounded focus:ring-primary-500 dark:bg-surface"
+                        class="w-4 h-4 mt-1 text-primary-600 border-border dark:border-border rounded-sm focus:ring-primary-500 dark:bg-surface"
                     />
                     <span class="ml-3 text-sm text-text dark:text-text">
                         {!! $field->placeholder ?? lang($field->label) !!}
@@ -153,6 +153,7 @@
                                 $paymentIsNotApplicable = !$paymentMethod->isApplicable($order->order_total, $paymentMethod);
                             @endphp
                             <div
+                                wire:key="payment-{{ $paymentMethod->code }}"
                                 @class([
                                     'border rounded-lg p-4 transition-colors',
                                     'border-primary-500 bg-primary-50 dark:bg-primary-900/20 selected' => $paymentIsSelected,

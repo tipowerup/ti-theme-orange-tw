@@ -89,12 +89,25 @@
         @enderror
     </div>
 
-    <button
-        type="submit"
-        wire:loading.attr="disabled"
-        class="w-full px-6 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors text-lg disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-        <span wire:loading.remove>@lang('igniter.reservation::default.button_reservation')</span>
-        <span wire:loading>@lang('igniter.local::default.text_please_wait')</span>
-    </button>
+    <div class="flex items-center justify-between gap-4 pt-2">
+        <a
+            wire:navigate
+            href="{{ page_url('reservation.reservation') }}"
+            class="inline-flex items-center gap-2 text-sm font-medium text-text-muted dark:text-text-muted hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+        >
+            <i class="fa fa-arrow-left"></i>
+            @lang('tipowerup.orange-tw::default.booking.start_again')
+        </a>
+
+        <button
+            type="submit"
+            wire:loading.attr="disabled"
+            class="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors inline-flex flex-nowrap items-center justify-center gap-2 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+            <i wire:loading class="fa fa-spinner fa-spin"></i>
+            <span wire:loading.remove>@lang('igniter.reservation::default.button_reservation')</span>
+            <span wire:loading>@lang('tipowerup.orange-tw::default.common.processing')</span>
+            <i wire:loading.remove class="fa fa-arrow-right"></i>
+        </button>
+    </div>
 </form>

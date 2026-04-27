@@ -8,7 +8,6 @@ use DateTime;
 use Igniter\Cart\Classes\AbstractOrderType;
 use Igniter\Local\Models\Location;
 use Igniter\Main\Traits\ConfigurableComponent;
-use Igniter\System\Facades\Assets;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Validation\ValidationException;
@@ -85,15 +84,13 @@ final class FulfillmentModal extends Component
     {
         $this->mountSearchesNearby();
 
-        Assets::addJs('tipowerup-orange-tw::/js/fulfillment.js', 'fulfillment-js');
-
         $this->parseTimeslot($this->location->scheduleTimeslot());
 
         $this->orderType = $this->location->orderType();
         $this->isAsap = $this->location->orderTimeIsAsap();
         $this->orderDate = $this->location->orderDateTime()->format('Y-m-d');
         $this->orderTime = $this->location->orderDateTime()->format('H:i');
-        $this->hideDeliveryAddress = !$this->location->orderTypeIsDelivery();
+        $this->hideDeliveryAddress = ! $this->location->orderTypeIsDelivery();
 
         $this->updateCurrentOrderType();
     }

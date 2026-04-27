@@ -338,6 +338,7 @@ return [
     'booking' => [
         'start_again' => 'Start again',
         'select_time' => 'Select a time',
+        'summary' => 'Booking Summary',
     ],
 
     // Pagination

@@ -4,7 +4,7 @@
     </h1>
 
     @forelse($this->loadReviewList() as $review)
-        <div class="bg-body dark:bg-surface border border-border dark:border-border rounded-lg shadow-sm mb-4 overflow-hidden">
+        <div class="bg-body dark:bg-surface border border-border dark:border-border rounded-lg shadow-xs mb-4 overflow-hidden">
             <div class="p-6">
                 <blockquote class="mb-4">
                     <p class="text-text dark:text-text leading-relaxed">{{ $review->review_text }}</p>

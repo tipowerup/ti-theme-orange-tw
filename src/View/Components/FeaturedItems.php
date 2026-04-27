@@ -8,7 +8,7 @@ use Igniter\Cart\Models\Menu;
 use Igniter\Main\Traits\ConfigurableComponent;
 use Illuminate\View\Component;
 use Override;
-use TiPowerUp\OrangeTw\Data\MenuItemData;
+use TiPowerUp\ThemeToolkit\Data\MenuItemData;
 
 final class FeaturedItems extends Component
 {

@@ -16,7 +16,7 @@ security: guest
 
             {{-- Social Login --}}
             <div class="mt-6">
-                <div class="bg-surface rounded-lg border border-border shadow-sm p-6 lg:p-8">
+                <div class="bg-surface rounded-lg border border-border shadow-xs p-6 lg:p-8">
                     <div class="text-center mb-4">
                         <span class="text-sm text-text-muted">@lang('tipowerup.orange-tw::default.text_or_register_with')</span>
                     </div>

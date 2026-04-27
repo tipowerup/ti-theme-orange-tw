@@ -3,22 +3,6 @@
     Usage: @include('tipowerup-orange-tw::includes.auth.social-buttons')
 --}}
 
-@php
-    $socialLinks = [];
-    try {
-        $socialiteComponent = app('Igniter\Socialite\Components\Socialite');
-        if (method_exists($socialiteComponent, 'getProviderLinks')) {
-            $socialLinks = $socialiteComponent->getProviderLinks();
-        }
-        $successPage = $socialiteComponent->property('successPage', 'account/login');
-        $errorPage = $socialiteComponent->property('errorPage', 'account/login');
-    } catch (\Exception $e) {
-        $socialLinks = [];
-        $successPage = 'account/login';
-        $errorPage = 'account/login';
-    }
-@endphp
-
 @if(count($socialLinks) > 0)
     <div class="space-y-3">
         @foreach($socialLinks as $name => $link)

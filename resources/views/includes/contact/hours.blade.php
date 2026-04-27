@@ -1,10 +1,4 @@
-@php
-    use Igniter\Local\Models\Location;
-    $location = Location::getDefault();
-    $workingHours = $location?->workingHours ?? [];
-@endphp
-
-@if($location && count($workingHours) > 0)
+@if($defaultLocation && count($defaultLocation->workingHours ?? []) > 0)
     <div class="bg-body dark:bg-surface rounded-lg shadow-lg p-6">
         <h3 class="text-lg font-semibold text-text dark:text-text mb-4">
             @lang('tipowerup.orange-tw::default.contact.text_business_hours')
@@ -13,7 +7,7 @@
         <div class="space-y-3">
             @foreach(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as $day)
                 @php
-                    $dayHours = $workingHours->get($day);
+                    $dayHours = $defaultLocation->workingHours->get($day);
                     $isToday = strtolower(now()->format('l')) === $day;
                     $isOpen = $dayHours?->isOpen ?? false;
                 @endphp
@@ -50,7 +44,7 @@
         </div>
 
         <!-- Current Status -->
-        @if($location->isOpen())
+        @if($defaultLocation->isOpen())
             <div class="mt-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
                 <div class="flex items-center gap-2">
                     <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>

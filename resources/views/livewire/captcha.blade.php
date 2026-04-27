@@ -53,7 +53,7 @@
                     wire:model="captcha"
                     type="text"
                     id="captcha-{{ $captchaKey }}"
-                    class="w-full px-4 py-3 rounded-lg border border-border dark:border-border bg-body dark:bg-surface text-text dark:text-text placeholder-text-muted dark:placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-colors duration-200"
+                    class="w-full px-4 py-3 rounded-lg border border-border dark:border-border bg-body dark:bg-surface text-text dark:text-text placeholder-text-muted dark:placeholder-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-colors duration-200"
                     placeholder="@lang('tipowerup.orange-tw::default.captcha.placeholder')"
                     maxlength="3"
                 />
