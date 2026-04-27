@@ -1,0 +1,133 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  pest:
+    name: Pest (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3']
+
+    steps:
+      - name: Checkout theme
+        uses: actions/checkout@v4
+        with:
+          path: ti-theme-orange-tw
+
+      # The composer.json declares a path repository at `../ti-theme-toolkit`
+      # for local dev. Mirror that layout in CI by checking out the toolkit
+      # as a sibling — `composer update` will then prefer the local version
+      # (matching contributor workflow) while still being able to fall back
+      # to Packagist if the sibling checkout fails.
+      - name: Checkout theme toolkit (sibling)
+        uses: actions/checkout@v4
+        with:
+          repository: tipowerup/ti-theme-toolkit
+          path: ti-theme-toolkit
+        continue-on-error: true
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer:v2
+
+      - name: Get composer cache dir
+        id: composer-cache
+        working-directory: ti-theme-orange-tw
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache composer
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-${{ matrix.php }}-${{ hashFiles('ti-theme-orange-tw/composer.json') }}
+          restore-keys: composer-${{ runner.os }}-${{ matrix.php }}-
+
+      - name: Install dependencies
+        working-directory: ti-theme-orange-tw
+        run: composer update --prefer-dist --no-interaction --no-progress
+
+      - name: Run Pest
+        working-directory: ti-theme-orange-tw
+        run: vendor/bin/pest --compact
+
+  pint:
+    name: Pint (lint)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout theme
+        uses: actions/checkout@v4
+        with:
+          path: ti-theme-orange-tw
+
+      - name: Checkout theme toolkit (sibling)
+        uses: actions/checkout@v4
+        with:
+          repository: tipowerup/ti-theme-toolkit
+          path: ti-theme-toolkit
+        continue-on-error: true
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer:v2
+
+      - name: Install dependencies
+        working-directory: ti-theme-orange-tw
+        run: composer update --prefer-dist --no-interaction --no-progress
+
+      - name: Run Pint
+        working-directory: ti-theme-orange-tw
+        run: vendor/bin/pint --test --ansi
+
+  frontend:
+    name: Frontend (TS + Vite)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout theme
+        uses: actions/checkout@v4
+        with:
+          path: ti-theme-orange-tw
+
+      # The npm package.json declares `"@tipowerup/ti-theme-toolkit": "file:../ti-theme-toolkit"`
+      # for local dev. Mirror that layout in CI.
+      - name: Checkout theme toolkit (sibling)
+        uses: actions/checkout@v4
+        with:
+          repository: tipowerup/ti-theme-toolkit
+          path: ti-theme-toolkit
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install toolkit deps
+        working-directory: ti-theme-toolkit
+        run: npm install --no-audit --no-fund
+
+      - name: Install theme deps
+        working-directory: ti-theme-orange-tw
+        run: npm install --no-audit --no-fund
+
+      - name: Type-check
+        working-directory: ti-theme-orange-tw
+        run: npm run typecheck
+
+      - name: Build
+        working-directory: ti-theme-orange-tw
+        run: npm run build

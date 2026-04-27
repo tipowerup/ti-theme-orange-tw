@@ -6,14 +6,20 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "watch": "vite build --watch"
+        "watch": "vite build --watch",
+        "typecheck": "tsc --noEmit"
     },
     "devDependencies": {
+        "@types/jquery": "^4.0.0",
         "tailwindcss": "^4.0.0",
+        "typescript": "^6.0.3",
         "vite": "^5.1.3"
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^7.2.0",
+        "@tailwindcss/forms": "^0.5.11",
+        "@tailwindcss/typography": "^0.5.19",
+        "@tailwindcss/vite": "^4.2.4",
         "@tipowerup/ti-theme-toolkit": "file:../ti-theme-toolkit",
         "currency.js": "^2.0.4",
         "flatpickr": "^4.6.13",

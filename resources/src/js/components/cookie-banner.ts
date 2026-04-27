@@ -4,10 +4,19 @@
  *
  * Usage in blade: <div x-data="cookieBanner()">
  */
+import type { AlpineComponent } from '../types/alpine';
+
 const STORAGE_KEY = 'cookie-consent';
 
+interface CookieBannerState {
+    showBanner: boolean;
+    init(): void;
+    acceptCookies(): void;
+    declineCookies(): void;
+}
+
 document.addEventListener('alpine:init', () => {
-    window.Alpine.data('cookieBanner', () => ({
+    window.Alpine.data('cookieBanner', (): AlpineComponent<CookieBannerState> => ({
         showBanner: false,
 
         init() {

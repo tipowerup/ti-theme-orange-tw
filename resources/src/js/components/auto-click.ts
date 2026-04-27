@@ -5,8 +5,14 @@
  *
  * Usage in blade: <button x-data="autoClick" @click="...">
  */
+import type { AlpineComponent } from '../types/alpine';
+
+interface AutoClickState {
+    init(): void;
+}
+
 document.addEventListener('alpine:init', () => {
-    window.Alpine.data('autoClick', () => ({
+    window.Alpine.data('autoClick', (): AlpineComponent<AutoClickState> => ({
         init() {
             this.$nextTick(() => this.$el.click());
         },

@@ -1,9 +1,10 @@
+// @ts-nocheck — legacy jQuery-plugin / vendor-snippet code; typing requires rewrite
 /**
  * Google Maps API Loader
  * Loads the Google Maps JavaScript API dynamically if not already loaded
  */
 document.addEventListener('DOMContentLoaded', function () {
-    const modalElement = document.querySelector('[data-map-key]');
+    const modalElement = document.querySelector<HTMLElement>('[data-map-key]');
     const mapKey = modalElement?.dataset.mapKey;
 
     if (!mapKey || typeof google !== 'undefined' && typeof google.maps !== 'undefined') {
@@ -11,8 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Google Maps loader snippet
-    ((g) => {
-        let h, a, k;
+    ((g: any) => {
+        let h: any, a: any, k: any;
         const p = "The Google Maps JavaScript API";
         const c = "google";
         const l = "importLibrary";
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
             a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
             d[q] = f;
             a.onerror = () => h = n(Error(p + " could not load."));
-            a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+            a.nonce = m.querySelector<HTMLScriptElement>("script[nonce]")?.nonce || "";
             m.head.append(a);
         }));
         d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n));

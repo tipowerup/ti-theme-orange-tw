@@ -30,10 +30,31 @@
         "tastyigniter/ti-ext-socialite": "^v4.0",
         "tastyigniter/ti-ext-user": "^v4.0"
     },
+    "require-dev": {
+        "laravel/pint": "^1.2",
+        "mockery/mockery": "^1.6",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "tipowerup/testbench": "^0.1"
+    },
     "autoload": {
         "psr-4": {
             "TiPowerUp\\OrangeTw\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TiPowerUp\\OrangeTw\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test:lint": "vendor/bin/pint --test --ansi",
+        "test:lint-fix": "vendor/bin/pint --ansi",
+        "test:pest": "vendor/bin/pest --compact",
+        "test": [
+            "@test:lint",
+            "@test:pest"
+        ]
     },
     "extra": {
         "laravel": {
@@ -63,12 +84,23 @@
             }
         }
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../ti-theme-toolkit",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "composer/installers": true
+            "composer/installers": true,
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
         }
     }
 }

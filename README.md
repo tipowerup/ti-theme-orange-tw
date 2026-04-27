@@ -14,13 +14,16 @@ Built with Laravel Livewire and Alpine.js, Orange TW is designed for restaurant 
 
 Orange TW takes the solid foundation of the original Orange theme and elevates it with:
 
-- **Tailwind CSS** - Utility-first CSS framework replacing Bootstrap for smaller bundle sizes and easier customization
-- **Dark Mode** - System preference detection with manual toggle, persisted via localStorage
+- **Tailwind CSS v4** - CSS-first configuration via `@theme`, no `tailwind.config.js`, no PostCSS pipeline; styled through the official `@tailwindcss/vite` plugin
+- **TypeScript** - Frontend source migrated to TypeScript under `strict: true`. Modern Alpine components are fully typed via a shared `AlpineComponent<TState, TWire>` helper; legacy jQuery-plugin code is isolated and `@ts-nocheck`-flagged
+- **Theme Toolkit** - Shared infrastructure (`@tipowerup/ti-theme-toolkit`) provides the Vite preset, Tailwind v4 theme tokens, and the dark-mode Alpine store; the toolkit ships `.d.ts` declarations so consumers get full intellisense
+- **Multi-Banner Hero** - The home-page banner supports multiple slides with autoplay, hover-to-pause, and keyboard navigation; configured directly from the admin panel
+- **Dark Mode** - System preference detection with manual toggle, persisted via localStorage; survives `wire:navigate` DOM swaps
 - **Mobile App-Like Navigation** - Bottom tab bar navigation for mobile devices (Uber Eats/DoorDash style)
 - **Smart Sticky Header** - Hides on scroll down, reveals on scroll up for maximum content visibility
 - **SPA-Like Transitions** - Native View Transitions API with Livewire navigate for instant page transitions
-- **CSS Variable Theming** - Runtime customizable colors from the admin panel without rebuilding assets
-- **Performance Optimized** - Code splitting, responsive images, debounced inputs, and content hashing
+- **CSS Variable Theming** - Runtime customizable colors from the admin panel without rebuilding assets; brand colors injected on `<html>` (survives morph), neutral colors scoped to light mode via `:root:not(.dark)`
+- **Performance Optimized** - Code splitting, responsive images, debounced inputs, content hashing, and a hashed-bundle JS pipeline that plays nicely with `wire:navigate`
 
 ## Features
 
@@ -48,8 +51,9 @@ Orange TW takes the solid foundation of the original Orange theme and elevates i
 ## Requirements
 
 - TastyIgniter v4.0+
-- PHP 8.1+
+- PHP 8.2+
 - Node.js 18+ (for asset compilation)
+- TypeScript 5+ (installed automatically as a dev dependency)
 
 ## Installation
 
@@ -83,6 +87,55 @@ To build for production:
 npm run build
 ```
 
+To type-check the TypeScript sources without emitting:
+
+```bash
+npm run typecheck
+```
+
+After building assets, publish them into the host TastyIgniter project:
+
+```bash
+php artisan igniter:theme-vendor-publish --force
+```
+
+### Tests
+
+The theme ships a Pest test suite under `tests/`:
+
+```bash
+composer test                            # Pint + Pest (Unit + Feature)
+vendor/bin/pest --compact                # Pest only
+vendor/bin/pest tests/Unit               # Fast unit tests
+vendor/bin/pest --filter=FlashMessage    # Filter by name
+```
+
+- **Unit tests** — pure logic (FlashMessage normalize, Booking computed, Modal/Slider/Icon helpers, ServiceProvider routes tuple).
+- **Feature tests** — boot the package via `tipowerup/testbench`, exercise Livewire components (`FlashMessage`, `LocalSearch`, `NewsletterSubscribeForm`), the Logout controller (with mocked `Cart` / `LogoutCustomer`), error-page templates (Blade compile + icon-name validation), and theme metadata invariants.
+
+### Frontend Source Layout
+
+```
+resources/src/
+├── css/app.css                       # Tailwind v4 entry — pulls toolkit theme.css
+└── js/
+    ├── app.ts                        # Entry — Alpine factories + currency helper
+    ├── globals.ts                    # Pre-flight: jQuery / flatpickr / intl-tel-input on window
+    ├── jquery-plugins.ts             # Legacy jQuery IIFEs (Livewire bridge, country picker, booking) — @ts-nocheck
+    ├── global.d.ts                   # Ambient declarations (window, JQuery, etc.)
+    ├── types/alpine.ts               # AlpineComponent / AlpineFactory helper types
+    └── components/                   # Typed Alpine x-data factories
+        ├── auto-click.ts
+        ├── autocomplete-suggestions.ts
+        ├── category-list.ts
+        ├── checkout-fulfillment.ts
+        ├── cookie-banner.ts
+        ├── quantity-option.ts
+        └── slider.ts
+```
+
+`resources/js/` holds the ported jQuery-plugin modules (checkout, fulfillment, cart-item, google-maps) — kept in their legacy idiom and marked `@ts-nocheck` so they participate in the bundle without forcing a rewrite.
+
 ## Customization
 
 ### Theme Colors
@@ -113,10 +166,12 @@ Configure Google Fonts from the theme settings. The theme uses Inter as the defa
 
 | Technology | Purpose |
 |------------|---------|
-| Tailwind CSS 3.x | Utility-first styling |
-| Livewire 3.x | Dynamic components |
-| Alpine.js 3.x | JavaScript interactions |
-| Vite 5.x | Asset bundling |
+| Tailwind CSS v4 | CSS-first theming (`@theme`, `@plugin`, `@custom-variant`) |
+| TypeScript | Strict-mode frontend source |
+| Livewire 3.x | Server-driven dynamic components |
+| Alpine.js 3.x | Client-side interactivity |
+| Vite 5.x | Asset bundling (via `@tailwindcss/vite`) |
+| `@tipowerup/ti-theme-toolkit` | Shared theme tokens, Vite preset, dark-mode store |
 | View Transitions API | Page transitions |
 
 ## Migration from Orange Theme

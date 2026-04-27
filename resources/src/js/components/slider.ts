@@ -4,8 +4,29 @@
  *
  * Usage in blade: <div x-data="slider({ slideCount: 5, interval: 5000 })">
  */
+import type { AlpineComponent } from '../types/alpine';
+
+interface SliderState {
+    currentSlide: number;
+    slides: number;
+    autoplay: boolean;
+    interval: number;
+    timer: ReturnType<typeof setInterval> | null;
+    init(): void;
+    startAutoplay(): void;
+    stopAutoplay(): void;
+    next(): void;
+    prev(): void;
+    goTo(index: number): void;
+}
+
+interface SliderArgs {
+    slideCount: number;
+    interval: number;
+}
+
 document.addEventListener('alpine:init', () => {
-    window.Alpine.data('slider', ({ slideCount, interval }) => ({
+    window.Alpine.data('slider', ({ slideCount, interval }: SliderArgs): AlpineComponent<SliderState> => ({
         currentSlide: 0,
         slides: slideCount,
         autoplay: true,
@@ -37,7 +58,7 @@ document.addEventListener('alpine:init', () => {
             this.currentSlide = (this.currentSlide - 1 + this.slides) % this.slides;
         },
 
-        goTo(index) {
+        goTo(index: number) {
             this.currentSlide = index;
         },
     }));

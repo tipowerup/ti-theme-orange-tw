@@ -1,3 +1,4 @@
+// @ts-nocheck — legacy jQuery-plugin / vendor-snippet code; typing requires rewrite
 window.OrangeCartItem = () => {
     return {
         minQuantity: 1,

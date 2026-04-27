@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ App::getLocale() }}" class="h-full">
+<html lang="{{ App::getLocale() }}" class="h-full" style="{!! $themeBrandStyle ?? '' !!}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,8 +10,16 @@
     {{-- Favicon --}}
     <link rel="shortcut icon" href="{{ asset('vendor/tipowerup-orange-tw/images/favicon.ico') }}" type="image/x-icon">
 
-    {{-- Vite Assets --}}
-    @vite(['resources/src/css/app.css', 'resources/src/js/app.js'], 'vendor/tipowerup-orange-tw/build')
+    {{-- Use the published theme bundle directly. Error pages must render
+         even when @vite()'s manifest can't be located (host without dev
+         server, broken publish, etc.); a plain <link> is simpler and
+         always-on. Same `app.css` the main theme loads, so no duplicate
+         design tokens and dark-mode/colour overrides match the live site. --}}
+    <link rel="stylesheet" href="{{ asset('vendor/tipowerup-orange-tw/css/app.css') }}">
+
+    {{-- Light-mode neutral overrides scoped to `:root:not(.dark)` — same
+         block the main theme injects via @include('theme-vars'). --}}
+    {!! $themeNeutralStyle ?? '' !!}
 </head>
 <body class="h-full bg-body text-text antialiased">
     <div class="min-h-full flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">

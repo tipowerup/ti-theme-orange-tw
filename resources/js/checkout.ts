@@ -1,10 +1,11 @@
+// @ts-nocheck — legacy jQuery-plugin / vendor-snippet code; typing requires rewrite
 +function ($) {
     "use strict"
 
     if ($.fn.checkout === undefined)
         $.fn.checkout = {}
 
-    var Checkout = function (element, options) {
+    var Checkout: any = function (this: any, element: any, options: any) {
         this.$el = $(element)
         this.options = options || {}
         this.paymentInputSelector = 'input[name="'+this.options.paymentInputName+'"]'

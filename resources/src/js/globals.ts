@@ -9,7 +9,9 @@
  */
 import $ from 'jquery';
 import flatpickr from 'flatpickr';
+// @ts-expect-error -- intl-tel-input ships JS without bundled types
 import intlTelInput from 'intl-tel-input';
+// @ts-expect-error -- Vite-specific ?url suffix; runtime works, types unavailable
 import intlTelInputUtilsUrl from 'intl-tel-input/build/js/utils.js?url';
 
 window.jQuery = window.$ = $;
@@ -22,7 +24,7 @@ window.intlTelInputUtilsUrl = intlTelInputUtilsUrl;
 // hook in app.js after requests/navigates). Defined here because downstream
 // IIFE imports (e.g. resources/js/checkout.js) call `$(document).render(...)`
 // at module load time and need $.fn.render to already exist.
-$.fn.render = function (callback) { $(document).on('render', callback); };
+$.fn.render = function (callback: () => void) { return $(document).on('render', callback); };
 
 export { $ as jQuery };
 export default $;

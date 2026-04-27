@@ -1,3 +1,4 @@
+// @ts-nocheck — legacy jQuery-plugin / vendor-snippet code; typing requires rewrite
 window.OrangeFulfillment = (timeslot) => {
     let map = null;
     return {
