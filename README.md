@@ -13,33 +13,30 @@
 
 ## Introduction
 
-Orange TW (also known as **Orange Theme with Tailwind CSS**) is a modernized version of the popular [TastyIgniter Orange Theme](https://github.com/tastyigniter/ti-theme-orange), rebuilt from the ground up with **Tailwind CSS** and enhanced with modern features like dark mode, mobile-first navigation, and SPA-like page transitions. It retains full feature parity with the original Orange theme while delivering a faster, more customizable, and visually refined experience.
+Orange TW is a modern, mobile-first TastyIgniter storefront theme — a Tailwind CSS rebuild of the popular [TastyIgniter Orange Theme](https://github.com/tastyigniter/ti-theme-orange). Drop-in replacement: same admin settings, same TastyIgniter extension support, faster and more customizable.
 
-Built with Laravel Livewire and Alpine.js, Orange TW is designed for restaurant online ordering on the TastyIgniter platform. It's perfect for restaurants, cafes, bars, bistros, pizza shops, bakeries, food delivery services, or any food-related business looking for a modern, professional storefront.
+Built for restaurants, cafes, bars, bistros, pizza shops, bakeries, food delivery services — any food business that wants a modern, professional storefront on TastyIgniter.
 
 ## What's New in Orange TW
 
-Orange TW takes the solid foundation of the original Orange theme and elevates it with:
-
-- **Tailwind CSS v4** - CSS-first configuration via `@theme`, no `tailwind.config.js`, no PostCSS pipeline; styled through the official `@tailwindcss/vite` plugin
-- **TypeScript** - Frontend source migrated to TypeScript under `strict: true`. Modern Alpine components are fully typed via a shared `AlpineComponent<TState, TWire>` helper; legacy jQuery-plugin code is isolated and `@ts-nocheck`-flagged
-- **Theme Toolkit** - Shared infrastructure (`@tipowerup/ti-theme-toolkit`) provides the Vite preset, Tailwind v4 theme tokens, and the dark-mode Alpine store; the toolkit ships `.d.ts` declarations so consumers get full intellisense
-- **Multi-Banner Hero** - The home-page banner supports multiple slides with autoplay, hover-to-pause, and keyboard navigation; configured directly from the admin panel
-- **Dark Mode** - System preference detection with manual toggle, persisted via localStorage; survives `wire:navigate` DOM swaps
-- **Mobile App-Like Navigation** - Bottom tab bar navigation for mobile devices (Uber Eats/DoorDash style)
-- **Smart Sticky Header** - Hides on scroll down, reveals on scroll up for maximum content visibility
-- **SPA-Like Transitions** - Native View Transitions API with Livewire navigate for instant page transitions
-- **CSS Variable Theming** - Runtime customizable colors from the admin panel without rebuilding assets; brand colors injected on `<html>` (survives morph), neutral colors scoped to light mode via `:root:not(.dark)`
-- **Performance Optimized** - Code splitting, responsive images, debounced inputs, content hashing, and a hashed-bundle JS pipeline that plays nicely with `wire:navigate`
+- **Tailwind CSS v4** — CSS-first design tokens, no separate config file
+- **TypeScript** — strict-mode frontend source
+- **Multi-banner hero** — multiple home-page slides with autoplay, hover-to-pause, and keyboard navigation; admin-configured
+- **Dark mode** — system-preference detection with manual toggle; persists across navigations
+- **Mobile bottom tab bar** — Uber Eats / DoorDash-style navigation
+- **Smart sticky header** — hides on scroll down, reveals on scroll up
+- **SPA-style page transitions** via Livewire navigate
+- **Runtime brand customization** — change colours, logo, banners, and fonts from the admin without rebuilding assets
+- **Performance optimized** — code splitting, responsive images, debounced inputs, content hashing
 
 ## Features
 
 - **Mobile-first ordering experience** — bottom tab bar, slide-in cart drawer, app-like sheets
 - **Dark mode** — system-preference detection with manual toggle; persists across page transitions
 - **Runtime brand customization** — change colours, logo, banners, and fonts from the admin without rebuilding assets
-- **SPA-like transitions** — instant page swaps via Livewire navigate + the View Transitions API
+- **SPA-style transitions** — instant page swaps via Livewire navigate
 - **Multi-slide hero banner** — autoplay, hover-to-pause, fully admin-configured
-- **Drop-in Orange replacement** — full feature parity with the original Orange theme; works with every TastyIgniter extension
+- **Drop-in Orange replacement** — full feature parity with the original; works with every TastyIgniter extension
 
 …and many more. See the [documentation](docs/index.md) for the full list.
 
@@ -108,33 +105,8 @@ vendor/bin/pest tests/Unit               # Fast unit tests
 vendor/bin/pest --filter=FlashMessage    # Filter by name
 ```
 
-- **Unit tests** — pure logic (FlashMessage normalize, Booking computed, Modal/Slider/Icon helpers, ServiceProvider routes tuple).
-- **Feature tests** — boot the package via `tipowerup/testbench`, exercise theme-local Livewire components (`FlashMessage`, `LocalSearch`) and the toolkit-shipped `NewsletterSubscribeForm` registered under the theme's namespace, the Logout controller (with mocked `Cart` / `LogoutCustomer`), error-page templates (Blade compile + icon-name validation), and theme metadata invariants.
-
-### Frontend Source Layout
-
-```
-resources/src/
-├── css/app.css                       # Tailwind v4 entry — pulls toolkit theme.css
-└── js/
-    ├── app.ts                        # Entry — registers Alpine factories
-    ├── globals.ts                    # Pre-flight: jQuery / flatpickr / intl-tel-input on window
-    ├── jquery-plugins.ts             # Legacy jQuery IIFEs (Livewire bridge, country picker, booking) — @ts-nocheck
-    ├── global.d.ts                   # Ambient declarations (window, JQuery, etc.)
-    ├── types/alpine.ts               # AlpineComponent / AlpineFactory helper types
-    └── components/                   # Typed Alpine x-data factories
-        ├── index.ts                  # Aggregates + registers all factories
-        ├── auto-click.ts
-        ├── autocomplete-suggestions.ts
-        ├── category-list.ts
-        ├── checkout-fulfillment.ts
-        ├── cookie-banner.ts
-        ├── nav-store.ts              # Active-route store for the mobile bottom tab bar
-        ├── quantity-option.ts
-        └── slider.ts
-```
-
-`resources/js/` holds the ported jQuery-plugin modules (checkout, fulfillment, cart-item, google-maps) — kept in their legacy idiom and marked `@ts-nocheck` so they participate in the bundle without forcing a rewrite.
+- **Unit tests** — pure logic and helpers.
+- **Feature tests** — Livewire components, the Logout controller, error-page templates, and theme metadata.
 
 ## Customization
 
@@ -170,17 +142,11 @@ Add multiple hero slides for the home page from **Design > Themes > Orange TW > 
 
 | Technology | Purpose |
 |------------|---------|
-| Tailwind CSS v4 | CSS-first theming (`@theme`, `@plugin`, `@custom-variant`) |
+| Tailwind CSS v4 | Styling and design tokens |
 | TypeScript | Strict-mode frontend source |
 | Livewire 3.x | Server-driven dynamic components |
 | Alpine.js 3.x | Client-side interactivity |
-| Vite 5.x | Asset bundling (via `@tailwindcss/vite`) |
-| [`@tipowerup/ti-theme-toolkit`](https://github.com/tipowerup/ti-theme-toolkit) | Shared theme tokens, Vite preset, dark-mode store, auth Livewire components |
-| View Transitions API | Page transitions |
-
-## Migration from Orange Theme
-
-Orange TW is designed as a drop-in replacement for the original Orange theme. All TastyIgniter extensions are fully supported. Simply install, activate, and customize your colors.
+| Vite 5.x | Asset bundling |
 
 ## Changelog
 
@@ -188,20 +154,30 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 ## Reporting Issues
 
-If you encounter a bug in this theme, please report it using the [Issue Tracker](https://github.com/tipowerup/ti-theme-orange-tw/issues) on GitHub.
+Found a bug or have a feature request? Open an issue on the [issue tracker](https://github.com/tipowerup/ti-theme-orange-tw/issues). Before filing, please:
+
+- Search existing issues to avoid duplicates.
+- Include your TastyIgniter version, PHP version, and steps to reproduce.
+- Attach screenshots or browser console output for UI bugs.
 
 ## Contributing
 
-Contributions are welcome! Please read [TastyIgniter's contributing guide](https://tastyigniter.com/docs/resources/contribution-guide).
+Pull requests are welcome. To contribute:
+
+1. Fork the repository and create a feature branch from `main`.
+2. Make your change, add or update tests where appropriate, and run `composer test` to ensure the suite passes.
+3. Open a pull request against `main` with a clear description of the change and the problem it solves.
+
+For larger changes, open an issue first to discuss the approach before investing time.
 
 ## Security Vulnerabilities
 
-For reporting security vulnerabilities, please see our security policy.
+If you discover a security vulnerability, please **do not** open a public issue. Email the maintainers directly so the issue can be addressed before public disclosure.
 
 ## Credits
 
-- Based on [TastyIgniter Orange Theme](https://github.com/tastyigniter/ti-theme-orange) by TastyIgniter Dev Team
-- Built by [TiPowerUp](https://github.com/tipowerup)
+- Inspired by [TastyIgniter Orange Theme](https://github.com/tastyigniter/ti-theme-orange) by TastyIgniter Dev Team
+- Built by [TI PowerUp Team](https://tipowerup.com)
 
 ## License
 

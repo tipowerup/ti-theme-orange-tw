@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-04-28
+
+### Added
+
+- **Explicit `php: ^8.2` constraint** in `composer.json` — enforces the
+  PHP version the theme already required at runtime. Composer now refuses
+  to install on PHP < 8.2 (was silently allowed before, would fail at
+  runtime). Also makes the PHP Version badge render on Packagist.
+
+### Removed
+
+- **`spatie/laravel-google-fonts`** dependency — never used by the theme.
+  Google Fonts are loaded via a direct `<link>` in `head.blade.php`, not
+  via the Spatie integration. Drops one dev install.
+- **Redundant TastyIgniter extension requires** — `ti-ext-cart`,
+  `ti-ext-local`, `ti-ext-payregister`, `ti-ext-reservation`, and
+  `ti-ext-user` are pulled in transitively by `tastyigniter/core`.
+  Listing them again in our `require` was noise, not enforcement.
+  Theme activation requirements (`extra.tastyigniter-theme.require`) are
+  unchanged.
+
+### Changed
+
+- **README jargon strip.** Dropped implementation-detail leakage from
+  the "What's New" bullets, removed the contributor-facing "Frontend
+  Source Layout" section (better suited to `CONTRIBUTING.md` if/when one
+  is added), tightened the Tests paragraph, dropped the "Migration from
+  Orange Theme" stub (already covered in Introduction), removed the
+  toolkit row + non-existent View Transitions API row from the Tech
+  Stack table, rewrote Reporting Issues / Contributing / Security
+  sections with general best-practice text, softened the Credits
+  attribution from "Based on" → "Inspired by", and dropped the
+  redundant Monthly Downloads badge.
+- **License badge** now links to `LICENSE.md` instead of the Packagist
+  page (clicking actually opens the licence text).
+
 ## [1.0.1] - 2026-04-28
 
 ### Changed
