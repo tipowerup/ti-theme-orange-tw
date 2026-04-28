@@ -1,7 +1,6 @@
 <p align="center">
     <a href="https://github.com/tipowerup/ti-theme-orange-tw/actions/workflows/tests.yml"><img src="https://github.com/tipowerup/ti-theme-orange-tw/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
     <a href="https://packagist.org/packages/tipowerup/ti-theme-orange-tw"><img src="https://img.shields.io/packagist/v/tipowerup/ti-theme-orange-tw" alt="Latest Stable Version"></a>
-    <a href="https://packagist.org/packages/tipowerup/ti-theme-orange-tw"><img src="https://img.shields.io/packagist/dm/tipowerup/ti-theme-orange-tw" alt="Monthly Downloads"></a>
     <a href="https://packagist.org/packages/tipowerup/ti-theme-orange-tw"><img src="https://img.shields.io/packagist/dt/tipowerup/ti-theme-orange-tw" alt="Total Downloads"></a>
     <a href="https://github.com/tipowerup/ti-theme-orange-tw/stargazers"><img src="https://img.shields.io/github/stars/tipowerup/ti-theme-orange-tw?style=flat" alt="GitHub Stars"></a>
     <a href="https://packagist.org/packages/tipowerup/ti-theme-orange-tw"><img src="https://img.shields.io/packagist/php-v/tipowerup/ti-theme-orange-tw" alt="PHP Version"></a>
