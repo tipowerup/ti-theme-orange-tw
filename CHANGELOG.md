@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-04-28
+
+### Fixed
+
+- **Flash toast transparency.** `bg-success/10` etc. resolve to a 10%
+  tint over `transparent`, which on a floating, no-backdrop toast reads
+  as see-through. Added four soft-tint `@theme` tokens
+  (`--color-{success,danger,warning,info}-soft`) computed at render time
+  via `color-mix(... 12%, var(--color-body))` and swapped the toast
+  classes to `bg-{level}-soft`. Tints stay opaque, follow admin palette
+  overrides, and flip with dark mode automatically.
+
 ## [1.0.3] - 2026-04-28
 
 ### Changed

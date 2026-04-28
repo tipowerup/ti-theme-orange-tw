@@ -15,10 +15,10 @@
                 x-init="setTimeout(() => { show = false; setTimeout(() => $wire.removeMessage({{ $index }}), 200) }, 5000)"
             @endif
             class="flex items-start gap-3 p-4 rounded-lg shadow-lg border
-                @if($level === 'success') bg-success/10 border-success text-success
-                @elseif($level === 'error') bg-danger/10 border-danger text-danger
-                @elseif($level === 'warning') bg-warning/10 border-warning text-warning
-                @else bg-info/10 border-info text-info
+                @if($level === 'success') bg-success-soft border-success text-success
+                @elseif($level === 'error') bg-danger-soft border-danger text-danger
+                @elseif($level === 'warning') bg-warning-soft border-warning text-warning
+                @else bg-info-soft border-info text-info
                 @endif"
         >
             {{-- Icon --}}
