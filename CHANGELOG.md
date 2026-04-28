@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-04-28
+
+### Changed
+
+- **Toolkit constraint** bumped to `^0.5.0` — picks up
+  [`tipowerup/ti-theme-toolkit:0.5.0`](https://github.com/tipowerup/ti-theme-toolkit/releases/tag/v0.5.0),
+  which auto-wires the theme's `errors/` views into Laravel's exception
+  handler. Removes ~30 lines of boilerplate from the theme's
+  `ServiceProvider` (view-path injection + `errors.layout` brand-style
+  composer now live in the toolkit, gated on non-admin requests).
+
+### Removed
+
+- **Duplicated error-view wiring in `ServiceProvider::boot()`** — moved
+  upstream into `AbstractThemeServiceProvider::registerStorefrontErrorViews()`.
+  No behaviour change for consumers; the theme's friendly 404 / 500 / 503
+  templates still render on the storefront and the admin error UI is
+  unaffected.
+
 ## [1.0.2] - 2026-04-28
 
 ### Added

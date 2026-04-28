@@ -19,7 +19,7 @@
         "php": "^8.2",
         "livewire/livewire": "^v3.0",
         "tastyigniter/core": "^v4.0",
-        "tipowerup/ti-theme-toolkit": "^0.4.0",
+        "tipowerup/ti-theme-toolkit": "^0.5.0",
         "tastyigniter/ti-ext-coupons": "^v4.0",
         "tastyigniter/ti-ext-frontend": "^v4.0",
         "tastyigniter/ti-ext-pages": "^v4.0",
