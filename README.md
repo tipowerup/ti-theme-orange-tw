@@ -4,7 +4,7 @@
     <a href="https://packagist.org/packages/tipowerup/ti-theme-orange-tw"><img src="https://img.shields.io/packagist/dt/tipowerup/ti-theme-orange-tw" alt="Total Downloads"></a>
     <a href="https://github.com/tipowerup/ti-theme-orange-tw/stargazers"><img src="https://img.shields.io/github/stars/tipowerup/ti-theme-orange-tw?style=flat" alt="GitHub Stars"></a>
     <a href="https://packagist.org/packages/tipowerup/ti-theme-orange-tw"><img src="https://img.shields.io/packagist/php-v/tipowerup/ti-theme-orange-tw" alt="PHP Version"></a>
-    <a href="https://packagist.org/packages/tipowerup/ti-theme-orange-tw"><img src="https://img.shields.io/packagist/l/tipowerup/ti-theme-orange-tw" alt="License"></a>
+    <a href="LICENSE.md"><img src="https://img.shields.io/packagist/l/tipowerup/ti-theme-orange-tw" alt="License"></a>
 </p>
 
 <p align="center">
@@ -161,6 +161,10 @@ Users can toggle dark mode using the switch in the header, and their preference 
 ### Fonts
 
 Configure Google Fonts from the theme settings. The theme uses Inter as the default font family with optimized font loading.
+
+### Hero Banners
+
+Add multiple hero slides for the home page from **Design > Themes > Orange TW > Customize > Banners**. Each slide carries a heading, sub-heading, CTA label + URL, background image, and optional alignment. Autoplay, hover-to-pause, and keyboard navigation work out of the box — no code changes needed.
 
 ## Tech Stack
 
