@@ -11,6 +11,7 @@ use Igniter\Local\Models\ReviewSettings;
 use Igniter\Main\Traits\ConfigurableComponent;
 use Igniter\Main\Traits\UsesPage;
 use Igniter\System\Facades\Assets;
+use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use Override;
 use TiPowerUp\ThemeToolkit\Data\LocationData;
@@ -88,7 +89,7 @@ final class LocalHeader extends Component
     }
 
     #[Override]
-    public function render(): \Illuminate\Contracts\View\View
+    public function render(): View
     {
         Assets::addCss('igniter.local::/css/starrating.css', 'starrating-css');
         Assets::addJs('igniter.local::/js/starrating.js', 'starrating-js');

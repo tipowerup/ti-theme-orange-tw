@@ -8,6 +8,7 @@ use DateTime;
 use Igniter\Cart\Classes\AbstractOrderType;
 use Igniter\Local\Models\Location;
 use Igniter\Main\Traits\ConfigurableComponent;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Validation\ValidationException;
@@ -73,7 +74,7 @@ final class FulfillmentModal extends Component
         ], $this->definePropertiesSearchNearby());
     }
 
-    public function render(): \Illuminate\Contracts\View\View
+    public function render(): View
     {
         return view('tipowerup-orange-tw::livewire.fulfillment-modal', [
             'orderTypes' => $this->location->getActiveOrderTypes(),

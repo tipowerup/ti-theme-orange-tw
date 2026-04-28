@@ -6,7 +6,7 @@ use Igniter\Flame\Flash\Message;
 use Illuminate\Support\Collection;
 use Livewire\Livewire;
 use TiPowerUp\OrangeTw\Livewire\FlashMessage;
-use TiPowerUp\OrangeTw\Livewire\NewsletterSubscribeForm;
+use TiPowerUp\ThemeToolkit\Livewire\NewsletterSubscribeForm;
 
 /**
  * Render-level smoke tests — boot each Livewire component and assert it

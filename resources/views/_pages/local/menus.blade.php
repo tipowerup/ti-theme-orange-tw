@@ -71,7 +71,7 @@ hideFooter: 1
                 class="sticky transition-[top] duration-300 flex flex-col"
                 :style="{ top: navbarVisible ? '140px' : '68px', maxHeight: navbarVisible ? 'calc(100vh - 156px)' : 'calc(100vh - 84px)' }"
             >
-                <div class="bg-body dark:bg-surface border border-border dark:border-border rounded-lg shadow-xs overflow-hidden">
+                <div class="flex-1 min-h-0 bg-body dark:bg-surface border border-border dark:border-border rounded-lg shadow-xs overflow-hidden flex flex-col">
                     <livewire:tipowerup-orange-tw::cart-box/>
                 </div>
             </div>

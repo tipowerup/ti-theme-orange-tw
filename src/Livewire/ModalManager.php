@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TiPowerUp\OrangeTw\Livewire;
 
+use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -38,7 +39,7 @@ final class ModalManager extends Component
         $this->reset();
     }
 
-    public function render(): \Illuminate\Contracts\View\View
+    public function render(): View
     {
         return view('tipowerup-orange-tw::livewire.modal-manager');
     }

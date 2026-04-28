@@ -1,7 +1,15 @@
 <p align="center">
-    <a href="https://packagist.org/packages/tipowerup/ti-theme-orange-tw"><img src="https://img.shields.io/packagist/dt/tipowerup/ti-theme-orange-tw" alt="Total Downloads"></a>
+    <a href="https://github.com/tipowerup/ti-theme-orange-tw/actions/workflows/tests.yml"><img src="https://github.com/tipowerup/ti-theme-orange-tw/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
     <a href="https://packagist.org/packages/tipowerup/ti-theme-orange-tw"><img src="https://img.shields.io/packagist/v/tipowerup/ti-theme-orange-tw" alt="Latest Stable Version"></a>
+    <a href="https://packagist.org/packages/tipowerup/ti-theme-orange-tw"><img src="https://img.shields.io/packagist/dm/tipowerup/ti-theme-orange-tw" alt="Monthly Downloads"></a>
+    <a href="https://packagist.org/packages/tipowerup/ti-theme-orange-tw"><img src="https://img.shields.io/packagist/dt/tipowerup/ti-theme-orange-tw" alt="Total Downloads"></a>
+    <a href="https://github.com/tipowerup/ti-theme-orange-tw/stargazers"><img src="https://img.shields.io/github/stars/tipowerup/ti-theme-orange-tw?style=flat" alt="GitHub Stars"></a>
+    <a href="https://packagist.org/packages/tipowerup/ti-theme-orange-tw"><img src="https://img.shields.io/packagist/php-v/tipowerup/ti-theme-orange-tw" alt="PHP Version"></a>
     <a href="https://packagist.org/packages/tipowerup/ti-theme-orange-tw"><img src="https://img.shields.io/packagist/l/tipowerup/ti-theme-orange-tw" alt="License"></a>
+</p>
+
+<p align="center">
+    <img src="docs/screenshots/screenshot1.png" alt="Orange TW Theme" width="100%">
 </p>
 
 ## Introduction
@@ -27,26 +35,14 @@ Orange TW takes the solid foundation of the original Orange theme and elevates i
 
 ## Features
 
-- Modern and clean design with Tailwind CSS
-- Full dark mode support with system preference detection
-- Responsive design with mobile-first approach
-- Bottom tab bar navigation for mobile devices
-- Smart sticky header with scroll behavior
-- SPA-like page transitions using View Transitions API
-- Effortlessly manage and showcase your menu items
-- AJAX add-to-cart with real-time updates
-- Multiple checkout flow with single or two-page checkout
-- 15+ customizable theme colors from the admin panel
-- Lightweight and optimized for speed with Vite
-- Google Fonts integration with font preloading
-- Supports static pages and navigation menus
-- GDPR-compliant cookie consent banner
-- Social login integration (Google, Facebook, Twitter)
-- Newsletter subscription form
-- Contact form with captcha support
-- Review and rating system
-- Reservation booking system
-- Compatible with all TastyIgniter extensions
+- **Mobile-first ordering experience** — bottom tab bar, slide-in cart drawer, app-like sheets
+- **Dark mode** — system-preference detection with manual toggle; persists across page transitions
+- **Runtime brand customization** — change colours, logo, banners, and fonts from the admin without rebuilding assets
+- **SPA-like transitions** — instant page swaps via Livewire navigate + the View Transitions API
+- **Multi-slide hero banner** — autoplay, hover-to-pause, fully admin-configured
+- **Drop-in Orange replacement** — full feature parity with the original Orange theme; works with every TastyIgniter extension
+
+…and many more. See the [documentation](docs/index.md) for the full list.
 
 ## Requirements
 
@@ -63,15 +59,18 @@ Install the theme via Composer:
 composer require tipowerup/ti-theme-orange-tw
 ```
 
-Then compile the assets:
+Activate the theme from **Design > Themes** in your TastyIgniter admin panel.
+The theme ships with pre-built CSS/JS assets, and the toolkit's auto-publish
+hook copies them into your project's `public/vendor/tipowerup-orange-tw/`
+on first activation — no manual build step required.
+
+If your favicon or logo doesn't appear after activation (rare, on locked-down
+shared hosting where the activation request can't write to `public/`), run
+the publish command manually from your project root:
 
 ```bash
-cd vendor/tipowerup/ti-theme-orange-tw
-npm install
-npm run build
+php artisan igniter:theme-vendor-publish --force
 ```
-
-Activate the theme from **Design > Themes** in your TastyIgniter admin panel.
 
 ## Development
 
@@ -111,7 +110,7 @@ vendor/bin/pest --filter=FlashMessage    # Filter by name
 ```
 
 - **Unit tests** — pure logic (FlashMessage normalize, Booking computed, Modal/Slider/Icon helpers, ServiceProvider routes tuple).
-- **Feature tests** — boot the package via `tipowerup/testbench`, exercise Livewire components (`FlashMessage`, `LocalSearch`, `NewsletterSubscribeForm`), the Logout controller (with mocked `Cart` / `LogoutCustomer`), error-page templates (Blade compile + icon-name validation), and theme metadata invariants.
+- **Feature tests** — boot the package via `tipowerup/testbench`, exercise theme-local Livewire components (`FlashMessage`, `LocalSearch`) and the toolkit-shipped `NewsletterSubscribeForm` registered under the theme's namespace, the Logout controller (with mocked `Cart` / `LogoutCustomer`), error-page templates (Blade compile + icon-name validation), and theme metadata invariants.
 
 ### Frontend Source Layout
 
@@ -119,17 +118,19 @@ vendor/bin/pest --filter=FlashMessage    # Filter by name
 resources/src/
 ├── css/app.css                       # Tailwind v4 entry — pulls toolkit theme.css
 └── js/
-    ├── app.ts                        # Entry — Alpine factories + currency helper
+    ├── app.ts                        # Entry — registers Alpine factories
     ├── globals.ts                    # Pre-flight: jQuery / flatpickr / intl-tel-input on window
     ├── jquery-plugins.ts             # Legacy jQuery IIFEs (Livewire bridge, country picker, booking) — @ts-nocheck
     ├── global.d.ts                   # Ambient declarations (window, JQuery, etc.)
     ├── types/alpine.ts               # AlpineComponent / AlpineFactory helper types
     └── components/                   # Typed Alpine x-data factories
+        ├── index.ts                  # Aggregates + registers all factories
         ├── auto-click.ts
         ├── autocomplete-suggestions.ts
         ├── category-list.ts
         ├── checkout-fulfillment.ts
         ├── cookie-banner.ts
+        ├── nav-store.ts              # Active-route store for the mobile bottom tab bar
         ├── quantity-option.ts
         └── slider.ts
 ```
@@ -171,7 +172,7 @@ Configure Google Fonts from the theme settings. The theme uses Inter as the defa
 | Livewire 3.x | Server-driven dynamic components |
 | Alpine.js 3.x | Client-side interactivity |
 | Vite 5.x | Asset bundling (via `@tailwindcss/vite`) |
-| `@tipowerup/ti-theme-toolkit` | Shared theme tokens, Vite preset, dark-mode store |
+| [`@tipowerup/ti-theme-toolkit`](https://github.com/tipowerup/ti-theme-toolkit) | Shared theme tokens, Vite preset, dark-mode store, auth Livewire components |
 | View Transitions API | Page transitions |
 
 ## Migration from Orange Theme

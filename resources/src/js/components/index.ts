@@ -8,5 +8,6 @@ import './autocomplete-suggestions';
 import './category-list';
 import './checkout-fulfillment';
 import './cookie-banner';
+import './nav-store';
 import './quantity-option';
 import './slider';

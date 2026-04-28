@@ -1,5 +1,5 @@
 ---
-title: igniter.cart::default.orders.text_heading
+title: tipowerup.orange-tw::default.account_order_title
 layout: default
 permalink: /account/order/:hash
 security: all

@@ -89,9 +89,9 @@ final class Booking extends Component
     #[Url(history: true)]
     public ?string $time = null;
 
-    public ?\Carbon\Carbon $startDate = null;
+    public ?Carbon $startDate = null;
 
-    public ?\Carbon\Carbon $endDate = null;
+    public ?Carbon $endDate = null;
 
     public array $dates = [];
 
@@ -309,7 +309,7 @@ final class Booking extends Component
      * Uses the noOfSlots property to determine the maximum number of slots to show.
      * Defaults to showing all available slots if noOfSlots is not set.
      *
-     * @return \Illuminate\Support\Collection<int, object{dateTime: Carbon, fullyBooked: bool, isSelected: bool}>
+     * @return Collection<int, object{dateTime: Carbon, fullyBooked: bool, isSelected: bool}>
      */
     #[Computed]
     public function reducedTimeslots()

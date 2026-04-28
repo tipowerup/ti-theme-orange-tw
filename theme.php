@@ -1,9 +1,11 @@
 <?php
 
+use Igniter\System\Models\Country;
+
 // Register country & currency JS variables for frontend use
 $jsVars = [];
 
-if ($defaultCountry = \Igniter\System\Models\Country::getDefault()) {
+if ($defaultCountry = Country::getDefault()) {
     $jsVars['country'] = [
         'name' => $defaultCountry->country_name,
         'iso_code_2' => $defaultCountry->iso_code_2,

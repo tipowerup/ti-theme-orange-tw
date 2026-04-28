@@ -343,16 +343,6 @@ html .iti__country-list .iti__dial-code {
     color: var(--color-text-muted);
 }
 
-html .iti__flag {
-    background-image: url('/vendor/tipowerup-orange-tw/img/flags.png');
-}
-
-@media (min-resolution: 2dppx) {
-    html .iti__flag {
-        background-image: url('/vendor/tipowerup-orange-tw/img/flags@2x.png');
-    }
-}
-
 /* -------------------------------------------------------------------------
  * Auth session banner — "Welcome back..." / "Already have an account..."
  * ------------------------------------------------------------------------- */

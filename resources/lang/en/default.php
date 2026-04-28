@@ -16,11 +16,14 @@ return [
     'help_security' => 'Control who can access this page',
 
     // Account pages
+    'account_title' => 'My Account',
     'account_login_title' => 'Login',
     'account_register_title' => 'Register',
     'account_reset_title' => 'Reset Password',
     'account_socialite_title' => 'Confirm your email address',
     'account_address_title' => 'Address Book',
+    'account_orders_title' => 'My Orders',
+    'account_order_title' => 'Order Details',
     'account_reservations_title' => 'My Reservations',
     'account_reservation_title' => 'Reservation Details',
 
@@ -73,7 +76,6 @@ return [
     'contact' => [
         'text_heading' => 'Contact',
         'text_summary' => 'Feel free to send a message',
-        'text_find_us' => 'Find Us On Map',
         'text_select_subject' => 'select a subject',
         'text_contact_us' => 'Contact Us',
         'text_general_enquiry' => 'General enquiry',

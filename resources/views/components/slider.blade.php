@@ -3,6 +3,8 @@
         x-data="slider({ slideCount: {{ $slideCount }}, interval: {{ $delayInterval }} })"
         @mouseenter="stopAutoplay()"
         @mouseleave="autoplay && slides > 1 ? startAutoplay() : null"
+        @touchstart="onTouchStart($event)"
+        @touchend="onTouchEnd($event)"
         class="relative overflow-hidden bg-body"
         style="max-height: {{ $height }};"
     >
@@ -119,7 +121,7 @@
             <button
                 @click="prev()"
                 type="button"
-                class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-xs text-white rounded-full p-3 transition-all duration-200 hover:scale-110 focus:outline-hidden focus:ring-2 focus:ring-white/50"
+                class="hidden md:block absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-xs text-white rounded-full p-3 transition-all duration-200 hover:scale-110 focus:outline-hidden focus:ring-2 focus:ring-white/50"
                 aria-label="Previous slide"
             >
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,7 +132,7 @@
             <button
                 @click="next()"
                 type="button"
-                class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-xs text-white rounded-full p-3 transition-all duration-200 hover:scale-110 focus:outline-hidden focus:ring-2 focus:ring-white/50"
+                class="hidden md:block absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-xs text-white rounded-full p-3 transition-all duration-200 hover:scale-110 focus:outline-hidden focus:ring-2 focus:ring-white/50"
                 aria-label="Next slide"
             >
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

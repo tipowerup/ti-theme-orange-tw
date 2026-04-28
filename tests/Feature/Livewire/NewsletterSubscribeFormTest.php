@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Livewire\Livewire;
-use TiPowerUp\OrangeTw\Livewire\NewsletterSubscribeForm;
+use TiPowerUp\ThemeToolkit\Livewire\NewsletterSubscribeForm;
 
 it('rejects an empty email', function (): void {
     Livewire::test(NewsletterSubscribeForm::class)

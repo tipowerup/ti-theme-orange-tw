@@ -22,7 +22,7 @@ permalink: /cart
         </div>
 
         {{-- Cart box component --}}
-        <div class="bg-surface rounded-lg shadow-xs border border-border">
+        <div class="bg-surface rounded-lg shadow-xs border border-border overflow-hidden flex flex-col h-[calc(100vh-12rem)]">
             <livewire:tipowerup-orange-tw::cart-box />
         </div>
     </div>

@@ -46,7 +46,7 @@
             <div class="space-y-3">
                 @foreach($links as $name => $link)
                     <a
-                        href="{{ $link.'?success='.$successPage.'&error='.$errorPage }}"
+                        href="{{ $link }}"
                         class="flex items-center justify-center w-full px-4 py-3 border border-border dark:border-border rounded-lg text-sm font-medium text-text dark:text-text bg-body dark:bg-surface hover:bg-surface dark:hover:bg-surface transition-colors duration-200"
                     >
                         <span class="flex items-center gap-3">
@@ -74,12 +74,6 @@
                         </span>
                     </a>
                 @endforeach
-            </div>
-        @else
-            <div class="text-center py-8">
-                <p class="text-sm text-text-muted dark:text-text-muted">
-                    @lang('igniter.socialite::default.text_no_login_providers')
-                </p>
             </div>
         @endif
     @endif

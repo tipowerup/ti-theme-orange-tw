@@ -1,6 +1,6 @@
 {
     "name": "tipowerup-orange-tw-theme",
-    "description": "TastyIgniter theme — Tailwind v4 + Vite",
+    "description": "Modern, mobile-first TastyIgniter theme with dark mode, SPA-style transitions, and full Tailwind v4 brand customization.",
     "private": true,
     "type": "module",
     "scripts": {
@@ -20,7 +20,7 @@
         "@tailwindcss/forms": "^0.5.11",
         "@tailwindcss/typography": "^0.5.19",
         "@tailwindcss/vite": "^4.2.4",
-        "@tipowerup/ti-theme-toolkit": "file:../ti-theme-toolkit",
+        "@tipowerup/ti-theme-toolkit": "^0.3.0",
         "currency.js": "^2.0.4",
         "flatpickr": "^4.6.13",
         "intl-tel-input": "^18.5.3",

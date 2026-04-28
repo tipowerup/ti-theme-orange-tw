@@ -15,10 +15,18 @@ security: guest
                     <livewire:tipowerup-orange-tw::login/>
                 </div>
 
-                {{-- Social Login --}}
-                <div class="px-6 pb-6 lg:px-8 lg:pb-8 border-t border-border pt-6">
-                    <livewire:tipowerup-orange-tw::socialite />
-                </div>
+                {{-- Social Login — only render if the Socialite extension is
+                     installed and at least one provider is configured. --}}
+                @php
+                    $socialiteEnabled = class_exists(\Igniter\Socialite\Classes\ProviderManager::class)
+                        && resolve(\Igniter\Socialite\Classes\ProviderManager::class)->listProviderLinks()->isNotEmpty();
+                @endphp
+
+                @if($socialiteEnabled)
+                    <div class="px-6 pb-6 lg:px-8 lg:pb-8 border-t border-border pt-6">
+                        <livewire:tipowerup-orange-tw::socialite />
+                    </div>
+                @endif
             </div>
         </div>
     </div>

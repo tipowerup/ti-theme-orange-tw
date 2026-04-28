@@ -66,8 +66,5 @@ layout: default
                 @endif
             </div>
         </div>
-
-        <!-- Map Section -->
-        @include('tipowerup-orange-tw::includes.contact.map')
     </div>
 </section>

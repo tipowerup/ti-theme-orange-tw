@@ -27,6 +27,7 @@ use Igniter\User\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
@@ -560,7 +561,7 @@ final class Checkout extends Component
         $url = rtrim($endpoint, '/').'/'.$placeId.($sessionToken !== '' ? '?sessionToken='.$sessionToken : '');
 
         try {
-            $response = \Illuminate\Support\Facades\Http::withHeaders([
+            $response = Http::withHeaders([
                 'X-Goog-Api-Key' => $apiKey,
                 'X-Goog-FieldMask' => 'addressComponents,location,formattedAddress',
             ])->timeout(15)->get($url);
@@ -796,7 +797,7 @@ final class Checkout extends Component
      * @param  Order  $order  The order being validated
      * @return array Validated and merged form data ready for order processing
      *
-     * @throws \Illuminate\Validation\ValidationException When validation fails
+     * @throws ValidationException When validation fails
      */
     protected function validateCheckout(Order $order)
     {

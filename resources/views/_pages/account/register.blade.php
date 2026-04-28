@@ -15,14 +15,21 @@ security: guest
             <livewire:tipowerup-orange-tw::register />
 
             {{-- Social Login --}}
-            <div class="mt-6">
-                <div class="bg-surface rounded-lg border border-border shadow-xs p-6 lg:p-8">
-                    <div class="text-center mb-4">
-                        <span class="text-sm text-text-muted">@lang('tipowerup.orange-tw::default.text_or_register_with')</span>
+            @php
+                $socialiteEnabled = class_exists(\Igniter\Socialite\Classes\ProviderManager::class)
+                    && resolve(\Igniter\Socialite\Classes\ProviderManager::class)->listProviderLinks()->isNotEmpty();
+            @endphp
+
+            @if($socialiteEnabled)
+                <div class="mt-6">
+                    <div class="bg-surface rounded-lg border border-border shadow-xs p-6 lg:p-8">
+                        <div class="text-center mb-4">
+                            <span class="text-sm text-text-muted">@lang('tipowerup.orange-tw::default.text_or_register_with')</span>
+                        </div>
+                        <livewire:tipowerup-orange-tw::socialite />
                     </div>
-                    <livewire:tipowerup-orange-tw::socialite />
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 </div>

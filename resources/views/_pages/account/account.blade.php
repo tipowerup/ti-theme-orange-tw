@@ -1,5 +1,5 @@
 ---
-title: igniter.user::default.account_title
+title: tipowerup.orange-tw::default.account_title
 permalink: /account
 layout: default
 security: customer

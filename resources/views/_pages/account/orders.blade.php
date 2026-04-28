@@ -1,5 +1,5 @@
 ---
-title: igniter.cart::default.orders.text_heading
+title: tipowerup.orange-tw::default.account_orders_title
 layout: default
 permalink: /account/orders
 security: customer
@@ -16,7 +16,7 @@ security: customer
             <div class="bg-surface rounded-lg shadow-xs">
                 <div class="p-6">
                     <h2 class="text-2xl font-bold text-text mb-6">
-                        @lang('igniter.cart::default.orders.text_heading')
+                        @lang('tipowerup.orange-tw::default.account_orders_title')
                     </h2>
                     <x-tipowerup-orange-tw::order-list/>
                 </div>

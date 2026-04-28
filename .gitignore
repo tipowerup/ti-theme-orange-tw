@@ -15,9 +15,6 @@ node_modules/
 npm-debug.log
 yarn-error.log
 public/build/*
-public/css/*
-public/js/*
-public/assets/*
 public/.vite/
 public/hot
 public/manifest.json

@@ -101,11 +101,15 @@ final class CartBox extends Component
             'rowId' => $rowId,
             'quantity' => $quantity,
         ]);
+
+        $this->dispatch('cart-updated');
     }
 
     public function onUpdateItemQuantity(string $rowId, string $action = 'plus'): void
     {
         $this->cartManager->updateCartItemQty($rowId, $action);
+
+        $this->dispatch('cart-updated');
     }
 
     public function onApplyCoupon(): void

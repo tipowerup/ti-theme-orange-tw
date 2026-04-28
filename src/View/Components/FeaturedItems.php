@@ -6,6 +6,7 @@ namespace TiPowerUp\OrangeTw\View\Components;
 
 use Igniter\Cart\Models\Menu;
 use Igniter\Main\Traits\ConfigurableComponent;
+use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 use Override;
 use TiPowerUp\ThemeToolkit\Data\MenuItemData;
@@ -100,7 +101,7 @@ final class FeaturedItems extends Component
         ]);
     }
 
-    protected function loadItems(): \Illuminate\Support\Collection
+    protected function loadItems(): Collection
     {
         return Menu::query()
             ->with(['locations', 'media'])

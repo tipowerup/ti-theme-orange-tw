@@ -12,12 +12,15 @@ interface SliderState {
     autoplay: boolean;
     interval: number;
     timer: ReturnType<typeof setInterval> | null;
+    touchStartX: number;
     init(): void;
     startAutoplay(): void;
     stopAutoplay(): void;
     next(): void;
     prev(): void;
     goTo(index: number): void;
+    onTouchStart(event: TouchEvent): void;
+    onTouchEnd(event: TouchEvent): void;
 }
 
 interface SliderArgs {
@@ -32,6 +35,7 @@ document.addEventListener('alpine:init', () => {
         autoplay: true,
         interval,
         timer: null,
+        touchStartX: 0,
 
         init() {
             if (this.autoplay && this.slides > 1) {
@@ -60,6 +64,23 @@ document.addEventListener('alpine:init', () => {
 
         goTo(index: number) {
             this.currentSlide = index;
+        },
+
+        onTouchStart(event: TouchEvent) {
+            this.touchStartX = event.changedTouches[0].screenX;
+        },
+
+        onTouchEnd(event: TouchEvent) {
+            if (this.slides <= 1) {
+                return;
+            }
+            const delta = event.changedTouches[0].screenX - this.touchStartX;
+            const threshold = 40;
+            if (delta <= -threshold) {
+                this.next();
+            } else if (delta >= threshold) {
+                this.prev();
+            }
         },
     }));
 });

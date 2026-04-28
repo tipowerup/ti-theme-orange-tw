@@ -1,7 +1,7 @@
 {
     "name": "tipowerup/ti-theme-orange-tw",
     "type": "tastyigniter-package",
-    "description": "Minimal TastyIgniter theme template with Tailwind CSS and Vite",
+    "description": "Modern, mobile-first TastyIgniter theme with dark mode, SPA-style transitions, and full Tailwind v4 brand customization.",
     "license": "MIT",
     "authors": [
         {
@@ -19,7 +19,7 @@
         "livewire/livewire": "^v3.0",
         "spatie/laravel-google-fonts": "^1.2",
         "tastyigniter/core": "^v4.0",
-        "tipowerup/ti-theme-toolkit": "*",
+        "tipowerup/ti-theme-toolkit": "^0.3.0",
         "tastyigniter/ti-ext-cart": "^v4.0",
         "tastyigniter/ti-ext-coupons": "^v4.0",
         "tastyigniter/ti-ext-frontend": "^v4.0",
@@ -84,15 +84,6 @@
             }
         }
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../ti-theme-toolkit",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
