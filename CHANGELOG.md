@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-04-28
+
+### Changed
+
+- **Toolkit constraint** bumped to `^0.4.0` — picks up
+  [`tipowerup/ti-theme-toolkit:0.4.0`](https://github.com/tipowerup/ti-theme-toolkit/releases/tag/v0.4.0),
+  which adds an auto-publish hook on `main.theme.activated`. Theme
+  assets now copy into `public/vendor/<theme-code>/` automatically when
+  an admin activates the theme — no manual
+  `php artisan igniter:theme-vendor-publish --force` needed in the
+  standard install flow.
+
 ## [1.0.0] - 2026-04-28
 
 First public release. Modern, mobile-first TastyIgniter theme — drop-in
